@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/transactionProvider.dart';
+
 
 void main() {
   runApp(
@@ -18,11 +20,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "MoneyMoveApp",
-      home: Scaffold(
-        appBar: AppBar(title: Text("MoneyMove")),
-        body: Center(child: Text("hola")),
-        
-      ),
-    );
+      home: HomeScreen(),
+
+      );
+    
   }
 }
