@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/transactionProvider.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "MoneyMoveApp",
+      title: AppConstants.appTitle,
       home: HomeScreen(),
 
       );
