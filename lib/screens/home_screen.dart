@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
-import 'package:money_move/models/transaction.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transactionProvider.dart';

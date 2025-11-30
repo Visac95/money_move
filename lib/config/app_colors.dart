@@ -7,5 +7,5 @@ class AppColors {
   static const Color accentColor = Colors.orange;
 
   static const Color expenseColor = Color.fromARGB(255, 207, 32, 32);
-  static const Color incomeColor = Color.fromARGB(255, 44, 187, 46);
+  static const Color incomeColor = Color.fromARGB(255, 37, 159, 39);
 }
