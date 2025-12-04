@@ -1,4 +1,5 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:money_move/config/app_constants.dart';
 import '../config/api_keys.dart';
 
 class GeminiService {
@@ -12,9 +13,13 @@ class GeminiService {
   @override
   Future<String> classifyTransaction(String transactionTitle) async {
 
+    final String categoriesString = AppConstants.categories
+        .map((cat) => cat.toUpperCase())
+        .join(', ');
+
     String prompt =
         """"Actúa como un clasificador de gastos. Dada la descripción, responde ÚNICAMENTE con una de las siguientes palabras clave, sin explicaciones:
-      COMIDA, TRANSPORTE, VIVIENDA, OCIO, SALUD, EDUCACION, OTROS.
+      $categoriesString
       Descripción: '$transactionTitle'.
       """;
     
@@ -23,12 +28,10 @@ class GeminiService {
       final response = await _model.generateContent(content);
 
 
-      return response.text?.trim() ?? "OTROS";
+      return response.text?.trim() ?? "manual_category";
     } catch(e) {
       print('Error al conectar con Gemini: $e');
-      return "OTROS";
-    }
-
-    return "Comida"; // Resultado de prueba
+      return "manual_category";
+    }// Resultado de prueba
   }
 }

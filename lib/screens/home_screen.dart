@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
 import 'package:provider/provider.dart';
-import '../providers/transactionProvider.dart';
+import '../providers/transaction_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -39,7 +40,39 @@ class HomeScreen extends StatelessWidget {
                           : AppColors.incomeColor,
                     ),
                   ),
-                  leading: Icon(Icons.monetization_on),
+                  leading: Icon(
+                    AppConstants.getIconForCategory(transaction.categoria),
+                    color: Colors.blue,
+                  ),
+                  trailing: PopupMenuButton(
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (value) {
+                      if (value == "borrar") {
+                        Provider.of<TransactionProvider>(
+                          context,
+                          listen: false,
+                        ).deleteTrasnsaction(transaction.id);
+
+                        // Opcional: Mostrar confirmación
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Transacción eliminada'),
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text("Borrar", style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
