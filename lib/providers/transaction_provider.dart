@@ -14,8 +14,8 @@ class TransactionProvider extends ChangeNotifier {
     for (var i = 0; i < _transactions.length; i++) {
       if (_transactions[i].id == idActual) {
         _transactions.removeAt(i);
+        notifyListeners();
       }
-      notifyListeners();
     }
   }
 }

@@ -63,6 +63,7 @@ class HomeScreen extends StatelessWidget {
                     },
                     itemBuilder: (context) => [
                       const PopupMenuItem(
+                        value: "borrar",
                         child: Row(
                           children: [
                             Icon(Icons.delete, color: Colors.red),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AppConstants {
   static const String appTitle = "MoneyMove App";
@@ -19,8 +18,8 @@ class AppConstants {
     "EDUCACION",
     "IGLESIA",
     "EMPLEO",
-    "MASCOTA"
-        "OTROS",
+    "MASCOTA",
+    "OTROS",
   ];
 
   // NUEVO: Mapa de íconos
