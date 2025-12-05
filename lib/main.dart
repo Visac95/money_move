@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
-import 'package:money_move/screens/home_screen.dart';
+import 'package:money_move/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
-import './services/database_helper.dart';
 
 
 void main() {
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: AppConstants.appTitle,
-      home: HomeScreen(),
+      home: MainScreen(),
 
       );
     

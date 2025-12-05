@@ -14,7 +14,6 @@ class HomeScreen extends StatelessWidget {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
     return Scaffold(
-      appBar: AppBar(title: Text("MoneyMove")),
       body: Column(
         children: [
           BalanceCard(),
