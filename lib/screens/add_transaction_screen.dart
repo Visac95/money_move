@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +87,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         builder: (BuildContext context) {
           return SimpleDialog(
             title: Text(
-              AppConstants.chooseCategoryManualTitle ?? 'Elige una categoría',
+              AppConstants.chooseCategoryManualTitle,
             ), // Asegúrate de que no sea null
             // SENIOR TIP: Usamos .map para no repetir código 8 veces
             children: AppConstants.categories.map((categoryItem) {

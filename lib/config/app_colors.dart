@@ -8,4 +8,6 @@ class AppColors {
 
   static const Color expenseColor = Color.fromARGB(255, 207, 32, 32);
   static const Color incomeColor = Color.fromARGB(255, 37, 159, 39);
+
+  static const Color transactionListIconColor = Color.fromARGB(255, 33, 33, 33);
 }
