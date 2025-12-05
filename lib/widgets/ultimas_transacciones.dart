@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/ui_provider.dart';
 import 'package:provider/provider.dart';
 
 class UltimasTransacciones extends StatefulWidget {
@@ -106,7 +107,8 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
           ElevatedButton(style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(Size(double.infinity, 40))
           ),
-            onPressed: () => 1 + 1,
+            onPressed: () => Provider.of<UiProvider>(context, listen: false)
+                .selectedIndex = 1,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

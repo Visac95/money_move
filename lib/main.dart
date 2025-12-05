@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
@@ -10,7 +11,9 @@ void main() {
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => TransactionProvider()..loadTransactions()),
-      ChangeNotifierProvider(create: (_)=> AiCategoryProvider())],
+      ChangeNotifierProvider(create: (_)=> AiCategoryProvider()),
+      ChangeNotifierProvider(create: (_)=> UiProvider()),
+      ],
       child: const MyApp(),
     ),
   );

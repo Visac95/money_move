@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/providers/ui_provider.dart';
+import 'package:money_move/screens/all_transactions.dart';
 import 'package:money_move/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -9,39 +12,25 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-  List<Widget> screens = [
-    HomeScreen(),
-    Center(child: Text("Ajustes")),
-  ];
+  List<Widget> screens = [HomeScreen(), AllTransactions()];
 
   @override
   Widget build(BuildContext context) {
+    final uiProvider = Provider.of<UiProvider>(context);
+    final int currentIndex = uiProvider.selectedIndex;
     return Scaffold(
       appBar: AppBar(title: Text("MoneyMove")),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: screens,
-      ),
+      body: IndexedStack(index: currentIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          uiProvider.selectedIndex = index;
         },
         items: const [
-          BottomNavigationBarItem(
-            
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ), 
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Ajustes',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
       ),
-      );
+    );
   }
 }
