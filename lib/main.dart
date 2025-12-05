@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
@@ -27,6 +28,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: AppConstants.appTitle,
+      theme: ThemeData(
+        // Aquí aplicamos tu nuevo color índigo a toda la app
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primaryColor,
+          primary: AppColors.primaryColor, // Botones y barras
+          secondary: AppColors.primaryDark, 
+        ),
+        scaffoldBackgroundColor: AppColors.scaffoldBackground,
+        useMaterial3: true,
+      ),
       home: MainScreen(),
 
       );

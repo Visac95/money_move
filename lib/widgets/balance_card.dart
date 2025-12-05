@@ -17,7 +17,7 @@ class BalanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24), // Bordes bien redondeados
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06), // Sombra muy sutil
+            color: const Color.fromARGB(146, 0, 0, 0), // Sombra muy sutil
             blurRadius: 20, // Muy borrosa (efecto nube)
             offset: const Offset(0, 8), // Cae hacia abajo
           ),
@@ -75,7 +75,7 @@ class BalanceCard extends StatelessWidget {
                   amount: provider.totalIngresos,
                   icon: Icons.arrow_upward_rounded,
                   color: AppColors.incomeColor,
-                  bgColor: AppColors.incomeColor.withOpacity(0.1), // Fondo del ícono
+                  bgColor: const Color.fromARGB(48, 16, 185, 129), // Fondo del ícono
                 ),
 
                 // LÍNEA DIVISORIA VERTICAL
@@ -87,7 +87,7 @@ class BalanceCard extends StatelessWidget {
                   amount: provider.totalEgresos,
                   icon: Icons.arrow_downward_rounded,
                   color: AppColors.expenseColor,
-                  bgColor: AppColors.expenseColor.withOpacity(0.1), // Fondo del ícono
+                  bgColor: const Color.fromARGB(40, 239, 68, 68), // Fondo del ícono
                 ),
               ],
             ),

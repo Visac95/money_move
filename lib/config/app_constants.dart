@@ -12,13 +12,14 @@ class AppConstants {
   static const List<String> categories = [
     "COMIDA",
     "TRANSPORTE",
-    "VIVIENDA",
     "OCIO",
     "SALUD",
     "EDUCACION",
     "IGLESIA",
     "EMPLEO",
     "MASCOTA",
+    "HOGAR",
+    "SERVICIOS",
     "OTROS",
   ];
 
@@ -28,9 +29,9 @@ class AppConstants {
     'TRANSPORTE': Icons.directions_bus,
     'SALUD': Icons.local_hospital,
     'OCIO': Icons.movie,
-    'VIVIENDA': Icons.home,
+    "HOGAR": Icons.house,
     'EDUCACION': Icons.school,
-    'Servicios': Icons.lightbulb,
+    'SERVICIOS': Icons.lightbulb,
     "IGLESIA": Icons.church,
     "EMPLEO": Icons.work,
     'OTROS': Icons.category,

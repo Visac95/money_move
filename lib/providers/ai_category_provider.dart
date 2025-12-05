@@ -5,7 +5,12 @@ import '../services/gemini_service.dart';
 
 class AiCategoryProvider extends ChangeNotifier {
   final GeminiService _geminiService = GeminiService(); // Instancia del servicio
-  
+  String? _manualCategory;
+  String? get manualCategory => _manualCategory;
+  set manualCategory(String? value) {
+    _manualCategory = value;
+    notifyListeners(); // Notificamos el cambio
+  }
   // Estado de carga (para mostrar un Spinner)
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -16,6 +21,7 @@ class AiCategoryProvider extends ChangeNotifier {
 
   // --- FUNCIÓN PRINCIPAL ---
   Future<void> requestClassification(String title) async {
+    if (_manualCategory != null) return;
     if (title.trim().isEmpty) {
       _suggestedCategory = 'manual_category';
       return;
@@ -31,7 +37,6 @@ class AiCategoryProvider extends ChangeNotifier {
       _suggestedCategory = result;
 
     } catch (e) {
-      print('Error en AiCategoryProvider: $e');
       _suggestedCategory = 'manual_category'; 
 
     } finally {
@@ -41,6 +46,8 @@ class AiCategoryProvider extends ChangeNotifier {
   }
 
   void resetCategory () {
-    _suggestedCategory = 'manual_category';
+    _suggestedCategory = "";
+    _manualCategory = null;
+    notifyListeners();
   }
 }

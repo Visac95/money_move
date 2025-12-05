@@ -12,6 +12,16 @@ class ListaDeTransacciones extends StatefulWidget {
 }
 
 class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
+  
+  // FUNCIÓN ACTUALIZADA: Solo fecha
+  String _formatDate(DateTime date) {
+    String day = date.day.toString().padLeft(2, '0');
+    String month = date.month.toString().padLeft(2, '0');
+    String year = date.year.toString();
+    
+    return "$day/$month/$year";
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
@@ -19,12 +29,12 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
 
     return Expanded(
       child: lista.isEmpty
-          // 1. ESTADO VACÍO MEJORADO
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.receipt_long_rounded, size: 60, color: Colors.grey.shade300),
+                  Icon(Icons.receipt_long_rounded,
+                      size: 60, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
                   const Text(
                     "No hay transacciones aún",
@@ -33,23 +43,21 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                 ],
               ),
             )
-          // 2. LISTA CON SEPARACIÓN Y PADDING
           : ListView.separated(
-              physics: const BouncingScrollPhysics(), // Rebote suave tipo iOS
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 80), // Padding inferior de 80 para el botón flotante
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 80),
               itemCount: lista.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12), // Espacio entre tarjetas
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final transaction = lista[index];
-                
-                // 3. TARJETA INDIVIDUAL FLOTANTE
+
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20), // Bordes muy redondeados
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.03), // Sombra casi invisible
+                        color: const Color.fromARGB(16, 0, 0, 0),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -57,12 +65,12 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    
-                    // A. ÍCONO CON FONDO
+
+                    // A. ÍCONO
                     leading: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5F7FA), // Gris azulado muy suave
+                        color: const Color(0xFFF5F7FA),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Icon(
@@ -82,25 +90,49 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                       ),
                     ),
 
-                    // C. MONTO (SUBTÍTULO)
+                    // C. SUBTÍTULO (MONTO + FECHA)
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 6.0),
-                      child: Text(
-                        (transaction.isExpense ? '-' : '+') +
-                            transaction.monto.toStringAsFixed(2),
-                        style: TextStyle(
-                          color: transaction.isExpense
-                              ? AppColors.expenseColor
-                              : AppColors.incomeColor,
-                          fontWeight: FontWeight.w700, // Letra gruesa para el dinero
-                          fontSize: 15,
-                        ),
+                      child: Row(
+                        children: [
+                          // 1. El Monto
+                          Text(
+                            (transaction.isExpense ? '-' : '+') +
+                                transaction.monto.toStringAsFixed(2),
+                            style: TextStyle(
+                              color: transaction.isExpense
+                                  ? AppColors.expenseColor
+                                  : AppColors.incomeColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                            ),
+                          ),
+                          
+                          // 2. Separador
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(Icons.circle, size: 4, color: Colors.grey.shade300),
+                          ),
+
+                          // 3. La Fecha (Solo día/mes/año)
+                          // CAMBIO: Usamos ícono de calendario
+                          Icon(Icons.calendar_today_rounded, size: 14, color: Colors.grey.shade400),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatDate(transaction.fecha),
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
-                    // D. MENÚ DE OPCIONES
+                    // D. MENÚ
                     trailing: PopupMenuButton(
-                      icon: Icon(Icons.more_horiz_rounded, color: Colors.grey.shade400), // 3 puntos horizontales se ven más modernos
+                      icon: Icon(Icons.more_horiz_rounded, color: Colors.grey.shade400),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       onSelected: (value) {
                         if (value == "borrar") {
@@ -112,7 +144,7 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Transacción eliminada'),
-                              behavior: SnackBarBehavior.floating, // Flota sobre el contenido
+                              behavior: SnackBarBehavior.floating,
                             ),
                           );
                         }

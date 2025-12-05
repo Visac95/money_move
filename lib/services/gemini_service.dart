@@ -10,7 +10,7 @@ class GeminiService {
     : _model = GenerativeModel(model: "gemini-2.5-flash", apiKey: geminiApiKey);
 
   // Función para solicitar la categoría a Gemini
-  @override
+  /// Retorna la categoría sugerida o "manual_category" en caso de error
   Future<String> classifyTransaction(String transactionTitle) async {
 
     final String categoriesString = AppConstants.categories
@@ -30,7 +30,6 @@ class GeminiService {
 
       return response.text?.trim() ?? "manual_category";
     } catch(e) {
-      print('Error al conectar con Gemini: $e');
       return "manual_category";
     }// Resultado de prueba
   }

@@ -13,61 +13,67 @@ class UltimasTransacciones extends StatefulWidget {
 }
 
 class _UltimasTransaccionesState extends State<UltimasTransacciones> {
+  
+  // Función auxiliar para la fecha (Día/Mes/Año)
+  String _formatDate(DateTime date) {
+    String day = date.day.toString().padLeft(2, '0');
+    String month = date.month.toString().padLeft(2, '0');
+    String year = date.year.toString();
+    return "$day/$month/$year";
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Un poco más de margen lateral
-      padding: const EdgeInsets.all(16), // Padding interno para que el contenido no pegue con los bordes
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20), // Bordes más redondeados (moderno)
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05), // Sombra MUY suave (5% opacidad)
-            blurRadius: 15, // Muy difusa
-            offset: const Offset(0, 5), // Ligeramente hacia abajo
+            color: const Color.fromARGB(32, 0, 0, 0),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
         children: [
-          // Header opcional si quisieras poner título
-          // Align(alignment: Alignment.centerLeft, child: Text("Recientes", style: ...)),
-          // SizedBox(height: 10),
-
           lista.isEmpty
               ? const Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("No hay transacciones aún 😴", style: TextStyle(color: Colors.grey)),
+                  child: Text("No hay transacciones aún 😴",
+                      style: TextStyle(color: Colors.grey)), // Usamos grey si textLight no está definido
                 )
-              : ListView.separated( // Usamos separated para dar aire entre items
+              : ListView.separated(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(), // Importante para que no haga scroll dentro del scroll
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: lista.length > 3 ? 3 : lista.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8), // Espacio entre filas
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final transaction = lista[index];
                     return ListTile(
-                      contentPadding: EdgeInsets.zero, // Quitamos padding default para alinearlo nosotros
+                      contentPadding: EdgeInsets.zero,
                       
-                      // 1. ÍCONO MEJORADO (Tipo App Bancaria)
+                      // 1. ÍCONO
                       leading: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100, // Fondo gris muy clarito
-                          borderRadius: BorderRadius.circular(12), // Cuadrado redondeado (Squircle)
+                          color: AppColors.primaryLight,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
                           AppConstants.getIconForCategory(transaction.categoria),
-                          color: Colors.black87, // Ícono oscuro para contraste
+                          color: AppColors.primaryDark,
                           size: 22,
                         ),
                       ),
-                      
-                      // 2. TÍTULO Y MONTO
+
+                      // 2. TÍTULO
                       title: Text(
                         transaction.title,
                         style: const TextStyle(
@@ -78,67 +84,63 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      
+
+                      // 3. SUBTÍTULO (MONTO + FECHA)
                       subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 4.0), // Separación título-monto
-                        child: Text(
-                          (transaction.isExpense ? '-' : '+') +
-                              transaction.monto.toStringAsFixed(2),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600, // Semi-bold
-                            color: transaction.isExpense
-                                ? AppColors.expenseColor // Rojo
-                                : AppColors.incomeColor, // Verde
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      
-                      // 3. MENÚ DE PUNTOS (Más sutil)
-                      trailing: PopupMenuButton(
-                        icon: Icon(Icons.more_vert, color: Colors.grey.shade400), // Ícono gris suave
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        onSelected: (value) {
-                           if (value == "borrar") {
-                            Provider.of<TransactionProvider>(context, listen: false)
-                                .deleteTransaction(transaction.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Transacción eliminada')),
-                            );
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: "borrar",
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                                SizedBox(width: 8),
-                                Text("Borrar", style: TextStyle(color: Colors.red)),
-                              ],
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Row(
+                          children: [
+                            // A. El Monto
+                            Text(
+                              (transaction.isExpense ? '-' : '+') +
+                                  transaction.monto.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: transaction.isExpense
+                                    ? AppColors.expenseColor
+                                    : AppColors.incomeColor,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                        ],
+
+                            // B. Separador (Puntito)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                              child: Icon(Icons.circle, size: 4, color: Colors.grey.shade300),
+                            ),
+
+                            // C. La Fecha
+                            Icon(Icons.calendar_today_rounded, size: 12, color: Colors.grey.shade400),
+                            const SizedBox(width: 4),
+                            Text(
+                              _formatDate(transaction.fecha),
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 12, // Un pelín más pequeña para que quepa bien
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
 
-          const SizedBox(height: 16), // Espacio antes del botón
+          const SizedBox(height: 16),
 
-          // 4. BOTÓN ESTILO "SOFT" (Como en tu imagen)
+          // 4. BOTÓN VER TODAS
           SizedBox(
             width: double.infinity,
-            child: TextButton( // Usamos TextButton o ElevatedButton con estilo plano
+            child: TextButton(
               onPressed: () =>
                   Provider.of<UiProvider>(context, listen: false).selectedIndex = 1,
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFFF3E5F5), // Un lila muy suave (casi blanco)
-                foregroundColor: Colors.purple, // Color del texto/ícono
+                backgroundColor: AppColors.primaryLight,
+                foregroundColor: AppColors.primaryColor,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // Bordes totalmente redondos (Pill shape)
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               child: const Row(
