@@ -19,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
     final uiProvider = Provider.of<UiProvider>(context);
     final int currentIndex = uiProvider.selectedIndex;
     return Scaffold(
-      appBar: AppBar(title: Text("MoneyMove")),
       body: IndexedStack(index: currentIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
@@ -28,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
+          BottomNavigationBarItem(icon: Icon(Icons.monetization_on), label: 'Transacciones'),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/widgets/add_transaction_button.dart';
 import 'package:money_move/widgets/lista_de_transacciones.dart';
 
 class AllTransactions extends StatefulWidget {
@@ -11,6 +12,11 @@ class AllTransactions extends StatefulWidget {
 class _AllTransactionsState extends State<AllTransactions> {
   @override
   Widget build(BuildContext context) {
-    return ListaDeTransacciones();
+    return Scaffold(
+      
+      appBar: AppBar(title: Center(child: Text("Transacciones"))),
+      body: ListaDeTransacciones(),
+      floatingActionButton: AddTransactionButton(),
+    );
   }
 }
