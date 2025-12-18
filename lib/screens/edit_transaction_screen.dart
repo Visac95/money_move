@@ -1,30 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/models/transaction.dart';
+import 'package:money_move/widgets/transaction_form.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
-import 'package:money_move/widgets/transaction_form.dart';
 import 'package:provider/provider.dart';
-import '../providers/transaction_provider.dart';
-import '../models/transaction.dart';
 import 'dart:async';
 
-class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+class EditTransactionScreen extends StatefulWidget {
+  final Transaction transaction;
+  const EditTransactionScreen({super.key, required this.transaction});
 
   @override
-  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  State<EditTransactionScreen> createState() => _EditTransactionScreenState();
 }
 
-class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
-  bool isExpense = true;
+class _EditTransactionScreenState extends State<EditTransactionScreen> {
+  var titleController = TextEditingController();
+  var amountController = TextEditingController();
+
+  late bool isExpense;
   Timer? debounce;
   String? manualCategory;
 
   @override
   void initState() {
     super.initState();
-    titleController.addListener(_classifyTitle);
+    //titleController.addListener(_classifyTitle);
+    // 1. Cargamos el booleano (esto ya lo tenías)
+    isExpense = widget.transaction.isExpense;
+
+    // 2. ¡IMPORTANTE! Cargamos los textos AQUÍ una sola vez
+    titleController.text = widget.transaction.title;
+
+    // Ojo: toStringAsFixed(2) para que se vea bonito "15.50"
+    amountController.text = widget.transaction.monto.toStringAsFixed(2);
   }
 
   @override
@@ -58,12 +67,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     } catch (e) {
       return;
     }
-
-    final transactionProvider = Provider.of<TransactionProvider>(
-      context,
-      listen: false,
-    );
-
     // 1. OBTENEMOS EL PROVIDER UNA SOLA VEZ (con listen: false)
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
@@ -96,16 +99,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       }
     }
 
-    // --- GUARDAR ---
-    transactionProvider.addTransaction(
-      Transaction(
-        title: titleController.text,
-        description: "Sin descripción",
-        monto: enteredAmount,
-        fecha: DateTime.now(),
-        categoria: categoryToSave,
-        isExpense: isExpense,
-      ),
+    // 4. ACTUALIZAMOS LA TRANSACCIÓN
+    widget.transaction.update(
+      title: titleController.text,
+      monto: enteredAmount,
+      categoria: manualCategoryFromProvider ?? categoryToSave,
+      isExpense: isExpense,
     );
 
     if (mounted) {
@@ -122,7 +121,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Nuevo Movimiento',
+          'Editar Movimiento',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -139,6 +138,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           });
         },
         onSave: _saveTransaction,
+        transaction: widget.transaction,
+        isEditMode: true,
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:provider/provider.dart';
 
 class ListaDeTransacciones extends StatefulWidget {
@@ -12,13 +13,12 @@ class ListaDeTransacciones extends StatefulWidget {
 }
 
 class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
-  
   // FUNCIÓN ACTUALIZADA: Solo fecha
   String _formatDate(DateTime date) {
     String day = date.day.toString().padLeft(2, '0');
     String month = date.month.toString().padLeft(2, '0');
     String year = date.year.toString();
-    
+
     return "$day/$month/$year";
   }
 
@@ -33,8 +33,11 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.receipt_long_rounded,
-                      size: 60, color: Colors.grey.shade300),
+                  Icon(
+                    Icons.receipt_long_rounded,
+                    size: 60,
+                    color: Colors.grey.shade300,
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     "No hay transacciones aún",
@@ -64,7 +67,10 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                     ],
                   ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
 
                     // A. ÍCONO
                     leading: Container(
@@ -107,16 +113,26 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                               fontSize: 15,
                             ),
                           ),
-                          
+
                           // 2. Separador
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Icon(Icons.circle, size: 4, color: Colors.grey.shade300),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Icon(
+                              Icons.circle,
+                              size: 4,
+                              color: Colors.grey.shade300,
+                            ),
                           ),
 
                           // 3. La Fecha (Solo día/mes/año)
                           // CAMBIO: Usamos ícono de calendario
-                          Icon(Icons.calendar_today_rounded, size: 14, color: Colors.grey.shade400),
+                          Icon(
+                            Icons.calendar_today_rounded,
+                            size: 14,
+                            color: Colors.grey.shade400,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             _formatDate(transaction.fecha),
@@ -132,8 +148,13 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
 
                     // D. MENÚ
                     trailing: PopupMenuButton(
-                      icon: Icon(Icons.more_horiz_rounded, color: Colors.grey.shade400),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      icon: Icon(
+                        Icons.more_horiz_rounded,
+                        color: Colors.grey.shade400,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       onSelected: (value) {
                         if (value == "borrar") {
                           Provider.of<TransactionProvider>(
@@ -147,6 +168,15 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
+                        } 
+                        if (value == "editar") {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditTransactionScreen(
+                                transaction: transaction,
+                              ),
+                            ),
+                          );
                         }
                       },
                       itemBuilder: (context) => [
@@ -154,11 +184,38 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
                           value: "borrar",
                           child: Row(
                             children: [
-                              Icon(Icons.delete_outline_rounded, color: Colors.red, size: 20),
+                              Icon(
+                                Icons.delete_outline_rounded,
+                                color: Colors.red,
+                                size: 20,
+                              ),
                               SizedBox(width: 10),
                               Text(
                                 "Borrar",
-                                style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: "editar",
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons. edit_rounded,
+                                color: AppColors.incomeColor,
+                                size: 20,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "Editar",
+                                style: TextStyle(
+                                  color: AppColors.incomeColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),

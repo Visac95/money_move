@@ -12,7 +12,7 @@ class AiCategoryProvider extends ChangeNotifier {
     notifyListeners(); // Notificamos el cambio
   }
   // Estado de carga (para mostrar un Spinner)
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
 
   // Resultado de la última clasificación

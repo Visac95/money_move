@@ -48,4 +48,23 @@ class Transaction {
       isExpense: map['isExpense'] == 1, // Si es 1 es true, si es 0 es false
     );
   }
+
+  Transaction update({
+    String? title,
+    String? description,
+    double? monto,
+    DateTime? fecha,
+    String? categoria,
+    bool? isExpense,
+  }) {
+    return Transaction(
+      id: id,
+      title: this.title,
+      description: this.description,
+      monto: this.monto,
+      fecha: this.fecha,
+      categoria: this.categoria,
+      isExpense: this.isExpense,
+    );
+  }
 }
