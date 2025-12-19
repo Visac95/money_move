@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/models/transaction.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/transaction_form.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
@@ -98,15 +99,13 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
         return; // Canceló
       }
     }
-
-    // 4. ACTUALIZAMOS LA TRANSACCIÓN
-    widget.transaction.update(
+    final Transaction transactionActualizada = widget.transaction.update(
       title: titleController.text,
       monto: enteredAmount,
       categoria: manualCategoryFromProvider ?? categoryToSave,
       isExpense: isExpense,
     );
-
+    context.read<TransactionProvider>().updateTransaction(transactionActualizada);
     if (mounted) {
       Navigator.of(context).pop();
     }

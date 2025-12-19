@@ -59,12 +59,12 @@ class Transaction {
   }) {
     return Transaction(
       id: id,
-      title: this.title,
-      description: this.description,
-      monto: this.monto,
-      fecha: this.fecha,
-      categoria: this.categoria,
-      isExpense: this.isExpense,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      monto: monto ?? this.monto,
+      fecha: fecha ?? this.fecha,
+      categoria: categoria ?? this.categoria,
+      isExpense: isExpense ?? this.isExpense,
     );
   }
 }

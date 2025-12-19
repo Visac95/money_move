@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/all_transactions.dart';
+import 'package:money_move/screens/deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Widget> screens = [HomeScreen(), AllTransactions()];
+  List<Widget> screens = [HomeScreen(), AllTransactions(), DeudasScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.monetization_on), label: 'Transacciones'),
+          BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: "Deudas"),
         ],
       ),
     );

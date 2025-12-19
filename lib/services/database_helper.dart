@@ -85,4 +85,15 @@ class DatabaseHelper {
       whereArgs: [id], // Aquí va el valor real
     );
   }
+
+  Future<int> updateTransaction(Transaction t) async {
+    final db = await instance.database;
+
+    return await db.update(
+      'transactions',
+      t.toMap(),
+      where: 'id = ?', // Buscamos por ID
+      whereArgs: [t.id], // Pasamos el ID de la transacción a actualizar
+    );
+  }
 }

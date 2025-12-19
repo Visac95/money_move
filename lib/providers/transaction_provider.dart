@@ -53,4 +53,18 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   double get saldoActual => totalIngresos - totalEgresos;
+
+  Future<void> updateTransaction(Transaction updatedTransaction) async {
+    // 1. Actualizar en la base de datos
+    await DatabaseHelper.instance.updateTransaction(updatedTransaction);
+
+    // 2. Actualizar en la lista en memoria
+    int index = _transactions.indexWhere((t) => t.id == updatedTransaction.id);
+    if (index != -1) {
+      _transactions[index] = updatedTransaction;
+      // Ordenamos por fecha (opcional)
+      _transactions.sort((a, b) => b.fecha.compareTo(a.fecha));
+      notifyListeners();
+    }
+  }
 }
