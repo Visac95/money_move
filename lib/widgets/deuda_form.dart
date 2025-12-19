@@ -1,35 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/models/transaction.dart';
+import 'package:flutter/services.dart';
+import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
-import '../config/app_colors.dart'; // Asegúrate de importar tus colores
-import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
-class TransactionForm extends StatelessWidget {
-  // Recibe los controles desde el padre
+class DeudaForm extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController amountController;
-
-  // Recibe el estado actual
-  bool isExpense;
-
-  // Recibe FUNCIONES (Callbacks) para avisar al padre cuando algo cambia
-  final Function(bool) onTypeChanged; // Avisa si cambió de Gasto a Ingreso
-  final VoidCallback onSave; // Avisa cuando le dieron click al botón guardar
-
-  final Transaction? transaction;
+  final TextEditingController involucradoController;
+  bool debo;
+  final Function(bool) onTypeChanged;
+  final VoidCallback onSave;
+  final Deuda? deuda;
   final bool? isEditMode;
 
-   TransactionForm({
+  DeudaForm({
     super.key,
     required this.titleController,
     required this.amountController,
-    required this.isExpense,
+    required this.involucradoController,
+    required this.debo,
     required this.onTypeChanged,
     required this.onSave,
-    this.transaction,
+    this.deuda,
     this.isEditMode,
   });
 
@@ -37,28 +33,23 @@ class TransactionForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final aiProvider = context.watch<AiCategoryProvider>();
 
-    // Color dinámico según selección
-    final activeColor = isExpense
-        ? AppColors.expenseColor
-        : AppColors.incomeColor;
-    String? manualCategory = aiProvider
-        .manualCategory; // Si es null, usamos la IA. Si tiene texto, usamos este.
+    final activeColor = debo ? AppColors.expenseColor : AppColors.incomeColor;
+    String? manualCategory = aiProvider.manualCategory;
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(20.4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 3. INPUT DE TÍTULO
             const Text(
-              "Descripción",
+              "Titulo de la Deuda",
               style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                hintText: "Describe tu movimiento",
+                hintText: "Escribe el titulo de tu movimiento",
                 filled: true,
                 fillColor: Colors.grey.shade50,
                 prefixIcon: Icon(
@@ -76,7 +67,7 @@ class TransactionForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // 1. TOGGLE PERSONALIZADO (Gasto vs Ingreso)
+
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -85,13 +76,40 @@ class TransactionForm extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildToggleOption("Gasto", true),
-                  _buildToggleOption("Ingreso", false),
+                  _buildToggleOption("Yo debo", true),
+                  _buildToggleOption("Me deben", false),
                 ],
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
+
+            //Involucrado input
+            Text(
+              _involucradoText(),
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: involucradoController,
+              decoration: InputDecoration(
+                hintText: "Nombre del involucrado",
+                filled: true,
+                fillColor: Colors.grey.shade50,
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Colors.grey.shade400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: activeColor, width: 2),
+                ),
+              ),
+            ),
 
             // 2. INPUT DE MONTO (Gigante, estilo banco)
             const Text(
@@ -124,8 +142,6 @@ class TransactionForm extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
               ),
             ),
-
-            // 4. CHIP DE IA / CATEGORÍA (Con lógica de bloqueo)
             const SizedBox(height: 16),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -223,7 +239,6 @@ class TransactionForm extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
             ),
-
             const SizedBox(height: 40),
 
             // 5. BOTÓN DE GUARDAR (Full Width)
@@ -240,7 +255,7 @@ class TransactionForm extends StatelessWidget {
                   elevation: 2,
                 ),
                 child: const Text(
-                  "Guardar Movimiento",
+                  "Guardar Deuda",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -255,14 +270,22 @@ class TransactionForm extends StatelessWidget {
     );
   }
 
+  String _involucradoText() {
+    if (debo) {
+      return "A quien le debo";
+    } else {
+      return "Quien me debe";
+    }
+  }
+
   // Helper para construir los botones del Toggle
-  Widget _buildToggleOption(String label, bool isExpenseButton) {
+  Widget _buildToggleOption(String label, bool deboButton) {
     // Si _isExpense es true y este botón es el de gasto (isExpenseButton == true) -> ACTIVO
-    bool isActive = isExpense == isExpenseButton;
+    bool isActive = debo == deboButton;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => onTypeChanged(isExpenseButton),
+        onTap: () => onTypeChanged(deboButton),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -285,7 +308,7 @@ class TransactionForm extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: isActive
-                  ? (isExpenseButton
+                  ? (deboButton
                         ? AppColors.expenseColor
                         : AppColors.incomeColor)
                   : Colors.grey,

@@ -6,6 +6,7 @@ import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
+import './providers/deuda_provider.dart';
 
 
 void main() {
@@ -14,6 +15,7 @@ void main() {
       providers: [ChangeNotifierProvider(create: (_) => TransactionProvider()..loadTransactions()),
       ChangeNotifierProvider(create: (_)=> AiCategoryProvider()),
       ChangeNotifierProvider(create: (_)=> UiProvider()),
+      ChangeNotifierProvider(create: (_)=> DeudaProvider())
       ],
       child: const MyApp(),
     ),

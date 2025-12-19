@@ -20,6 +20,7 @@ class AppConstants {
     "MASCOTA",
     "HOGAR",
     "SERVICIOS",
+    "DEUDAS",
     "OTROS",
   ];
 
@@ -36,6 +37,7 @@ class AppConstants {
     "EMPLEO": Icons.work,
     'OTROS': Icons.category,
     "MASCOTA": Icons.pets,
+    "DEUDAS" : Icons.receipt_long,
   };
 
   // Función Helper: "Dame el ícono para esta categoría"

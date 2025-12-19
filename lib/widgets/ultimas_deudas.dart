@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:provider/provider.dart';
 
-class UltimasTransacciones extends StatefulWidget {
-  const UltimasTransacciones({super.key});
+class UltimasDeudas extends StatefulWidget {
+  const UltimasDeudas({super.key});
 
   @override
-  State<UltimasTransacciones> createState() => _UltimasTransaccionesState();
+  State<UltimasDeudas> createState() => _UltimasDeudasState();
 }
 
-class _UltimasTransaccionesState extends State<UltimasTransacciones> {
+class _UltimasDeudasState extends State<UltimasDeudas> {
   
   // Función auxiliar para la fecha (Día/Mes/Año)
   String _formatDate(DateTime date) {
@@ -24,8 +25,8 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TransactionProvider>(context);
-    final lista = provider.transactions;
+    final provider = Provider.of<DeudaProvider>(context);
+    final lista = provider.deudas;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -92,11 +93,11 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                           children: [
                             // A. El Monto
                             Text(
-                              (transaction.isExpense ? '-' : '+') +
+                              (transaction.debo ? '-' : '+') +
                                   transaction.monto.toStringAsFixed(2),
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: transaction.isExpense
+                                color: transaction.debo
                                     ? AppColors.expenseColor
                                     : AppColors.incomeColor,
                                 fontSize: 14,
@@ -113,7 +114,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                             Icon(Icons.calendar_today_rounded, size: 12, color: Colors.grey.shade400),
                             const SizedBox(width: 4),
                             Text(
-                              _formatDate(transaction.fecha),
+                              _formatDate(transaction.fechaInicio),
                               style: TextStyle(
                                 color: Colors.grey.shade500,
                                 fontSize: 12, // Un pelín más pequeña para que quepa bien
