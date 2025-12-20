@@ -3,9 +3,12 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
+import 'package:provider/provider.dart';
 import '../models/transaction.dart';
 
 class VerTransaction extends StatelessWidget {
+  final String id;
+
   String _formatDate(DateTime date) {
     String day = date.day.toString().padLeft(2, '0');
     String month = date.month.toString().padLeft(2, '0');
@@ -13,14 +16,6 @@ class VerTransaction extends StatelessWidget {
 
     return "$day/$month/$year";
   }
-
-  final String id;
-  final String title;
-  final String description;
-  final double monto;
-  final DateTime fecha;
-  final String categoria;
-  final bool isExpense;
 
   const VerTransaction({
     super.key,
@@ -33,9 +28,17 @@ class VerTransaction extends StatelessWidget {
     required this.isExpense,
   });
 
+  final String title;
+  final String description;
+  final double monto;
+  final DateTime fecha;
+  final String categoria;
+  final bool isExpense;
+
   @override
   Widget build(BuildContext context) {
-    Transaction transaction = TransactionProvider().getTransactionById(id)!;
+    final provider = Provider.of<TransactionProvider>(context);
+    Transaction transaction = provider.getTransactionById(id)!;
 
     return Scaffold(
       appBar: AppBar(title: Text("Detalles de la Transación")),
@@ -51,21 +54,23 @@ class VerTransaction extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Text(_formatDate(fecha)),
+                    Text(_formatDate(transaction.fecha)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
-                            AppConstants.getIconForCategory(categoria),
+                            AppConstants.getIconForCategory(
+                              transaction.categoria,
+                            ),
                             size: 30,
                             color: AppColors.primaryColor,
                           ),
                         ),
                         Flexible(
                           child: Text(
-                            title,
+                            transaction.title,
                             overflow: TextOverflow.visible,
                             style: TextStyle(
                               color: AppColors.primaryDark,
@@ -85,7 +90,7 @@ class VerTransaction extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Descripción: $description",
+                        "Descripción: ${transaction.description}",
                         style: TextStyle(
                           color: AppColors.textLight,
                           fontSize: 15,
@@ -111,11 +116,11 @@ class VerTransaction extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(1, 0, 1, 10),
               child: Text(
-                (isExpense ? '-' : '+') +
-                    monto.toStringAsFixed(2) +
-                    (isExpense ? " (Gasto)" : " (Ingreso)"),
+                (transaction.isExpense ? '-' : '+') +
+                    transaction.monto.toStringAsFixed(2) +
+                    (transaction.isExpense ? " (Gasto)" : " (Ingreso)"),
                 style: TextStyle(
-                  color: isExpense
+                  color: transaction.isExpense
                       ? AppColors.expenseColor
                       : AppColors.incomeColor,
                   fontSize: 40, // Mucho más grande = Héroe de la pantalla
@@ -137,23 +142,60 @@ class VerTransaction extends StatelessWidget {
               ),
             ),
             Text(
-              categoria,
+              transaction.categoria,
               style: TextStyle(
                 fontSize: 30,
                 color: AppColors.primaryDark,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 40),
 
             //--------EDITAR TRANSACCION----------
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                fixedSize: Size(500, 50),
+                backgroundColor: AppColors.incomeColor,
+              ),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) =>
                       EditTransactionScreen(transaction: transaction),
                 ),
               ),
-              child: Text("Editar Transacción"),
+              child: Text(
+                "Editar Transacción",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: AppColors.primaryLight,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            //----------ELIMINAR TRANSACCION---------
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                fixedSize: Size(500, 50),
+                backgroundColor: AppColors.expenseColor,
+              ),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      EditTransactionScreen(transaction: transaction),
+                ),
+              ),
+              child: Text(
+                "Eliminar Transacción",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: AppColors.primaryLight,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

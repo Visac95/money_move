@@ -1,6 +1,8 @@
-import 'package:sqflite/sqflite.dart' hide Transaction; // El motor de base de datos
-import 'package:path/path.dart';       // Para encontrar la ruta en el celular
-import '../models/transaction.dart';   // Tu modelo de datos
+import 'package:money_move/models/deuda.dart';
+import 'package:sqflite/sqflite.dart'
+    hide Transaction; // El motor de base de datos
+import 'package:path/path.dart'; // Para encontrar la ruta en el celular
+import '../models/transaction.dart'; // Tu modelo de datos
 
 class DatabaseHelper {
   // 1. EL SINGLETON (Patrón de diseño)
@@ -48,6 +50,23 @@ class DatabaseHelper {
         isExpense $intType
       )
     ''');
+
+    // --- TABLA 2: DEUDAS 
+    await db.execute('''
+      CREATE TABLE deudas ( 
+        id $idType, 
+        title $textType,
+        involucrado $textType,       -- A quién le debo o quién me debe
+        description $textType,
+        categoria $textType,
+        monto $doubleType,
+        abono $doubleType,          -- Cantidad ya abonada
+        fechaInicio $textType,   -- Fecha en que se creó la deuda
+        fechaLimite $textType,  -- Fecha para pagar
+        debo $intType,    -- 1 = Yo debo, 0 = Me deben
+        pagada $intType     -- 1 = Ya se pagó, 0 = Pendiente
+      )
+    ''');
   }
 
   // --- MÉTODOS CRUD (Create, Read, Update, Delete) ---
@@ -58,16 +77,16 @@ class DatabaseHelper {
     // Usamos el toMap() que creaste en el paso anterior
     // conflictAlgorithm: si ya existe el ID, lo reemplaza
     await db.insert(
-      'transactions', 
-      t.toMap(), 
-      conflictAlgorithm: ConflictAlgorithm.replace
+      'transactions',
+      t.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
   // B. LEER TODAS
   Future<List<Transaction>> getAllTransactions() async {
     final db = await instance.database;
-    
+
     // Pedimos ordenar por fecha (más reciente primero)
     final result = await db.query('transactions', orderBy: 'fecha DESC');
 
@@ -78,7 +97,7 @@ class DatabaseHelper {
   // C. BORRAR
   Future<int> deleteTransaction(String id) async {
     final db = await instance.database;
-    
+
     return await db.delete(
       'transactions',
       where: 'id = ?', // ? es un placeholder de seguridad
@@ -95,5 +114,44 @@ class DatabaseHelper {
       where: 'id = ?', // Buscamos por ID
       whereArgs: [t.id], // Pasamos el ID de la transacción a actualizar
     );
+  }
+
+  // ----------- CRUD DE DEUDAS ------------
+
+  // A. INSERTAR DEUDA
+  Future<void> insertDeuda(Deuda d) async {
+    final db = await instance.database;
+    await db.insert(
+      'deudas', // <--- Nombre de la nueva tabla
+      d.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // B. LEER TODAS LAS DEUDAS
+  Future<List<Deuda>> getAllDeudas() async {
+    final db = await instance.database;
+    final result = await db.query(
+      'deudas',
+      orderBy: 'fechaLimite ASC',
+    ); // Ordenar por urgencia
+    return result.map((json) => Deuda.fromMap(json)).toList();
+  }
+
+  // C. ACTUALIZAR DEUDA (Ej: Marcar como pagada)
+  Future<int> updateDeuda(Deuda d) async {
+    final db = await instance.database;
+    return await db.update(
+      'deudas',
+      d.toMap(),
+      where: 'id = ?',
+      whereArgs: [d.id],
+    );
+  }
+
+  // D. BORRAR DEUDA
+  Future<int> deleteDeuda(String id) async {
+    final db = await instance.database;
+    return await db.delete('deudas', where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -38,7 +38,7 @@ class Deuda {
       "involucrado": involucrado,
       "abono": abono,
       // SQLite no guarda fechas, las guardamos como texto
-      'fechaInicio': fechaInicio.toIso8601String(),
+      "fechaInicio": fechaInicio.toIso8601String(),
       'fechaLimite': fechaLimite.toIso8601String(),
       'categoria': categoria,
       // SQLite no tiene bool, guardamos 1 o 0

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/widgets/add_deuda_button.dart';
-import 'package:money_move/widgets/add_transaction_button.dart';
-import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
 
 class DeudasScreen extends StatefulWidget {

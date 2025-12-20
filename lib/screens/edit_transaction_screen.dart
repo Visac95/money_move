@@ -49,18 +49,18 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     super.dispose();
   }
 
-  void _classifyTitle() {
-    if (manualCategory != null) return;
+  // void _classifyTitle() {
+  //   if (manualCategory != null) return;
 
-    if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 1000), () {
-      final aiProvider = Provider.of<AiCategoryProvider>(
-        context,
-        listen: false,
-      );
-      aiProvider.requestClassification(titleController.text);
-    });
-  }
+  //   if (debounce?.isActive ?? false) debounce!.cancel();
+  //   debounce = Timer(const Duration(milliseconds: 1000), () {
+  //     final aiProvider = Provider.of<AiCategoryProvider>(
+  //       context,
+  //       listen: false,
+  //     );
+  //     aiProvider.requestClassification(titleController.text);
+  //   });
+  // }
 
   Future<void> _saveTransaction() async {
     // --- VALIDACIONES ---

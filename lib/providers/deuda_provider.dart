@@ -17,7 +17,7 @@ class DeudaProvider extends ChangeNotifier {
 
     _deudas.add(d);
 
-    _deudas.sort((a, b) => b.fechaInicio.compareTo(a.fechaInicio));
+    _deudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
 
     notifyListeners();
   }
@@ -36,7 +36,7 @@ class DeudaProvider extends ChangeNotifier {
     if (index != -1){
       _deudas[index] = updatedDeuda;
 
-      _deudas.sort((a, b) => b.fechaInicio.compareTo(a.fechaInicio));
+      _deudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
       notifyListeners();
     }
   }

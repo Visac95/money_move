@@ -15,7 +15,7 @@ class AddDeudaButton extends StatelessWidget {
           );
         },
         child: Icon(Icons.add),
-      );;
+      );
   }
 }
 
