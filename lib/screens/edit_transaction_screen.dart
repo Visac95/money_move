@@ -36,6 +36,8 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
     // Ojo: toStringAsFixed(2) para que se vea bonito "15.50"
     amountController.text = widget.transaction.monto.toStringAsFixed(2);
+
+    descriptionController.text = widget.transaction.description;
   }
 
   @override
@@ -43,6 +45,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     debounce?.cancel();
     titleController.dispose();
     amountController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
