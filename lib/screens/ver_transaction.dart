@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import '../models/transaction.dart';
 
@@ -34,14 +35,7 @@ class VerTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Transaction transaction = Transaction(
-      title: title,
-      description: description,
-      monto: monto,
-      fecha: fecha,
-      categoria: categoria,
-      isExpense: isExpense,
-    );
+    Transaction transaction = TransactionProvider().getTransactionById(id)!;
 
     return Scaffold(
       appBar: AppBar(title: Text("Detalles de la Transación")),

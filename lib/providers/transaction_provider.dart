@@ -68,4 +68,12 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
+  Transaction? getTransactionById(String id) {
+    try {
+      return _transactions.firstWhere((t) => t.id == id);
+    } catch (e) {
+      return null; // Si no se encuentra, retornamos null
+    }
+  }
+
 }
