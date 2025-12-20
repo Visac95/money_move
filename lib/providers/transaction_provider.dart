@@ -67,4 +67,5 @@ class TransactionProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 }

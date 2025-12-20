@@ -18,6 +18,7 @@ class EditTransactionScreen extends StatefulWidget {
 class _EditTransactionScreenState extends State<EditTransactionScreen> {
   var titleController = TextEditingController();
   var amountController = TextEditingController();
+  var descriptionController = TextEditingController();
 
   late bool isExpense;
   Timer? debounce;
@@ -102,6 +103,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     final Transaction transactionActualizada = widget.transaction.update(
       title: titleController.text,
       monto: enteredAmount,
+      description: descriptionController.text,
       categoria: manualCategoryFromProvider ?? categoryToSave,
       isExpense: isExpense,
     );
@@ -130,6 +132,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       body: TransactionForm(
         titleController: titleController,
         amountController: amountController,
+        descriptionController: descriptionController,
         isExpense: isExpense,
         onTypeChanged: (bool value) {
           setState(() {

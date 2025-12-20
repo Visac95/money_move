@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/widgets/add_transaction_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/ultimas_deudas.dart';
 import 'package:money_move/widgets/ultimas_transacciones.dart';

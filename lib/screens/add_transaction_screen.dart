@@ -17,6 +17,7 @@ class AddTransactionScreen extends StatefulWidget {
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
+  final descriptionController = TextEditingController();
   bool isExpense = true;
   Timer? debounce;
   String? manualCategory;
@@ -100,7 +101,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     transactionProvider.addTransaction(
       Transaction(
         title: titleController.text,
-        description: "Sin descripción",
+        description: descriptionController.text,
         monto: enteredAmount,
         fecha: DateTime.now(),
         categoria: categoryToSave,
@@ -132,6 +133,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       body: TransactionForm(
         titleController: titleController,
         amountController: amountController,
+        descriptionController: descriptionController,
         isExpense: isExpense,
         onTypeChanged: (bool value) {
           setState(() {

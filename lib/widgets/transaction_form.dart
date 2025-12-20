@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 class TransactionForm extends StatelessWidget {
   // Recibe los controles desde el padre
   final TextEditingController titleController;
+  final TextEditingController descriptionController;
   final TextEditingController amountController;
 
   // Recibe el estado actual
@@ -22,9 +23,10 @@ class TransactionForm extends StatelessWidget {
   final Transaction? transaction;
   final bool? isEditMode;
 
-   TransactionForm({
+  TransactionForm({
     super.key,
     required this.titleController,
+    required this.descriptionController,
     required this.amountController,
     required this.isExpense,
     required this.onTypeChanged,
@@ -51,14 +53,14 @@ class TransactionForm extends StatelessWidget {
           children: [
             // 3. INPUT DE TÍTULO
             const Text(
-              "Descripción",
+              "Título de la Transacción",
               style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                hintText: "Describe tu movimiento",
+                hintText: "Ej. Compra de zapatos",
                 filled: true,
                 fillColor: Colors.grey.shade50,
                 prefixIcon: Icon(
@@ -76,6 +78,35 @@ class TransactionForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
+
+            // 3. INPUT DE Description
+            const Text(
+              "Descripción de la Transacción",
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                hintText: "Opcional",
+                filled: true,
+                fillColor: Colors.grey.shade50,
+                prefixIcon: Icon(
+                  Icons.edit_note_rounded,
+                  color: Colors.grey.shade400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: activeColor, width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
             // 1. TOGGLE PERSONALIZADO (Gasto vs Ingreso)
             Container(
               padding: const EdgeInsets.all(4),
