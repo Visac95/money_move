@@ -5,11 +5,10 @@ import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:provider/provider.dart';
 
-
 // ignore: must_be_immutable
 class ListaDeudasWidget extends StatefulWidget {
   bool deboList;
-  ListaDeudasWidget({super.key, required this.deboList = true});
+  ListaDeudasWidget({super.key, this.deboList = true});
 
   @override
   State<ListaDeudasWidget> createState() => _ListaDeudasWidget();
@@ -20,7 +19,6 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   void initState() {
     super.initState();
     Provider.of<DeudaProvider>(context, listen: false).loadDeudas();
-    
   }
 
   String _formatDate(DateTime date) {
@@ -30,21 +28,33 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<DeudaProvider>(context);
-    final lista = provider.deudas.where((deuda) => deuda.debo == widget.deboList).toList();
+    final lista = provider.deudas
+        .where((deuda) => deuda.debo == widget.deboList)
+        .toList();
 
-    return Expanded(
-      child: lista.isEmpty
-          ? _buildEmptyState()
-          : ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 80),
-              itemCount: lista.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final deuda = lista[index];
-                return _buildDebtCard(context, deuda, provider);
-              },
-            ),
+    // 1. Quitamos el SizedBox que forzaba la altura
+    if (lista.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        child: _buildEmptyState(),
+      );
+    }
+
+    // 2. Usamos ListView con shrinkWrap y sin scroll propio
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+      itemCount: lista.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
+
+      // LA CLAVE ESTÁ AQUÍ:
+      shrinkWrap: true, // "Encógete al tamaño de tus hijos"
+      physics:
+          const NeverScrollableScrollPhysics(), // "No hagas scroll tú, deja que la pantalla principal lo haga"
+
+      itemBuilder: (context, index) {
+        final deuda = lista[index];
+        return _buildDebtCard(context, deuda, provider);
+      },
     );
   }
 

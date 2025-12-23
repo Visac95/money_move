@@ -16,11 +16,14 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(title: Text("Deudas")),
-      body: Column(
-        children: [
-          ListaDeudasWidget(deboList: true),
-          ListaDeudasWidget(deboList: true)
-        ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            ListaDeudasWidget(deboList: true),
+            ListaDeudasWidget(deboList: false)
+          ],
+        ),
       ),
       floatingActionButton: AddDeudaButton(),
     );
