@@ -7,6 +7,8 @@ import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_value.dart';
 
 class AddDeudaScreen extends StatefulWidget {
   const AddDeudaScreen({super.key});
@@ -95,9 +97,12 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       }
     }
 
+    const uuid = Uuid();
+
     // --- GUARDAR ---
     deudaProvider.addDeuda(
       Deuda(
+        id: uuid.v4(),
         title: titleController.text,
         description: "Sin descripción",
         monto: enteredAmount,

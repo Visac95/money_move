@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/all_transactions.dart';
-import 'package:money_move/screens/deudas_screen.dart';
+import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -13,13 +14,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Widget> screens = [HomeScreen(), AllTransactions(), DeudasScreen()];
+  List<Widget> screens = [HomeScreen(), AllTransactions(), AllDeudasScreen()];
 
   @override
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
     final int currentIndex = uiProvider.selectedIndex;
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: IndexedStack(index: currentIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,

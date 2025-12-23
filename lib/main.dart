@@ -8,14 +8,16 @@ import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
 import './providers/deuda_provider.dart';
 
-
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => TransactionProvider()..loadTransactions()),
-      ChangeNotifierProvider(create: (_)=> AiCategoryProvider()),
-      ChangeNotifierProvider(create: (_)=> UiProvider()),
-      ChangeNotifierProvider(create: (_)=> DeudaProvider())
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TransactionProvider()..loadTransactions(),
+        ),
+        ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
+        ChangeNotifierProvider(create: (_) => UiProvider()),
+        ChangeNotifierProvider(create: (_) => DeudaProvider()),
       ],
       child: const MyApp(),
     ),
@@ -35,14 +37,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primaryColor,
           primary: AppColors.primaryColor, // Botones y barras
-          secondary: AppColors.primaryDark, 
+          secondary: AppColors.primaryDark,
         ),
         scaffoldBackgroundColor: AppColors.scaffoldBackground,
         useMaterial3: true,
       ),
       home: MainScreen(),
-
-      );
-    
+    );
   }
 }

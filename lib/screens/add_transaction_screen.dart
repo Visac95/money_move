@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -120,13 +121,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        
         title: const Text(
           'Nuevo Movimiento',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),

@@ -51,20 +51,20 @@ class DatabaseHelper {
       )
     ''');
 
-    // --- TABLA 2: DEUDAS 
+    // --- TABLA 2: DEUDAS
     await db.execute('''
       CREATE TABLE deudas ( 
         id $idType, 
         title $textType,
-        involucrado $textType,       -- A quién le debo o quién me debe
         description $textType,
-        categoria $textType,
-        monto $doubleType,
-        abono $doubleType,          -- Cantidad ya abonada
-        fechaInicio $textType,   -- Fecha en que se creó la deuda
-        fechaLimite $textType,  -- Fecha para pagar
-        debo $intType,    -- 1 = Yo debo, 0 = Me deben
-        pagada $intType     -- 1 = Ya se pagó, 0 = Pendiente
+        monto $doubleType,   
+        involucrado $textType,  
+        abono $doubleType,       
+        fechaInicio $textType,  
+        fechaLimite $textType,   
+        categoria $textType,   
+        debo $intType,    
+        pagada $intType     
       )
     ''');
   }

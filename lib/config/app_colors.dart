@@ -10,7 +10,7 @@ class AppColors {
 
   // Una versión muy suave para fondos de botones secundarios o chips
   static const Color primaryLight = Color(0xFFEEF2FF);
-
+  static const Color backgroundColor = Color(0xFFEEF2FF);
   // --- COLORES FINANCIEROS (Ya los tienes) ---
   static const Color expenseColor = Color(0xFFEF4444); // Rojo vibrante moderno
   static const Color incomeColor = Color(0xFF10B981); // Verde esmeralda moderno

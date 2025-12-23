@@ -60,7 +60,7 @@ class TransactionForm extends StatelessWidget {
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                hintText: "Ej. Compra de zapatos",
+                hintText: "Escribe el titulo de tu movimiento",
                 filled: true,
                 fillColor: Colors.grey.shade50,
                 prefixIcon: Icon(

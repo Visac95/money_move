@@ -49,7 +49,7 @@ class DeudaForm extends StatelessWidget {
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                hintText: "Escribe el titulo de tu movimiento",
+                hintText: "Ej. Compra de zapatos",
                 filled: true,
                 fillColor: Colors.grey.shade50,
                 prefixIcon: Icon(
