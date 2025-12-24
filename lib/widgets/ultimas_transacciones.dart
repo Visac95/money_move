@@ -53,7 +53,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: lista.length > 2 ? 2 : lista.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, __) => const SizedBox(height: 2),
                   itemBuilder: (context, index) {
                     final transaction = lista[index];
                     return ListTile(
@@ -127,7 +127,6 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   },
                 ),
 
-          const SizedBox(height: 16),
 
           // 4. BOTÓN VER TODAS
           SizedBox(

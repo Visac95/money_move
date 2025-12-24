@@ -127,7 +127,6 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   },
                 ),
 
-          const SizedBox(height: 16),
 
           // 4. BOTÓN VER TODAS
           SizedBox(
@@ -147,7 +146,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Ver todas las transacciones",
+                    "Ver todas las deudas",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 8),

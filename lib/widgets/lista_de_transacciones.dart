@@ -21,7 +21,7 @@ class ListaDeTransacciones extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
               itemCount: lista.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              separatorBuilder: (context, index) => const SizedBox(height: 15),
               itemBuilder: (context, index) {
                 final transaction = lista[index];
                 return _TransactionCard(transaction: transaction);
