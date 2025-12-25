@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'MoneyMove';
+  String get appTitle => 'MoneyMov';
 
   @override
   String get noDescription => 'No description';
@@ -39,7 +39,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addTransaction => 'Add Transaction';
 
   @override
-  String get chooseCategoryManualTitle => 'Choose category for your transaction';
+  String get chooseCategoryManualTitle =>
+      'Choose category for your transaction';
 
   @override
   String get editTransaccionText => 'Edit Transaction';
@@ -63,11 +64,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeLanguage => 'Language changed';
 
   @override
-  String get seeAllTransactions => 'See all transactions';
+  String get seeAllTransactionsText => 'See all transactions';
 
   @override
-  String get textoRandom => 'Este es un texto de ejemplo';
+  String get textRandom => 'Random text';
 
   @override
-  String get greetingMessage => '¡Bienvenido a MoneyMove!';
+  String get otroTexto => 'Some other text';
 }

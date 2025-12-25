@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "appTitle": "MoneyMove",
+    "appTitle": "MoneyMov",
     "noDescription": "No description",
     "editText": "Edit",
     "deleteText": "Delete",
@@ -18,5 +18,7 @@
     "addDeuda": "Add Debt",
     "editDeudaText": "Edit Debt",
     "changeLanguage": "Language changed",
-    "seeAllTransactionsText": "See all transactions"
+    "seeAllTransactionsText": "See all transactions",
+    "textRandom" : "Random text",
+    "otroTexto": "Some other text"
 }

@@ -39,7 +39,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addTransaction => 'Añadir Movimiento';
 
   @override
-  String get chooseCategoryManualTitle => 'Elija la categoría para su movimiento';
+  String get chooseCategoryManualTitle =>
+      'Elija la categoría para su movimiento';
 
   @override
   String get editTransaccionText => 'Editar Movimiento';
@@ -63,11 +64,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get changeLanguage => 'Idioma cambiado';
 
   @override
-  String get seeAllTransactions => 'See all transactions';
+  String get seeAllTransactionsText => 'Ver todos los movimientos';
 
   @override
-  String get textoRandom => 'Este es un texto de ejemplo';
+  String get textRandom => 'Texto aleatorio';
 
   @override
-  String get greetingMessage => '¡Bienvenido a MoneyMove!';
+  String get otroTexto => 'Some other text';
 }
