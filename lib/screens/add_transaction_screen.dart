@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+// Eliminado: import 'package:money_move/config/app_strings.dart';
+import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRECTO
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -66,28 +68,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       listen: false,
     );
 
-    // 1. OBTENEMOS EL PROVIDER UNA SOLA VEZ (con listen: false)
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
     // 2. OBTENEMOS LA CATEGORÍA SUGERIDA
     String categoryToSave = aiProvider.suggestedCategory;
 
-    // --- AQUÍ ESTABA EL ERROR, BORRÉ LA SEGUNDA DECLARACIÓN ---
-
     // 3. VERIFICAMOS SI HAY UNA CATEGORÍA MANUAL EN EL PROVIDER
-    // Usamos la misma variable 'aiProvider' que declaramos arriba
     String? manualCategoryFromProvider = aiProvider.manualCategory;
 
     // Lógica de decisión:
     if (manualCategoryFromProvider != null) {
-      // Si el usuario eligió manual, usamos esa
       categoryToSave = manualCategoryFromProvider;
     } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
-      // Si no hay manual y la IA falló, abrimos ventana
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return const SelectCategoryWindow(); // Asumo que este widget existe
+          return const SelectCategoryWindow();
         },
       );
 
@@ -120,17 +116,25 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Inicializamos la variable de localización
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        
-        title: const Text(
-          'Nuevo Movimiento',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        // Quitamos 'const' y usamos la variable l10n
+        title: Text(
+          l10n.addTransaction, 
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.transactionListIconColor,
+          ),
         ),
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(
+          color: AppColors.transactionListIconColor,
+        ),
       ),
       body: TransactionForm(
         titleController: titleController,

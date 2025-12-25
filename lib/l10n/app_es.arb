@@ -1,0 +1,20 @@
+{
+    "@@locale": "es",
+    "appTitle": "MoneyMove",
+    "noDescription": "Sin descripción",
+    "editText": "Editar",
+    "deleteText": "Eliminar",
+    "navigationTextHome": "Inicio",
+    "navigationTextTransactions": "Movimientos",
+    "navigationTextDeudas": "Deudas",
+    "titleTransactionsScreen": "Movimientos",
+    "noTransactionsYet": "No hay movimientos aún 😴",
+    "addTransaction": "Añadir Movimiento",
+    "chooseCategoryManualTitle": "Elija la categoría para su movimiento",
+    "editTransaccionText": "Editar Movimiento",
+    "deletedTransactionMessage": "Movimiento eliminado",
+    "titleDeudasScreen": "Deudas",
+    "noDeudasYet": "No hay deudas aún 😴",
+    "addDeuda": "Añadir Deuda",
+    "editDeudaText": "Editar Deuda"
+}

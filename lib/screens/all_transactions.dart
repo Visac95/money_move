@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/widgets/add_transaction_button.dart';
 import 'package:money_move/widgets/lista_de_transacciones.dart';
 
-class AllTransactions extends StatefulWidget {
+class AllTransactions extends StatelessWidget {
   const AllTransactions({super.key});
 
-  @override
-  State<AllTransactions> createState() => _AllTransactionsState();
-}
-
-class _AllTransactionsState extends State<AllTransactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(title: Center(child: Text("Transacciones"))),
-      body: ListaDeTransacciones(),
-      floatingActionButton: AddTransactionButton(),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: AppColors.backgroundColor,
+        elevation: 0,
+        // 3. REEMPLAZAMOS AppStrings por S.of(context)
+        // Asegúrate de que 'transactionsTitle' sea el nombre exacto que pusiste en tu archivo .arb
+        title: Text(
+          AppLocalizations.of(context)!.titleTransactionsScreen, 
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: const ListaDeTransacciones(),
+      floatingActionButton: const AddTransactionButton(),
     );
   }
 }

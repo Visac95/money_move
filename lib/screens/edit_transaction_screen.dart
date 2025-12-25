@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -124,13 +126,13 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Editar Movimiento',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        title: Text(
+          AppLocalizations.of(context)!.editTransaccionText,
+          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.transactionListIconColor),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: AppColors.transactionListIconColor),
       ),
       body: TransactionForm(
         titleController: titleController,

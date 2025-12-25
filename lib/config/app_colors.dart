@@ -23,4 +23,6 @@ class AppColors {
   static const Color scaffoldBackground = Color(0xFFF9FAFB); // Blanco humo
 
   static const Color transactionListIconColor = Color.fromARGB(255, 33, 33, 33);
+
+  static const Color white = Colors.white;
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/l10n/app_localizations.dart'; 
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
@@ -8,7 +10,6 @@ import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_value.dart';
 
 class AddDeudaScreen extends StatefulWidget {
   const AddDeudaScreen({super.key});
@@ -64,29 +65,25 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     }
 
     final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
-
-    // 1. OBTENEMOS EL PROVIDER UNA SOLA VEZ (con listen: false)
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
+
+    // Guardamos la referencia de los textos antes de cualquier await para evitar problemas de contexto
+    final l10n = AppLocalizations.of(context)!;
 
     // 2. OBTENEMOS LA CATEGORÍA SUGERIDA
     String categoryToSave = aiProvider.suggestedCategory;
 
-    // --- AQUÍ ESTABA EL ERROR, BORRÉ LA SEGUNDA DECLARACIÓN ---
-
     // 3. VERIFICAMOS SI HAY UNA CATEGORÍA MANUAL EN EL PROVIDER
-    // Usamos la misma variable 'aiProvider' que declaramos arriba
     String? manualCategoryFromProvider = aiProvider.manualCategory;
 
     // Lógica de decisión:
     if (manualCategoryFromProvider != null) {
-      // Si el usuario eligió manual, usamos esa
       categoryToSave = manualCategoryFromProvider;
     } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
-      // Si no hay manual y la IA falló, abrimos ventana
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return const SelectCategoryWindow(); // Asumo que este widget existe
+          return const SelectCategoryWindow();
         },
       );
 
@@ -104,7 +101,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       Deuda(
         id: uuid.v4(),
         title: titleController.text,
-        description: "Sin descripción",
+        description: l10n.noDescription, // <--- CAMBIO AQUÍ
         monto: enteredAmount,
         involucrado: involucradoController.text,
         abono: 0.0,
@@ -126,16 +123,19 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Variable auxiliar para acortar código
+    final l10n = AppLocalizations.of(context)!; 
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          "Añadir Deuda",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          l10n.addDeuda, // <--- CAMBIO AQUÍ
+          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.transactionListIconColor),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: AppColors.transactionListIconColor),
       ),
       body: DeudaForm(
         titleController: titleController,

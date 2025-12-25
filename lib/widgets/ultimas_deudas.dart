@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/config/app_strings.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +32,11 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(32, 0, 0, 0),
+            color: AppColors.textLight,
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -46,8 +47,8 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
           lista.isEmpty
               ? const Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("No hay transacciones aún 😴",
-                      style: TextStyle(color: Colors.grey)), // Usamos grey si textLight no está definido
+                  child: Text(AppStrings.noDeudasYet,
+                      style: TextStyle(color: AppColors.textLight)), // Usamos grey si textLight no está definido
                 )
               : ListView.separated(
                   shrinkWrap: true,
@@ -79,7 +80,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: AppColors.transactionListIconColor,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -106,16 +107,16 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                             // B. Separador (Puntito)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                              child: Icon(Icons.circle, size: 4, color: Colors.grey.shade300),
+                              child: Icon(Icons.circle, size: 4, color: AppColors.textLight),
                             ),
 
                             // C. La Fecha
-                            Icon(Icons.calendar_today_rounded, size: 12, color: Colors.grey.shade400),
+                            Icon(Icons.calendar_today_rounded, size: 12, color: AppColors.textLight),
                             const SizedBox(width: 4),
                             Text(
                               _formatDate(transaction.fechaInicio),
                               style: TextStyle(
-                                color: Colors.grey.shade500,
+                                color: AppColors.textLight,
                                 fontSize: 12, // Un pelín más pequeña para que quepa bien
                                 fontWeight: FontWeight.w500,
                               ),

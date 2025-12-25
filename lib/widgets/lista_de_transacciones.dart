@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/config/app_strings.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/screens/ver_transaction.dart';
@@ -38,20 +39,28 @@ class ListaDeTransacciones extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: AppColors.textLight,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.receipt_long_rounded, size: 50, color: Colors.grey.shade400),
+            child: Icon(
+              Icons.receipt_long_rounded,
+              size: 50,
+              color: AppColors.white,
+            ),
           ),
           const SizedBox(height: 20),
           Text(
             "Sin movimientos",
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppColors.textLight,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 5),
-           Text(
+          Text(
             "Tus transacciones aparecerán aquí",
-            style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            style: TextStyle(color: AppColors.textLight, fontSize: 14),
           ),
         ],
       ),
@@ -73,15 +82,17 @@ class _TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isExpense = transaction.isExpense;
-    final Color amountColor = isExpense ? AppColors.expenseColor : AppColors.incomeColor;
-    
+    final Color amountColor = isExpense
+        ? AppColors.expenseColor
+        : AppColors.incomeColor;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(24), // Bordes más redondeados
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF909090).withOpacity(0.08), // Sombra muy sutil
+            color: AppColors.textLight, // Sombra muy sutil
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -113,7 +124,9 @@ class _TransactionCard extends StatelessWidget {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1), // Fondo suave
+                    color: AppColors.primaryColor.withOpacity(
+                      0.1,
+                    ), // Fondo suave
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -122,7 +135,7 @@ class _TransactionCard extends StatelessWidget {
                     size: 26,
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
 
                 // 2. TÍTULO Y FECHA
@@ -135,7 +148,7 @@ class _TransactionCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: Color(0xFF2D3142), // Color oscuro suave
+                          color: AppColors.transactionListIconColor, // Color oscuro suave
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -143,12 +156,16 @@ class _TransactionCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          Icon(Icons.access_time_rounded, size: 12, color: Colors.grey.shade400),
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 12,
+                            color: AppColors.textLight,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             _formatDate(transaction.fecha),
                             style: TextStyle(
-                              color: Colors.grey.shade500,
+                              color: AppColors.textLight,
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
@@ -164,7 +181,8 @@ class _TransactionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      (isExpense ? '- ' : '+ ') + transaction.monto.toStringAsFixed(2),
+                      (isExpense ? '- ' : '+ ') +
+                          transaction.monto.toStringAsFixed(2),
                       style: TextStyle(
                         color: amountColor,
                         fontWeight: FontWeight.w800, // Extra bold para números
@@ -191,21 +209,28 @@ class _TransactionCard extends StatelessWidget {
   Widget _buildPopupMenu(BuildContext context) {
     return PopupMenuButton(
       padding: EdgeInsets.zero,
-      icon: Icon(Icons.more_horiz, size: 20, color: AppColors.textDark), // Icono muy sutil
+      icon: Icon(
+        Icons.more_horiz,
+        size: 20,
+        color: AppColors.textDark,
+      ), // Icono muy sutil
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       onSelected: (value) {
         if (value == "borrar") {
-          Provider.of<TransactionProvider>(context, listen: false)
-              .deleteTransaction(transaction.id);
+          Provider.of<TransactionProvider>(
+            context,
+            listen: false,
+          ).deleteTransaction(transaction.id);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Transacción eliminada')),
+            const SnackBar(content: Text(AppStrings.deletedTransactionMessage)),
           );
         }
         if (value == "editar") {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => EditTransactionScreen(transaction: transaction),
+              builder: (context) =>
+                  EditTransactionScreen(transaction: transaction),
             ),
           );
         }
@@ -215,9 +240,9 @@ class _TransactionCard extends StatelessWidget {
           value: "editar",
           child: Row(
             children: [
-              Icon(Icons.edit_rounded, color: Colors.blueGrey),
+              Icon(Icons.edit_rounded, color: AppColors.incomeColor),
               SizedBox(width: 10),
-              Text("Editar"),
+              Text(AppStrings.editText),
             ],
           ),
         ),
@@ -227,7 +252,7 @@ class _TransactionCard extends StatelessWidget {
             children: [
               Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
               SizedBox(width: 10),
-              Text("Eliminar", style: TextStyle(color: Colors.redAccent)),
+              Text(AppStrings.deleteText, style: TextStyle(color: Colors.redAccent)),
             ],
           ),
         ),

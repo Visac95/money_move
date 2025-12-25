@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+// Eliminado: import 'package:money_move/config/app_strings.dart';
+import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRECTO
 import 'package:money_move/widgets/add_deuda_button.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
 
@@ -13,19 +15,26 @@ class AllDeudasScreen extends StatefulWidget {
 class _AllDeudasScreenState extends State<AllDeudasScreen> {
   @override
   Widget build(BuildContext context) {
+    // Inicializamos la variable de localización
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(title: Text("Deudas")),
+      appBar: AppBar(
+        title: Center(
+          child: Text(l10n.titleDeudasScreen), // <--- CAMBIO AQUÍ
+        ),
+      ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             ListaDeudasWidget(deboList: true),
-            ListaDeudasWidget(deboList: false)
+            ListaDeudasWidget(deboList: false),
           ],
         ),
       ),
-      floatingActionButton: AddDeudaButton(),
+      floatingActionButton: const AddDeudaButton(),
     );
   }
 }
