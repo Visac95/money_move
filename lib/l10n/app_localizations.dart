@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-
+//flutter gen-l10n
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 
@@ -202,6 +202,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language changed'**
   String get changeLanguage;
+
+  /// No description provided for @seeAllTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'See all transactions'**
+  String get seeAllTransactions;
+
+  /// No description provided for @textoRandom.
+  ///
+  /// In en, this message translates to:
+  /// **'Este es un texto de ejemplo'**
+  String get textoRandom;
+
+  /// No description provided for @greetingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'¡Bienvenido a MoneyMove!'**
+  String get greetingMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

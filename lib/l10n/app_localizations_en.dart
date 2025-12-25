@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
-
+//flutter gen-l10n
 // ignore_for_file: type=lint
 
 /// The translations for English (`en`).
@@ -61,4 +61,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Language changed';
+
+  @override
+  String get seeAllTransactions => 'See all transactions';
+
+  @override
+  String get textoRandom => 'Este es un texto de ejemplo';
+
+  @override
+  String get greetingMessage => '¡Bienvenido a MoneyMove!';
 }
+//flutter gen-l10n

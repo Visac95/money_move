@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
-
+//flutter gen-l10n
 // ignore_for_file: type=lint
 
 /// The translations for Spanish Castilian (`es`).
@@ -61,4 +61,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Idioma cambiado';
+
+  @override
+  String get seeAllTransactions => 'Ver todos los movimientos';
+
+  @override
+  String get textoRandom => 'Este es un texto de ejemplo';
+
+  @override
+  String get greetingMessage => '¡Bienvenido a MoneyMove!';
 }
