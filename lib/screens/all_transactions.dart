@@ -15,8 +15,6 @@ class AllTransactions extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
-        // 3. REEMPLAZAMOS AppStrings por S.of(context)
-        // Asegúrate de que 'transactionsTitle' sea el nombre exacto que pusiste en tu archivo .arb
         title: Text(
           AppLocalizations.of(context)!.titleTransactionsScreen, 
           style: const TextStyle(fontWeight: FontWeight.bold),

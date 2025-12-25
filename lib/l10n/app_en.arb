@@ -18,7 +18,5 @@
     "addDeuda": "Add Debt",
     "editDeudaText": "Edit Debt",
     "changeLanguage": "Language changed",
-    "seeAllTransactions": "See all transactions",
-    "textoRandom": "Este es un texto de ejemplo",
-    "greetingMessage": "¡Bienvenido a MoneyMove!"
+    "seeAllTransactionsText": "See all transactions"
 }
