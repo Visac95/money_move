@@ -196,6 +196,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Debt'**
   String get editDeudaText;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed'**
+  String get changeLanguage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

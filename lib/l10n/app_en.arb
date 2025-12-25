@@ -16,5 +16,7 @@
     "titleDeudasScreen": "Debts",
     "noDeudasYet": "No debts yet 😴",
     "addDeuda": "Add Debt",
-    "editDeudaText": "Edit Debt"
+    "editDeudaText": "Edit Debt",
+    "changeLanguage": "Language changed",
+    "SeeAllTransactions": "See all transactions"
 }

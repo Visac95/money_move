@@ -58,4 +58,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editDeudaText => 'Editar Deuda';
+
+  @override
+  String get changeLanguage => 'Idioma cambiado';
 }

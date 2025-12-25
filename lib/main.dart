@@ -3,6 +3,7 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/providers/locale_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/main_screen.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
       ],
       child: const MyApp(),
     ),
@@ -30,28 +32,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      //title: AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: const [
-        AppLocalizations.delegate, // Tu delegado generado
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales, // Idiomas soportados
-      theme: ThemeData(
-        // Aquí aplicamos tu nuevo color índigo a toda la app
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryColor,
-          primary: AppColors.primaryColor, // Botones y barras
-          secondary: AppColors.primaryDark,
-        ),
-        scaffoldBackgroundColor: AppColors.scaffoldBackground,
-        useMaterial3: true,
-      ),
-      home: MainScreen(),
+    return Consumer<LocaleProvider>(
+      builder: (context, localeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          locale: localeProvider.locale,
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          //title: AppLocalizations.of(context)!.appTitle,
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // Tu delegado generado
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales:
+              AppLocalizations.supportedLocales, // Idiomas soportados
+          theme: ThemeData(
+            // Aquí aplicamos tu nuevo color índigo a toda la app
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primaryColor,
+              primary: AppColors.primaryColor, // Botones y barras
+              secondary: AppColors.primaryDark,
+            ),
+            scaffoldBackgroundColor: AppColors.scaffoldBackground,
+            useMaterial3: true,
+          ),
+          home: MainScreen(),
+        );
+      },
     );
   }
 }
