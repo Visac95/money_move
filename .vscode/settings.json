@@ -1,6 +1,8 @@
 {
-    "i18n-ally.localesPaths": [
-        "../../../../../../../../Users/09796/OneDrive/Documentos/A_Samuel/PROYECTOS.V/money_move/lib/l10n"
-    ]
+    "i18n-ally.localesPaths": ["lib/l10n"],
+    "i18n-ally.sourceLanguage": "en", 
+    "i18n-ally.displayLanguage": "es",
+    "i18n-ally.keystyle": "flat",
+    "cmake.ignoreCMakeListsMissing": true
    
 }

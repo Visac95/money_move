@@ -211,18 +211,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See all transactions'**
   String get seeAllTransactionsText;
-
-  /// No description provided for @textRandom.
-  ///
-  /// In en, this message translates to:
-  /// **'Random text'**
-  String get textRandom;
-
-  /// No description provided for @otroTexto.
-  ///
-  /// In en, this message translates to:
-  /// **'Some other text'**
-  String get otroTexto;
 }
 
 class _AppLocalizationsDelegate

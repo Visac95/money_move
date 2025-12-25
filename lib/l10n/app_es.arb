@@ -18,7 +18,5 @@
     "addDeuda": "Añadir Deuda",
     "editDeudaText": "Editar Deuda",
     "changeLanguage": "Idioma cambiado",
-    "seeAllTransactionsText": "Ver todos los movimientos",
-    "textRandom" : "Texto aleatorio",
-    "otroTexto": "Some other text"
+    "seeAllTransactionsText": "Ver todos los movimientos"
 }

@@ -65,10 +65,4 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get seeAllTransactionsText => 'Ver todos los movimientos';
-
-  @override
-  String get textRandom => 'Texto aleatorio';
-
-  @override
-  String get otroTexto => 'Some other text';
 }

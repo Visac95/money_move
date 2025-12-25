@@ -65,10 +65,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeAllTransactionsText => 'See all transactions';
-
-  @override
-  String get textRandom => 'Random text';
-
-  @override
-  String get otroTexto => 'Some other text';
 }
