@@ -21,5 +21,39 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "SeeAllTransactions": MessageLookupByLibrary.simpleMessage(
+      "See all transactions",
+    ),
+    "addDeuda": MessageLookupByLibrary.simpleMessage("Add Debt"),
+    "addTransaction": MessageLookupByLibrary.simpleMessage("Add Transaction"),
+    "appTitle": MessageLookupByLibrary.simpleMessage("MoneyMove"),
+    "changeLanguage": MessageLookupByLibrary.simpleMessage("Language changed"),
+    "chooseCategoryManualTitle": MessageLookupByLibrary.simpleMessage(
+      "Choose category for your transaction",
+    ),
+    "deleteText": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deletedTransactionMessage": MessageLookupByLibrary.simpleMessage(
+      "Transaction deleted",
+    ),
+    "editDeudaText": MessageLookupByLibrary.simpleMessage("Edit Debt"),
+    "editText": MessageLookupByLibrary.simpleMessage("Edit"),
+    "editTransaccionText": MessageLookupByLibrary.simpleMessage(
+      "Edit Transaction",
+    ),
+    "navigationTextDeudas": MessageLookupByLibrary.simpleMessage("Debts"),
+    "navigationTextHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "navigationTextTransactions": MessageLookupByLibrary.simpleMessage(
+      "Transactions",
+    ),
+    "noDescription": MessageLookupByLibrary.simpleMessage("No description"),
+    "noDeudasYet": MessageLookupByLibrary.simpleMessage("No debts yet 😴"),
+    "noTransactionsYet": MessageLookupByLibrary.simpleMessage(
+      "No transactions yet 😴",
+    ),
+    "titleDeudasScreen": MessageLookupByLibrary.simpleMessage("Debts"),
+    "titleTransactionsScreen": MessageLookupByLibrary.simpleMessage(
+      "Transactions",
+    ),
+  };
 }

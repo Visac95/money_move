@@ -18,5 +18,6 @@
     "addDeuda": "Add Debt",
     "editDeudaText": "Edit Debt",
     "changeLanguage": "Language changed",
-    "SeeAllTransactions": "See all transactions"
+    "SeeAllTransactions": "See all transactions",
+    "Texto random": "Este es un texto de ejemplo"
 }
