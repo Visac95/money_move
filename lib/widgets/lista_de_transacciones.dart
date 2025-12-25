@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
-import 'package:money_move/config/app_strings.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/screens/ver_transaction.dart';
@@ -223,7 +223,7 @@ class _TransactionCard extends StatelessWidget {
             listen: false,
           ).deleteTransaction(transaction.id);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(AppStrings.deletedTransactionMessage)),
+             SnackBar(content: Text(AppLocalizations.of(context)!.deletedTransactionMessage)),
           );
         }
         if (value == "editar") {
@@ -236,23 +236,23 @@ class _TransactionCard extends StatelessWidget {
         }
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(
+         PopupMenuItem(
           value: "editar",
           child: Row(
             children: [
               Icon(Icons.edit_rounded, color: AppColors.incomeColor),
               SizedBox(width: 10),
-              Text(AppStrings.editText),
+              Text(AppLocalizations.of(context)!.editText),
             ],
           ),
         ),
-        const PopupMenuItem(
+         PopupMenuItem(
           value: "borrar",
           child: Row(
             children: [
               Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
               SizedBox(width: 10),
-              Text(AppStrings.deleteText, style: TextStyle(color: Colors.redAccent)),
+              Text(AppLocalizations.of(context)!.deleteText, style: TextStyle(color: Colors.redAccent)),
             ],
           ),
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
-import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:provider/provider.dart';

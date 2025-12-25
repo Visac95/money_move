@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
-import 'package:money_move/config/app_strings.dart';
+import 'package:money_move/l10n/app_localizations.dart';
+
 
 class SelectCategoryWindow extends StatefulWidget {
   const SelectCategoryWindow({super.key});
@@ -13,7 +14,7 @@ class _SelectCategoryWindowState extends State<SelectCategoryWindow> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: Text(AppStrings.chooseCategoryManualTitle),
+      title: Text(AppLocalizations.of(context)!.chooseCategoryManualTitle),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       children: AppConstants.categories.map((categoryItem) {
         return SimpleDialogOption(

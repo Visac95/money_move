@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
-import 'package:money_move/config/app_strings.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:provider/provider.dart';
@@ -45,9 +45,9 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
       child: Column(
         children: [
           lista.isEmpty
-              ? const Padding(
+              ?  Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text(AppStrings.noDeudasYet,
+                  child: Text(AppLocalizations.of(context)!.noDeudasYet,
                       style: TextStyle(color: AppColors.textLight)), // Usamos grey si textLight no está definido
                 )
               : ListView.separated(
