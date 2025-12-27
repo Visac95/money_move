@@ -15,7 +15,6 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
   Widget build(BuildContext context) {
     // Inicializamos la variable de localización
     final l10n = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(

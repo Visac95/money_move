@@ -225,7 +225,7 @@ class VerTransaction extends StatelessWidget {
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          EditTransactionScreen(transaction: transaction!),
+                          EditTransactionScreen(transaction: transaction),
                     ),
                   ),
                   icon: Icon(Icons.edit_rounded, color: colorScheme.surface), 
@@ -286,7 +286,7 @@ class VerTransaction extends StatelessWidget {
           style: TextStyle(
             fontSize: 16, 
             fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface, // Importante: Color adaptable
+            color: theme.colorScheme.onSurface, 
           ),
         ),
       ],

@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
               outline: AppColors
                   .lightTextSecondary, // Color para textos secundarios/iconos grises
               error: AppColors.expense,
+              outlineVariant: AppColors.lightOutlineVariant,
             ),
             // Configuramos las tarjetas por defecto
             cardTheme: CardThemeData(
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
             ),
             // Iconos por defecto
             iconTheme: const IconThemeData(color: AppColors.lightIcon),
+            
           ),
 
           // TEMA OSCURO (Noche)
@@ -86,6 +88,7 @@ class MyApp extends StatelessWidget {
               onSurface: AppColors.darkTextPrimary, // El texto será blanco
               outline: AppColors.darkTextSecondary,
               error: AppColors.expense,
+              outlineVariant: AppColors.darkOutlineVariant,
             ),
             cardTheme: CardThemeData(
               color: AppColors.darkSurface,
