@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'MoneyMov';
+  String get appTitle => 'MoneyMove';
 
   @override
   String get noDescription => 'No description';
@@ -30,6 +30,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navigationTextDeudas => 'Debts';
 
   @override
+  String get titleText => 'Title';
+
+  @override
+  String get dateText => 'Date';
+
+  @override
+  String get descriptionText => 'Description';
+
+  @override
+  String get category => 'Category';
+
+  @override
   String get titleTransactionsScreen => 'Transactions';
 
   @override
@@ -44,6 +56,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editTransaccionText => 'Edit Transaction';
+
+  @override
+  String get deleteTransactionText => 'Delete Transaction';
 
   @override
   String get deletedTransactionMessage => 'Transaction deleted';
@@ -65,4 +80,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeAllTransactionsText => 'See all transactions';
+
+  @override
+  String get transactionNotExist => 'The transaction does not exist';
+
+  @override
+  String get transactionDetailsTitle => 'Transaction Details';
+
+  @override
+  String get expenseMade => 'Expense Made';
+
+  @override
+  String get incomeReceived => 'Income Received';
 }

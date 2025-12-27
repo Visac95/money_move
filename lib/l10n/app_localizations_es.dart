@@ -30,6 +30,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navigationTextDeudas => 'Deudas';
 
   @override
+  String get titleText => 'Título';
+
+  @override
+  String get dateText => 'Fecha';
+
+  @override
+  String get descriptionText => 'Descripción';
+
+  @override
+  String get category => 'Categoría';
+
+  @override
   String get titleTransactionsScreen => 'Movimientos';
 
   @override
@@ -44,6 +56,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editTransaccionText => 'Editar Movimiento';
+
+  @override
+  String get deleteTransactionText => 'Eliminar Movimiento';
 
   @override
   String get deletedTransactionMessage => 'Movimiento eliminado';
@@ -65,4 +80,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get seeAllTransactionsText => 'Ver todos los movimientos';
+
+  @override
+  String get transactionNotExist => 'La transacción no existe';
+
+  @override
+  String get transactionDetailsTitle => 'Detalle del Movimiento';
+
+  @override
+  String get expenseMade => 'Gasto Realizado';
+
+  @override
+  String get incomeReceived => 'Ingreso Recibido';
 }

@@ -3,13 +3,14 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
 
 class VerTransaction extends StatelessWidget {
   final String id;
-  // Estos parámetros ya no son estrictamente necesarios si los sacas del provider,
-  // pero los dejaré por compatibilidad con tu código actual.
+  // Estos parámetros ya no son estrictamente necesarios si los saco del provider,
+  // pero los dejaré por compatibilidad con el código actual.
   final String title;
   final String description;
   final double monto;
@@ -40,56 +41,65 @@ class VerTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     // Obtenemos la transacción actualizada del provider
     final provider = Provider.of<TransactionProvider>(context);
-    
+
     // Manejo de seguridad por si se borró y la pantalla sigue abierta
     Transaction? transaction = provider.getTransactionById(id);
-    
+
     if (transaction == null) {
-      return Scaffold(body: Center(child: Text("La transacción no existe")));
+      return Scaffold(
+        body: Center(
+          child: Text(AppLocalizations.of(context)!.transactionNotExist),
+        ),
+      );
     }
 
     // Definimos el color principal según si es gasto o ingreso
-    final Color mainColor = transaction.isExpense 
-        ? AppColors.expenseColor 
+    final Color mainColor = transaction.isExpense
+        ? AppColors.expenseColor
         : AppColors.incomeColor;
 
     return Scaffold(
-      backgroundColor: AppColors.primaryLight, // Asegúrate de tener un color de fondo suave
+      backgroundColor:
+          AppColors.primaryLight, // Asegúrate de tener un color de fondo suave
       appBar: AppBar(
-        title: const Text("Detalle de Movimiento"),
+        title: Text(AppLocalizations.of(context)!.transactionDetailsTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new, color: AppColors.textDark),
-            onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.textDark),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView( // Para evitar overflow en pantallas pequeñas
+      body: SingleChildScrollView(
+        // Para evitar overflow en pantallas pequeñas
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              
+
               // 1. EL HÉROE (El Monto)
               // Lo ponemos arriba y gigante. Es lo que el usuario quiere ver.
-              Hero( // Animación bonita si vienes de la lista
+              Hero(
+                // Animación bonita si vienes de la lista
                 tag: transaction.id,
                 child: Text(
                   (transaction.isExpense ? '- ' : '+ ') +
                       "\$${transaction.monto.toStringAsFixed(2)}",
                   style: TextStyle(
                     color: mainColor,
-                    fontSize: 48, 
+                    fontSize: 48,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -1.5,
                   ),
                 ),
               ),
               Text(
-                transaction.isExpense ? "Gasto Realizado" : "Ingreso Recibido",
+                transaction.isExpense
+                    ? AppLocalizations.of(context)!.expenseMade
+                    : AppLocalizations.of(context)!.incomeReceived,
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 16,
@@ -110,7 +120,7 @@ class VerTransaction extends StatelessWidget {
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
-                    )
+                    ),
                   ],
                 ),
                 child: Column(
@@ -125,7 +135,9 @@ class VerTransaction extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(
-                            AppConstants.getIconForCategory(transaction.categoria),
+                            AppConstants.getIconForCategory(
+                              transaction.categoria,
+                            ),
                             size: 30,
                             color: mainColor,
                           ),
@@ -135,8 +147,11 @@ class VerTransaction extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Categoría",
-                              style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                              AppLocalizations.of(context)!.category,
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 12,
+                              ),
                             ),
                             Text(
                               transaction.categoria,
@@ -149,28 +164,40 @@ class VerTransaction extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 20),
                     const Divider(), // Usar Widget Divider es mejor que Container width:1000
                     const SizedBox(height: 20),
 
                     // Título y Descripción
-                    _buildDetailRow("Título", transaction.title),
+                    _buildDetailRow(
+                      AppLocalizations.of(context)!.titleText,
+                      transaction.title,
+                    ),
                     const SizedBox(height: 15),
-                    _buildDetailRow("Fecha", _formatDate(transaction.fecha)),
+                    _buildDetailRow(
+                      AppLocalizations.of(context)!.dateText,
+                      _formatDate(transaction.fecha),
+                    ),
                     const SizedBox(height: 15),
-                    
+
                     // Descripción con manejo de texto largo
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Descripción", style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                          Text(
+                            AppLocalizations.of(context)!.descriptionText,
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 12,
+                            ),
+                          ),
                           const SizedBox(height: 5),
                           Text(
-                            transaction.description.isEmpty 
-                                ? "Sin descripción" 
+                            transaction.description.isEmpty
+                                ? AppLocalizations.of(context)!.noDescription
                                 : transaction.description,
                             style: const TextStyle(fontSize: 16),
                           ),
@@ -196,9 +223,13 @@ class VerTransaction extends StatelessWidget {
                     ),
                   ),
                   icon: const Icon(Icons.edit_rounded, color: Colors.white),
-                  label: const Text("Editar Transacción", style: TextStyle(color: Colors.white, fontSize: 16)),
+                  label: Text(
+                    AppLocalizations.of(context)!.editTransaccionText,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryDark, // Usamos el color de marca, no verde
+                    backgroundColor: AppColors
+                        .primaryDark, // Usamos el color de marca, no verde
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -206,7 +237,7 @@ class VerTransaction extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 15),
 
               // Botón Secundario: ELIMINAR (Estilo "Peligro" pero sutil)
@@ -216,12 +247,15 @@ class VerTransaction extends StatelessWidget {
                 child: TextButton.icon(
                   // AQUÍ CONECTAMOS EL POPUP QUE HICIMOS ANTES
                   onPressed: () {
-                     // Aquí iría la lógica del ShowDialog que te expliqué antes
-                     // _showDeleteConfirmation(context);
-                     print("Lógica de eliminar aquí");
-                  }, 
+                    // Aquí iría la lógica del ShowDialog que te expliqué antes
+                    // _showDeleteConfirmation(context);
+                    print("Lógica de eliminar aquí");
+                  },
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  label: const Text("Eliminar Transacción", style: TextStyle(color: Colors.red, fontSize: 16)),
+                  label: Text(
+                    AppLocalizations.of(context)!.deleteTransactionText,
+                    style: TextStyle(color: Colors.red, fontSize: 16),
+                  ),
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -229,7 +263,7 @@ class VerTransaction extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Espacio extra abajo para que no pegue con el borde en algunos celulares
               const SizedBox(height: 20),
             ],
@@ -245,7 +279,10 @@ class VerTransaction extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
-        Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
       ],
     );
   }

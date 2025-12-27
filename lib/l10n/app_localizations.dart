@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'MoneyMov'**
+  /// **'MoneyMove'**
   String get appTitle;
 
   /// No description provided for @noDescription.
@@ -140,6 +140,30 @@ abstract class AppLocalizations {
   /// **'Debts'**
   String get navigationTextDeudas;
 
+  /// No description provided for @titleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get titleText;
+
+  /// No description provided for @dateText.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateText;
+
+  /// No description provided for @descriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionText;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
   /// No description provided for @titleTransactionsScreen.
   ///
   /// In en, this message translates to:
@@ -169,6 +193,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Transaction'**
   String get editTransaccionText;
+
+  /// No description provided for @deleteTransactionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Transaction'**
+  String get deleteTransactionText;
 
   /// No description provided for @deletedTransactionMessage.
   ///
@@ -211,6 +241,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See all transactions'**
   String get seeAllTransactionsText;
+
+  /// No description provided for @transactionNotExist.
+  ///
+  /// In en, this message translates to:
+  /// **'The transaction does not exist'**
+  String get transactionNotExist;
+
+  /// No description provided for @transactionDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transactionDetailsTitle;
+
+  /// No description provided for @expenseMade.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Made'**
+  String get expenseMade;
+
+  /// No description provided for @incomeReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Income Received'**
+  String get incomeReceived;
 }
 
 class _AppLocalizationsDelegate
