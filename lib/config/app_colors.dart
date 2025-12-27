@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  bool isLight = true;
+  // --- PALETA BASE (Los "ingredientes" puros) ---
+  // Estos son tus colores de marca, no cambian.
+  static const Color _brandPrimary = Color(0xFF4F46E5); // Tu índigo principal
+  static const Color _brandSecondary = Colors.orange;
+  
+  // Finanzas (Iguales para ambos, o ligeramente ajustados si quisieras)
+  static const Color expense = Color(0xFFEF4444); 
+  static const Color income = Color(0xFF10B981); 
 
-  static const Color primaryColor = Color(0xFF4F46E5);
-  static const Color accentColor = Colors.orange;
-  // Una versión más oscura para textos o bordes activos
-  static const Color primaryDark = Color(0xFF3730A3);
+  // --- MODO CLARO (Light Mode) ---
+  static const Color lightPrimary = _brandPrimary;
+  static const Color lightBackground = Color(0xFFF9FAFB); // Tu blanco humo
+  static const Color lightSurface = Colors.white;         // Para tarjetas
+  static const Color lightTextPrimary = Color(0xFF1F2937); // Tu negro suave
+  static const Color lightTextSecondary = Color(0xFF6B7280); // Tu gris subtítulos
+  static const Color lightIcon = Color(0xFF1F2937);
 
-  // Una versión muy suave para fondos de botones secundarios o chips
-  static const Color primaryLight = Color(0xFFEEF2FF);
-  static const Color backgroundColor = Color(0xFFEEF2FF);
-  // --- COLORES FINANCIEROS (Ya los tienes) ---
-  static const Color expenseColor = Color(0xFFEF4444); // Rojo vibrante moderno
-  static const Color incomeColor = Color(0xFF10B981); // Verde esmeralda moderno
-
-  // --- NEUTROS ---
-  static const Color textDark = Color(
-    0xFF1F2937,
-  ); // Negro suave (menos duro que el negro puro)
-  static const Color textLight = Color(0xFF6B7280); // Gris para subtítulos
-  static const Color scaffoldBackground = Color(0xFFF9FAFB); // Blanco humo
-
-  static const Color transactionListIconColor = Color.fromARGB(255, 33, 33, 33);
-
-  static const Color white = Colors.white;
+  // --- MODO OSCURO (Dark Mode) ---
+  // Aquí corregimos: El fondo pasa a ser oscuro y el texto claro.
+  static const Color darkPrimary = Color(0xFF818CF8); // Un índigo más pastel para que no brille tanto en lo oscuro
+  static const Color darkBackground = Color(0xFF121212); // Negro casi puro
+  static const Color darkSurface = Color(0xFF1E1E1E);    // Gris oscuro para tarjetas
+  static const Color darkTextPrimary = Color(0xFFF3F4F6); // Blanco hueso
+  static const Color darkTextSecondary = Color(0xFF9CA3AF); // Gris claro
+  static const Color darkIcon = Color(0xFFF3F4F6);
 }

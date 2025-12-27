@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
+// import 'package:money_move/config/app_colors.dart'; // Ya no lo necesitamos aquí
 import 'package:money_move/l10n/app_localizations.dart'; 
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
@@ -66,8 +66,6 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
 
     final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-
-    // Guardamos la referencia de los textos antes de cualquier await para evitar problemas de contexto
     final l10n = AppLocalizations.of(context)!;
 
     // 2. OBTENEMOS LA CATEGORÍA SUGERIDA
@@ -76,10 +74,11 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     // 3. VERIFICAMOS SI HAY UNA CATEGORÍA MANUAL EN EL PROVIDER
     String? manualCategoryFromProvider = aiProvider.manualCategory;
 
-    // Lógica de decisión:
     if (manualCategoryFromProvider != null) {
       categoryToSave = manualCategoryFromProvider;
     } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
+      if (!mounted) return; // Verificación de seguridad
+      
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -101,7 +100,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       Deuda(
         id: uuid.v4(),
         title: titleController.text,
-        description: l10n.noDescription, // <--- CAMBIO AQUÍ
+        description: l10n.noDescription,
         monto: enteredAmount,
         involucrado: involucradoController.text,
         abono: 0.0,
@@ -117,26 +116,35 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       Navigator.of(context).pop();
     }
 
-    // Reseteamos el provider para la próxima vez
     aiProvider.resetCategory();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Variable auxiliar para acortar código
     final l10n = AppLocalizations.of(context)!; 
+    
+    // Acceso al tema actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      // backgroundColor: AppColors.white, // ELIMINADO: Ahora es automático
+      
       appBar: AppBar(
         title: Text(
-          l10n.addDeuda, // <--- CAMBIO AQUÍ
-          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.transactionListIconColor),
+          l10n.addDeuda,
+          style: TextStyle(
+            fontWeight: FontWeight.bold, 
+            // El color se adapta automáticamente (negro/blanco)
+            color: colorScheme.onSurface 
+          ),
         ),
-        backgroundColor: AppColors.white,
+        backgroundColor: Colors.transparent, // O colorScheme.surface
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.transactionListIconColor),
+        // El icono de "atrás" también se adapta
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
+      
       body: DeudaForm(
         titleController: titleController,
         amountController: amountController,

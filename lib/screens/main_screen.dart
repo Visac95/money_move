@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
+// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/all_transactions.dart';
@@ -15,26 +15,55 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // Nota: Si tus pantallas son const, puedes dejar el const aquí, si no, así está bien.
-  List<Widget> screens = [HomeScreen(), AllTransactions(), AllDeudasScreen()];
+  // Lista de pantallas
+  final List<Widget> screens = const [
+    HomeScreen(),
+    AllTransactions(),
+    AllDeudasScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
     final int currentIndex = uiProvider.selectedIndex;
     
-    // Obtenemos las traducciones
     final l10n = AppLocalizations.of(context)!;
+    
+    // Acceso al tema actual para los colores de la barra
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: IndexedStack(index: currentIndex, children: screens),
+      // 1. ELIMINADO: backgroundColor: AppColors.backgroundColor
+      // El Scaffold tomará automáticamente el color definido en main.dart 
+      // (Blanco humo en Light, Negro casi puro en Dark)
+
+      body: IndexedStack(
+        index: currentIndex, 
+        children: screens
+      ),
+      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) {
           uiProvider.selectedIndex = index;
         },
-        // IMPORTANTE: Se eliminó 'const' aquí porque 'l10n' no es constante
+        
+        // 2. COLORES ADAPTATIVOS
+        // El fondo de la barra será blanco (día) o gris oscuro (noche)
+        backgroundColor: colorScheme.surface,
+        
+        // El ícono seleccionado será de tu color principal (Índigo)
+        selectedItemColor: colorScheme.primary,
+        
+        // Los íconos no seleccionados serán gris oscuro (día) o blanco hueso (noche)
+        // Le damos un poco de transparencia para que se vean "desactivados"
+        unselectedItemColor: colorScheme.onSurface.withOpacity(0.6),
+
+        // Opcional: Tipo fijo para evitar animaciones raras de fondo si agregas un 4to botón
+        type: BottomNavigationBarType.fixed,
+        elevation: 8, // Una pequeña sombra para separar del contenido
+
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home), 

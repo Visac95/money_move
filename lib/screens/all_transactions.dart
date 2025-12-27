@@ -9,11 +9,13 @@ class AllTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: colorScheme.onSurface,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         title: Text(
           AppLocalizations.of(context)!.titleTransactionsScreen, 

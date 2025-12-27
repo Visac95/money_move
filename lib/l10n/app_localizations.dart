@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get editText;
 
+  /// No description provided for @cancelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelText;
+
   /// No description provided for @deleteText.
   ///
   /// In en, this message translates to:
@@ -193,6 +199,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Transaction'**
   String get editTransaccionText;
+
+  /// No description provided for @accitionNotUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get accitionNotUndone;
+
+  /// No description provided for @deleteTransactionquestionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete this transaction?'**
+  String get deleteTransactionquestionText;
 
   /// No description provided for @deleteTransactionText.
   ///

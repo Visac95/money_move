@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita aquí
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -29,16 +29,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    //titleController.addListener(_classifyTitle);
-    // 1. Cargamos el booleano (esto ya lo tenías)
+    // Carga de datos iniciales
     isExpense = widget.transaction.isExpense;
-
-    // 2. ¡IMPORTANTE! Cargamos los textos AQUÍ una sola vez
     titleController.text = widget.transaction.title;
-
-    // Ojo: toStringAsFixed(2) para que se vea bonito "15.50"
     amountController.text = widget.transaction.monto.toStringAsFixed(2);
-
     descriptionController.text = widget.transaction.description;
   }
 
@@ -51,19 +45,6 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     super.dispose();
   }
 
-  // void _classifyTitle() {
-  //   if (manualCategory != null) return;
-
-  //   if (debounce?.isActive ?? false) debounce!.cancel();
-  //   debounce = Timer(const Duration(milliseconds: 1000), () {
-  //     final aiProvider = Provider.of<AiCategoryProvider>(
-  //       context,
-  //       listen: false,
-  //     );
-  //     aiProvider.requestClassification(titleController.text);
-  //   });
-  // }
-
   Future<void> _saveTransaction() async {
     // --- VALIDACIONES ---
     if (titleController.text.isEmpty || amountController.text.isEmpty) return;
@@ -74,28 +55,24 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     } catch (e) {
       return;
     }
-    // 1. OBTENEMOS EL PROVIDER UNA SOLA VEZ (con listen: false)
+    
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
-    // 2. OBTENEMOS LA CATEGORÍA SUGERIDA
+    // 2. OBTENEMOS LA CATEGORÍA SUGERIDA O MANUAL
     String categoryToSave = aiProvider.suggestedCategory;
-
-    // --- AQUÍ ESTABA EL ERROR, BORRÉ LA SEGUNDA DECLARACIÓN ---
-
-    // 3. VERIFICAMOS SI HAY UNA CATEGORÍA MANUAL EN EL PROVIDER
-    // Usamos la misma variable 'aiProvider' que declaramos arriba
     String? manualCategoryFromProvider = aiProvider.manualCategory;
 
     // Lógica de decisión:
     if (manualCategoryFromProvider != null) {
-      // Si el usuario eligió manual, usamos esa
       categoryToSave = manualCategoryFromProvider;
     } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
-      // Si no hay manual y la IA falló, abrimos ventana
+      
+      if (!mounted) return; // Seguridad de contexto
+
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return const SelectCategoryWindow(); // Asumo que este widget existe
+          return const SelectCategoryWindow();
         },
       );
 
@@ -105,6 +82,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
         return; // Canceló
       }
     }
+    
     final Transaction transactionActualizada = widget.transaction.update(
       title: titleController.text,
       monto: enteredAmount,
@@ -112,28 +90,40 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       categoria: manualCategoryFromProvider ?? categoryToSave,
       isExpense: isExpense,
     );
+    
+    if (!mounted) return;
     context.read<TransactionProvider>().updateTransaction(transactionActualizada);
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
+    
+    Navigator.of(context).pop();
 
-    // Reseteamos el provider para la próxima vez
+    // Reseteamos el provider
     aiProvider.resetCategory();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Acceso al esquema de colores actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: AppColors.white, // ELIMINADO: Ahora es automático
+      
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.editTransaccionText,
-          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.transactionListIconColor),
+          style: TextStyle(
+            fontWeight: FontWeight.bold, 
+            // Color de texto adaptable (Negro día / Blanco noche)
+            color: colorScheme.onSurface 
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent, // O colorScheme.surface
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.transactionListIconColor),
+        // Icono de "atrás" adaptable
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
+      
       body: TransactionForm(
         titleController: titleController,
         amountController: amountController,

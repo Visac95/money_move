@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
-// Eliminado: import 'package:money_move/config/app_strings.dart';
-import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRECTO
+// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita aquí
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -80,6 +79,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     if (manualCategoryFromProvider != null) {
       categoryToSave = manualCategoryFromProvider;
     } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
+      if (!mounted) return; // Seguridad
+
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -116,24 +117,28 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializamos la variable de localización
     final l10n = AppLocalizations.of(context)!;
 
+    // Acceso al tema actual
+
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      // backgroundColor: AppColors.backgroundColor, // ELIMINADO: Automático por tema
       appBar: AppBar(
-        // Quitamos 'const' y usamos la variable l10n
         title: Text(
-          l10n.addTransaction, 
-          style: const TextStyle(
+          l10n.addTransaction,
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: AppColors.transactionListIconColor,
+            // Antes era transactionListIconColor (gris oscuro).
+            // Ahora se adapta (Negro día / Blanco noche)
+            color: colorScheme.onSurface,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: Colors.transparent, // O colorScheme.surface
         elevation: 0,
-        iconTheme: const IconThemeData(
-          color: AppColors.transactionListIconColor,
+        iconTheme: IconThemeData(
+          color: colorScheme.onSurface, // Icono de atrás adaptable
         ),
       ),
       body: TransactionForm(

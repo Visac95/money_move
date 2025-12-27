@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editText => 'Edit';
 
   @override
+  String get cancelText => 'Cancel';
+
+  @override
   String get deleteText => 'Delete';
 
   @override
@@ -56,6 +59,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editTransaccionText => 'Edit Transaction';
+
+  @override
+  String get accitionNotUndone => 'This action cannot be undone.';
+
+  @override
+  String get deleteTransactionquestionText =>
+      'Do you want to delete this transaction?';
 
   @override
   String get deleteTransactionText => 'Delete Transaction';

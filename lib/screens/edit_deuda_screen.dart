@@ -14,8 +14,11 @@ class EditDeudaScreen extends StatefulWidget {
 class _EditDeudaScreenState extends State<EditDeudaScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.editDeudaText)),
+      appBar: AppBar(
+        backgroundColor: theme.surface,
+        title: Text(AppLocalizations.of(context)!.editDeudaText)),
       body: Center(child: Text("Editar deuda")),
     );
   }

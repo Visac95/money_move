@@ -3,14 +3,13 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
-import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
 
 class VerTransaction extends StatelessWidget {
   final String id;
-  // Estos parámetros ya no son estrictamente necesarios si los saco del provider,
-  // pero los dejaré por compatibilidad con el código actual.
+  // Mantenemos los parámetros por compatibilidad, aunque lo ideal es usar solo el ID
   final String title;
   final String description;
   final double monto;
@@ -30,7 +29,6 @@ class VerTransaction extends StatelessWidget {
   });
 
   String _formatDate(DateTime date) {
-    // Tip Pro: Podrías usar el paquete 'intl' para esto: DateFormat.yMMMd().format(date)
     String day = date.day.toString().padLeft(2, '0');
     String month = date.month.toString().padLeft(2, '0');
     String year = date.year.toString();
@@ -39,11 +37,12 @@ class VerTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Obtenemos la transacción actualizada del provider
     final provider = Provider.of<TransactionProvider>(context);
-
-    // Manejo de seguridad por si se borró y la pantalla sigue abierta
     Transaction? transaction = provider.getTransactionById(id);
+    
+    // Acceso rápido al tema actual (Esto es lo que hace funcionar el modo oscuro)
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     if (transaction == null) {
       return Scaffold(
@@ -53,26 +52,30 @@ class VerTransaction extends StatelessWidget {
       );
     }
 
-    // Definimos el color principal según si es gasto o ingreso
+    // Colores financieros (Rojo/Verde) se mantienen igual en ambos modos
     final Color mainColor = transaction.isExpense
-        ? AppColors.expenseColor
-        : AppColors.incomeColor;
+        ? AppColors.expense
+        : AppColors.income;
 
     return Scaffold(
-      backgroundColor:
-          AppColors.primaryLight, // Asegúrate de tener un color de fondo suave
+      // El color de fondo ahora lo decide el main.dart automáticamente
+      backgroundColor: theme.scaffoldBackgroundColor, 
+      
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.transactionDetailsTitle),
+        title: Text(
+          AppLocalizations.of(context)!.transactionDetailsTitle,
+          style: TextStyle(color: colorScheme.onSurface), // Texto se adapta
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.textDark),
+          // El icono será negro en día, blanco en noche
+          icon: Icon(Icons.arrow_back_ios_new, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
-        // Para evitar overflow en pantallas pequeñas
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -81,15 +84,13 @@ class VerTransaction extends StatelessWidget {
               const SizedBox(height: 20),
 
               // 1. EL HÉROE (El Monto)
-              // Lo ponemos arriba y gigante. Es lo que el usuario quiere ver.
               Hero(
-                // Animación bonita si vienes de la lista
                 tag: transaction.id,
                 child: Text(
                   (transaction.isExpense ? '- ' : '+ ') +
                       "\$${transaction.monto.toStringAsFixed(2)}",
                   style: TextStyle(
-                    color: mainColor,
+                    color: mainColor, // Mantenemos rojo/verde
                     fontSize: 48,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -1.5,
@@ -101,7 +102,8 @@ class VerTransaction extends StatelessWidget {
                     ? AppLocalizations.of(context)!.expenseMade
                     : AppLocalizations.of(context)!.incomeReceived,
                 style: TextStyle(
-                  color: Colors.grey[600],
+                  // Usamos 'outline' (nuestro gris secundario definido en main)
+                  color: colorScheme.outline, 
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -109,15 +111,16 @@ class VerTransaction extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // 2. LA TARJETA DE DETALLES (Estilo "Recibo")
+              // 2. LA TARJETA DE DETALLES
               Container(
                 padding: const EdgeInsets.all(25),
                 decoration: BoxDecoration(
-                  color: Colors.white, // O AppColors.cardColor
+                  // Aquí la magia: surface es Blanco(Día) o Gris Oscuro(Noche)
+                  color: colorScheme.surface, 
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withOpacity(0.05), // Sombra sutil
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -135,9 +138,7 @@ class VerTransaction extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(
-                            AppConstants.getIconForCategory(
-                              transaction.categoria,
-                            ),
+                            AppConstants.getIconForCategory(transaction.categoria),
                             size: 30,
                             color: mainColor,
                           ),
@@ -149,15 +150,16 @@ class VerTransaction extends StatelessWidget {
                             Text(
                               AppLocalizations.of(context)!.category,
                               style: TextStyle(
-                                color: Colors.grey[500],
+                                color: colorScheme.outline, // Gris adaptable
                                 fontSize: 12,
                               ),
                             ),
                             Text(
                               transaction.categoria,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface, // Negro/Blanco
                               ),
                             ),
                           ],
@@ -166,22 +168,24 @@ class VerTransaction extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-                    const Divider(), // Usar Widget Divider es mejor que Container width:1000
+                    const Divider(), 
                     const SizedBox(height: 20),
 
                     // Título y Descripción
                     _buildDetailRow(
+                      context, // Pasamos el contexto para leer colores
                       AppLocalizations.of(context)!.titleText,
                       transaction.title,
                     ),
                     const SizedBox(height: 15),
                     _buildDetailRow(
+                      context,
                       AppLocalizations.of(context)!.dateText,
                       _formatDate(transaction.fecha),
                     ),
                     const SizedBox(height: 15),
 
-                    // Descripción con manejo de texto largo
+                    // Descripción
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
@@ -190,7 +194,7 @@ class VerTransaction extends StatelessWidget {
                           Text(
                             AppLocalizations.of(context)!.descriptionText,
                             style: TextStyle(
-                              color: Colors.grey[500],
+                              color: colorScheme.outline,
                               fontSize: 12,
                             ),
                           ),
@@ -199,7 +203,10 @@ class VerTransaction extends StatelessWidget {
                             transaction.description.isEmpty
                                 ? AppLocalizations.of(context)!.noDescription
                                 : transaction.description,
-                            style: const TextStyle(fontSize: 16),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: colorScheme.onSurface, // Negro/Blanco
+                            ),
                           ),
                         ],
                       ),
@@ -211,7 +218,6 @@ class VerTransaction extends StatelessWidget {
               const SizedBox(height: 40),
 
               // 3. BOTONES DE ACCIÓN
-              // Botón Principal: EDITAR
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -222,14 +228,14 @@ class VerTransaction extends StatelessWidget {
                           EditTransactionScreen(transaction: transaction!),
                     ),
                   ),
-                  icon: const Icon(Icons.edit_rounded, color: Colors.white),
+                  icon: Icon(Icons.edit_rounded, color: colorScheme.surface), 
                   label: Text(
                     AppLocalizations.of(context)!.editTransaccionText,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: colorScheme.surface, fontSize: 16),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors
-                        .primaryDark, // Usamos el color de marca, no verde
+                    // Usamos el color Primario del tema (Tu Indigo)
+                    backgroundColor: colorScheme.primary, 
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -240,21 +246,18 @@ class VerTransaction extends StatelessWidget {
 
               const SizedBox(height: 15),
 
-              // Botón Secundario: ELIMINAR (Estilo "Peligro" pero sutil)
+              // Botón ELIMINAR
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: TextButton.icon(
-                  // AQUÍ CONECTAMOS EL POPUP QUE HICIMOS ANTES
                   onPressed: () {
-                    // Aquí iría la lógica del ShowDialog que te expliqué antes
-                    // _showDeleteConfirmation(context);
-                    print("Lógica de eliminar aquí");
+                    _showDeleteConfirmation(context, id);
                   },
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  icon: Icon(Icons.delete_outline, color: colorScheme.error),
                   label: Text(
                     AppLocalizations.of(context)!.deleteTransactionText,
-                    style: TextStyle(color: Colors.red, fontSize: 16),
+                    style: TextStyle(color: colorScheme.error, fontSize: 16),
                   ),
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -263,8 +266,6 @@ class VerTransaction extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Espacio extra abajo para que no pegue con el borde en algunos celulares
               const SizedBox(height: 20),
             ],
           ),
@@ -273,17 +274,78 @@ class VerTransaction extends StatelessWidget {
     );
   }
 
-  // Widget auxiliar para no repetir código en las filas de detalles
-  Widget _buildDetailRow(String label, String value) {
+  // Widget auxiliar actualizado
+  Widget _buildDetailRow(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+        Text(label, style: TextStyle(color: theme.colorScheme.outline, fontSize: 14)),
         Text(
           value,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 16, 
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface, // Importante: Color adaptable
+          ),
         ),
       ],
     );
+  }
+
+  // Popup de eliminación
+  Future<void> _showDeleteConfirmation(BuildContext context, String id) async {
+    final theme = Theme.of(context);
+    
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // Fondo del diálogo automático según el tema
+          backgroundColor: theme.colorScheme.surface, 
+          title: Text(
+            AppLocalizations.of(context)!.deleteTransactionquestionText,
+            style: TextStyle(color: theme.colorScheme.onSurface),
+          ),
+          content: Text(
+            AppLocalizations.of(context)!.accitionNotUndone,
+            style: TextStyle(color: theme.colorScheme.onSurface),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(
+                AppLocalizations.of(context)!.cancelText,
+                style: TextStyle(color: theme.colorScheme.primary),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                AppLocalizations.of(context)!.deleteTransactionText,
+                style: TextStyle(color: theme.colorScheme.error),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      if (!context.mounted) return; // Buena práctica de seguridad
+      final provider = Provider.of<TransactionProvider>(context, listen: false);
+      
+      await provider.deleteTransaction(id);
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.deletedTransactionMessage),
+        ),
+      );
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
+// import 'package:money_move/config/app_colors.dart'; // <-- Ya no lo necesitas aquí
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/locale_provider.dart';
 
@@ -14,45 +14,64 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Acceso rápido a los colores del tema actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      // ELIMINADO: backgroundColor: AppColors.backgroundColor, 
+      // Ahora el Theme en main.dart se encarga del fondo automáticamente.
+      
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
+        // Opcional: Si quieres la AppBar transparente como en la otra pantalla
+        backgroundColor: Colors.transparent, 
+        elevation: 0,
+        
+        title: Text(
+          AppLocalizations.of(context)!.appTitle,
+          style: TextStyle(
+            color: colorScheme.onSurface, // Texto Negro (Día) / Blanco (Noche)
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
               final provider = context.read<LocaleProvider>();
               final currentLocale = Localizations.localeOf(context);
 
-              // Si es inglés cambia a español, si no, a inglés
+              // Lógica de cambio de idioma intacta
               if (currentLocale.languageCode == 'en') {
                 provider.setLocale(const Locale('es'));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      AppLocalizations.of(context)!.changeLanguage,
-                    ),
-                  ),
-                );
+                _showSnackBar(context, AppLocalizations.of(context)!.changeLanguage);
               } else {
                 provider.setLocale(const Locale('en'));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      AppLocalizations.of(context)!.changeLanguage,
-                    ),
-                  ),
-                );
+                _showSnackBar(context, AppLocalizations.of(context)!.changeLanguage);
               }
             },
-            icon: Icon(Icons.language),
+            // El icono cambia de color según el tema
+            icon: Icon(Icons.language, color: colorScheme.onSurface),
           ),
         ],
       ),
       body: Column(
-        children: [BalanceCard(), UltimasTransacciones(), UltimasDeudas()],
+        children: const [ // Agregué const para optimizar rendimiento
+          BalanceCard(), 
+          UltimasTransacciones(), 
+          UltimasDeudas()
+        ],
       ),
-      floatingActionButton: AddButton(),
+      floatingActionButton: const AddButton(),
+    );
+  }
+
+  // Helper pequeño para no repetir código del SnackBar
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 }

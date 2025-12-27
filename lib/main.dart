@@ -47,15 +47,51 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales:
               AppLocalizations.supportedLocales, // Idiomas soportados
+          // Esto permite que cambie solo según la configuración del celular
+          themeMode: ThemeMode.system,
+
+          // TEMA CLARO (Día)
           theme: ThemeData(
-            // Aquí aplicamos tu nuevo color índigo a toda la app
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: AppColors.primaryColor,
-              primary: AppColors.primaryColor, // Botones y barras
-              secondary: AppColors.primaryDark,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: AppColors.lightBackground,
+            // Definimos el esquema de colores semántico
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.lightPrimary,
+              secondary: AppColors
+                  .income, // Usamos verde como secundario o el que prefieras
+              surface: AppColors.lightSurface, // Color de las Tarjetas
+              onSurface: AppColors
+                  .lightTextPrimary, // Color de Texto sobre las tarjetas
+              outline: AppColors
+                  .lightTextSecondary, // Color para textos secundarios/iconos grises
+              error: AppColors.expense,
             ),
-            scaffoldBackgroundColor: AppColors.scaffoldBackground,
-            useMaterial3: true,
+            // Configuramos las tarjetas por defecto
+            cardTheme: CardThemeData(
+              color: AppColors.lightSurface,
+              elevation: 0,
+            ),
+            // Iconos por defecto
+            iconTheme: const IconThemeData(color: AppColors.lightIcon),
+          ),
+
+          // TEMA OSCURO (Noche)
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: AppColors.darkBackground,
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.darkPrimary,
+              secondary: AppColors.income,
+              surface: AppColors.darkSurface, // Las tarjetas serán gris oscuro
+              onSurface: AppColors.darkTextPrimary, // El texto será blanco
+              outline: AppColors.darkTextSecondary,
+              error: AppColors.expense,
+            ),
+            cardTheme: CardThemeData(
+              color: AppColors.darkSurface,
+              elevation: 0,
+            ),
+            iconTheme: const IconThemeData(color: AppColors.darkIcon),
           ),
           home: MainScreen(),
         );
