@@ -14,10 +14,12 @@ class ListaDeTransacciones extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
+    // Accedemos al tema
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Expanded(
       child: lista.isEmpty
-          ? _buildEmptyState()
+          ? _buildEmptyState(context, colorScheme)
           : ListView.separated(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
@@ -31,7 +33,7 @@ class ListaDeTransacciones extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,20 +41,22 @@ class ListaDeTransacciones extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.textLight,
+              // Usamos un color de contenedor suave del tema
+              color: colorScheme.surfaceContainerHigh,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.receipt_long_rounded,
               size: 50,
-              color: AppColors.white,
+              // El icono usa el color primario o variante
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 20),
           Text(
             "Sin movimientos",
             style: TextStyle(
-              color: AppColors.textLight,
+              color: colorScheme.onSurface, // Texto principal
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -60,7 +64,10 @@ class ListaDeTransacciones extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             "Tus transacciones aparecerán aquí",
-            style: TextStyle(color: AppColors.textLight, fontSize: 14),
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant, // Texto secundario
+              fontSize: 14,
+            ),
           ),
         ],
       ),
@@ -75,28 +82,35 @@ class _TransactionCard extends StatelessWidget {
   const _TransactionCard({required this.transaction});
 
   String _formatDate(DateTime date) {
-    // Formato corto: 24/10
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     final bool isExpense = transaction.isExpense;
     final Color amountColor = isExpense
-        ? AppColors.expenseColor
-        : AppColors.incomeColor;
+        ? AppColors.expense
+        : AppColors.income;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(24), // Bordes más redondeados
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textLight, // Sombra muy sutil
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        // Fondo adaptable: blanco en light, gris oscuro en dark
+        color: colorScheme.surfaceContainerLow, 
+        borderRadius: BorderRadius.circular(24),
+        // Sombra solo en modo claro. En modo oscuro se ve mal.
+        boxShadow: isDark 
+            ? [] 
+            : [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -124,14 +138,14 @@ class _TransactionCard extends StatelessWidget {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(
-                      0.1,
-                    ), // Fondo suave
+                    // Fondo del icono basado en el color primario del tema
+                    color: colorScheme.primaryContainer, 
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
                     AppConstants.getIconForCategory(transaction.categoria),
-                    color: AppColors.primaryDark,
+                    // Color del icono que contrasta con el primaryContainer
+                    color: colorScheme.onPrimaryContainer, 
                     size: 26,
                   ),
                 ),
@@ -145,10 +159,10 @@ class _TransactionCard extends StatelessWidget {
                     children: [
                       Text(
                         transaction.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: AppColors.transactionListIconColor, // Color oscuro suave
+                          color: colorScheme.onSurface, // Color adaptable
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -159,13 +173,13 @@ class _TransactionCard extends StatelessWidget {
                           Icon(
                             Icons.access_time_rounded,
                             size: 12,
-                            color: AppColors.textLight,
+                            color: colorScheme.onSurfaceVariant, // Color gris suave
                           ),
                           const SizedBox(width: 4),
                           Text(
                             _formatDate(transaction.fecha),
                             style: TextStyle(
-                              color: AppColors.textLight,
+                              color: colorScheme.onSurfaceVariant,
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
@@ -184,17 +198,17 @@ class _TransactionCard extends StatelessWidget {
                       (isExpense ? '- ' : '+ ') +
                           transaction.monto.toStringAsFixed(2),
                       style: TextStyle(
-                        color: amountColor,
-                        fontWeight: FontWeight.w800, // Extra bold para números
+                        color: amountColor, // Rojo o Verde (se mantiene igual)
+                        fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 4), // Espacio pequeño
-                    // Menú de 3 puntos discreto
+                    const SizedBox(height: 4),
+                    // Menú de 3 puntos
                     SizedBox(
                       height: 20,
                       width: 20,
-                      child: _buildPopupMenu(context),
+                      child: _buildPopupMenu(context, colorScheme),
                     ),
                   ],
                 ),
@@ -206,14 +220,15 @@ class _TransactionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPopupMenu(BuildContext context) {
+  Widget _buildPopupMenu(BuildContext context, ColorScheme colorScheme) {
     return PopupMenuButton(
       padding: EdgeInsets.zero,
+      color: colorScheme.surfaceContainer, // Fondo del menú desplegable
       icon: Icon(
         Icons.more_horiz,
         size: 20,
-        color: AppColors.textDark,
-      ), // Icono muy sutil
+        color: colorScheme.onSurfaceVariant, // Icono de 3 puntos adaptable
+      ),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       onSelected: (value) {
@@ -236,23 +251,29 @@ class _TransactionCard extends StatelessWidget {
         }
       },
       itemBuilder: (context) => [
-         PopupMenuItem(
+        PopupMenuItem(
           value: "editar",
           child: Row(
             children: [
-              Icon(Icons.edit_rounded, color: AppColors.incomeColor),
-              SizedBox(width: 10),
-              Text(AppLocalizations.of(context)!.editText),
+              Icon(Icons.edit_rounded, color: AppColors.income),
+              const SizedBox(width: 10),
+              Text(
+                AppLocalizations.of(context)!.editText,
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
             ],
           ),
         ),
-         PopupMenuItem(
+        PopupMenuItem(
           value: "borrar",
           child: Row(
             children: [
-              Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-              SizedBox(width: 10),
-              Text(AppLocalizations.of(context)!.deleteText, style: TextStyle(color: Colors.redAccent)),
+              const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+              const SizedBox(width: 10),
+              Text(
+                AppLocalizations.of(context)!.deleteText,
+                style: const TextStyle(color: Colors.redAccent),
+              ),
             ],
           ),
         ),

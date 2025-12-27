@@ -31,25 +31,22 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
         .where((deuda) => deuda.debo == widget.deboList)
         .toList();
 
-    // 1. Quitamos el SizedBox que forzaba la altura
+    // Accedemos al esquema de colores actual
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (lista.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 30),
-        child: _buildEmptyState(),
+        child: _buildEmptyState(colorScheme),
       );
     }
 
-    // 2. Usamos ListView con shrinkWrap y sin scroll propio
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
       itemCount: lista.length,
       separatorBuilder: (context, index) => const SizedBox(height: 16),
-
-      // LA CLAVE ESTÁ AQUÍ:
-      shrinkWrap: true, // "Encógete al tamaño de tus hijos"
-      physics:
-          const NeverScrollableScrollPhysics(), // "No hagas scroll tú, deja que la pantalla principal lo haga"
-
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final deuda = lista[index];
         return _buildDebtCard(context, deuda, provider);
@@ -62,15 +59,21 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     dynamic deuda,
     DeudaProvider provider,
   ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     // Definimos colores según si YO DEBO o ME DEBEN
-    final bool soyDeudor = deuda.debo; // true = Yo debo, false = Me deben
+    final bool soyDeudor = deuda.debo; 
 
     final Color mainColor = soyDeudor
-        ? AppColors.accentColor
-        : AppColors.incomeColor;
-    final Color bgColor = soyDeudor
-        ? Colors.orange.shade50
-        : Colors.teal.shade50;
+        ? AppColors.accent // Color naranja/rojo
+        : AppColors.income; // Color verde
+
+    // TRUCO PRO: En lugar de shade50 (que es blanco), usamos opacidad.
+    // Esto funciona perfecto en Dark Mode porque se mezcla con el gris oscuro.
+    final Color chipBgColor = mainColor.withOpacity(isDark ? 0.15 : 0.1);
+
     final String label = soyDeudor ? "POR PAGAR" : "POR COBRAR";
     final IconData iconStatus = soyDeudor
         ? Icons.arrow_outward_rounded
@@ -78,24 +81,26 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        // Fondo adaptable
+        color: colorScheme.surfaceContainerLow, 
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        // Sombra solo en modo claro
+        boxShadow: isDark 
+            ? [] 
+            : [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: ClipRRect(
-        // Para que la franja de color respete el borde
         borderRadius: BorderRadius.circular(16),
         child: IntrinsicHeight(
-          // Hace que la franja mida lo mismo que la tarjeta
           child: Row(
             children: [
-              // 1. FRANJA LATERAL DE COLOR (Semáforo visual)
+              // 1. FRANJA LATERAL DE COLOR
               Container(width: 6, color: mainColor),
 
               // 2. CONTENIDO PRINCIPAL
@@ -105,18 +110,18 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Encabezado: Etiqueta y Monto
+                      // Encabezado: Etiqueta y Menú
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Chip de estado (Por pagar / Por cobrar)
+                          // Chip de estado
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: bgColor,
+                              color: chipBgColor, // Color translúcido adaptable
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -134,26 +139,28 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                               ],
                             ),
                           ),
-                          // Menú de opciones (3 puntos)
-                          _buildPopupMenu(context, deuda, provider),
+                          // Menú de opciones
+                          _buildPopupMenu(context, deuda, provider, colorScheme),
                         ],
                       ),
 
                       const SizedBox(height: 12),
 
-                      // Información Principal: Avatar y Título
+                      // Información Principal
                       Row(
                         children: [
-                          // AVATAR CON INICIAL (Mucho más personal que un icono de categoría)
+                          // AVATAR CON INICIAL
                           CircleAvatar(
                             radius: 22,
-                            backgroundColor: AppColors.backgroundColor,
+                            // Fondo del avatar basado en el tema (Primary Container)
+                            backgroundColor: colorScheme.primaryContainer,
                             child: Text(
                               deuda.involucrado.isNotEmpty
                                   ? deuda.involucrado[0].toUpperCase()
                                   : "?",
                               style: TextStyle(
-                                color: AppColors.textDark,
+                                // Texto del avatar contrastante
+                                color: colorScheme.onPrimaryContainer,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
@@ -168,16 +175,17 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                               children: [
                                 Text(
                                   deuda.title,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
+                                    color: colorScheme.onSurface, // Texto principal
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   "Con: ${deuda.involucrado}",
                                   style: TextStyle(
-                                    color: AppColors.textDark,
+                                    color: colorScheme.onSurfaceVariant, // Texto secundario
                                     fontSize: 13,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -186,7 +194,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                             ),
                           ),
 
-                          // MONTO (Grande y legible)
+                          // MONTO
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -195,7 +203,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w900,
-                                  color: mainColor,
+                                  color: mainColor, // Mantenemos el color semántico (rojo/verde)
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -204,14 +212,14 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                   Icon(
                                     Icons.event_busy_rounded,
                                     size: 12,
-                                    color: Colors.grey.shade400,
+                                    color: colorScheme.outline, // Icono gris suave
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     "Vence: ${_formatDate(deuda.fechaLimite)}",
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: AppColors.textDark,
+                                      color: colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 ],
@@ -231,18 +239,19 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     );
   }
 
-  // Menú PopUp extraído para limpieza
   Widget _buildPopupMenu(
     BuildContext context,
     dynamic deuda,
     DeudaProvider provider,
+    ColorScheme colorScheme,
   ) {
     return SizedBox(
       height: 24,
       width: 24,
       child: PopupMenuButton(
         padding: EdgeInsets.zero,
-        icon: Icon(Icons.more_vert, size: 20, color: Colors.grey.shade400),
+        color: colorScheme.surfaceContainer, // Fondo del menú
+        icon: Icon(Icons.more_vert, size: 20, color: colorScheme.onSurfaceVariant),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         onSelected: (value) {
           if (value == "borrar") {
@@ -260,23 +269,23 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           }
         },
         itemBuilder: (context) => [
-          const PopupMenuItem(
+           PopupMenuItem(
             value: "editar",
             child: Row(
               children: [
-                Icon(Icons.edit, size: 18),
-                SizedBox(width: 8),
-                Text("Editar"),
+                Icon(Icons.edit, size: 18, color: colorScheme.primary),
+                const SizedBox(width: 8),
+                Text("Editar", style: TextStyle(color: colorScheme.onSurface)),
               ],
             ),
           ),
-          const PopupMenuItem(
+           PopupMenuItem(
             value: "borrar",
             child: Row(
               children: [
-                Icon(Icons.delete, color: Colors.red, size: 18),
-                SizedBox(width: 8),
-                Text("Borrar", style: TextStyle(color: Colors.red)),
+                const Icon(Icons.delete, color: Colors.red, size: 18),
+                const SizedBox(width: 8),
+                const Text("Borrar", style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
@@ -285,7 +294,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(ColorScheme colorScheme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -293,13 +302,14 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           Icon(
             Icons.handshake_outlined,
             size: 70,
-            color: Colors.grey.shade200,
-          ), // Icono más acorde a deudas
+            // Usamos un color que se vea bien en fondo oscuro y claro (outline o surfaceVariant)
+            color: colorScheme.surfaceContainerHighest, 
+          ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             "Todo saldado 🎉",
             style: TextStyle(
-              color: Colors.grey,
+              color: colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -307,7 +317,10 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           const SizedBox(height: 8),
           Text(
             "No tienes deudas pendientes",
-            style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant, 
+              fontSize: 14,
+            ),
           ),
         ],
       ),

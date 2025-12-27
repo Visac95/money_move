@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 class AppColors {
   // --- PALETA BASE (Los "ingredientes" puros) ---
   // Estos son tus colores de marca, no cambian.
-  static const Color _brandPrimary = Color(0xFF4F46E5); // Tu índigo principal
-  static const Color _brandSecondary = Colors.orange;
+  static const Color brandPrimary = Color(0xFF4F46E5); // Tu índigo principal
+  static const Color brandSecondary = Colors.orange;
   
   // Finanzas (Iguales para ambos, o ligeramente ajustados si quisieras)
   static const Color expense = Color(0xFFEF4444); 
   static const Color income = Color(0xFF10B981); 
+  static const Color accent = Color(0xFFF59E0B);
 
   // --- MODO CLARO (Light Mode) ---
-  static const Color lightPrimary = _brandPrimary;
+  static const Color lightPrimary = brandPrimary;
   static const Color lightBackground = Color(0xFFF9FAFB); // Tu blanco humo
   static const Color lightSurface = Colors.white;         // Para tarjetas
   static const Color lightTextPrimary = Color(0xFF1F2937); // Tu negro suave

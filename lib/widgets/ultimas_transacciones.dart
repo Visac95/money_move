@@ -27,48 +27,72 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
 
+    // Accedemos al tema actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // Fondo adaptable: blanco en light, gris oscuro en dark
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(32, 0, 0, 0),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        // Sombra solo en modo claro
+        boxShadow: isDark 
+            ? [] 
+            : [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
       ),
       child: Column(
         children: [
           lista.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text("No hay transacciones aún 😴",
-                      style: TextStyle(color: Colors.grey)), // Usamos grey si textLight no está definido
+              ? Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Icon(Icons.inbox_rounded, size: 40, color: colorScheme.outline),
+                      const SizedBox(height: 8),
+                      Text(
+                        "No hay transacciones aún 😴",
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
                 )
               : ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: lista.length > 2 ? 2 : lista.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 2),
+                  // Divider sutil en lugar de espacio vacío
+                  separatorBuilder: (_, __) => Divider(
+                    height: 16, 
+                    thickness: 0.5, 
+                    color: colorScheme.outlineVariant.withOpacity(0.5)
+                  ),
                   itemBuilder: (context, index) {
                     final transaction = lista[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       
-                      // 1. ÍCONO
+                      // 1. ÍCONO DE CATEGORÍA
                       leading: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryLight,
+                          // Fondo del icono adaptable al color primario del tema
+                          color: colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
                           AppConstants.getIconForCategory(transaction.categoria),
-                          color: AppColors.primaryDark,
+                          // Color del icono que contrasta con el fondo
+                          color: colorScheme.onPrimaryContainer,
                           size: 22,
                         ),
                       ),
@@ -76,10 +100,11 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                       // 2. TÍTULO
                       title: Text(
                         transaction.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
-                          color: Colors.black87,
+                          // Texto principal adaptable (negro/blanco)
+                          color: colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -95,10 +120,11 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                               (transaction.isExpense ? '-' : '+') +
                                   transaction.monto.toStringAsFixed(2),
                               style: TextStyle(
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w800,
+                                // Colores semánticos (Rojo/Verde)
                                 color: transaction.isExpense
-                                    ? AppColors.expenseColor
-                                    : AppColors.incomeColor,
+                                    ? AppColors.expense
+                                    : AppColors.income,
                                 fontSize: 14,
                               ),
                             ),
@@ -106,17 +132,27 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                             // B. Separador (Puntito)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                              child: Icon(Icons.circle, size: 4, color: Colors.grey.shade300),
+                              child: Icon(
+                                Icons.circle, 
+                                size: 4, 
+                                // Color gris suave adaptable
+                                color: colorScheme.outline
+                              ),
                             ),
 
                             // C. La Fecha
-                            Icon(Icons.calendar_today_rounded, size: 12, color: Colors.grey.shade400),
+                            Icon(
+                              Icons.calendar_today_rounded, 
+                              size: 12, 
+                              color: colorScheme.onSurfaceVariant
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               _formatDate(transaction.fecha),
                               style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 12, // Un pelín más pequeña para que quepa bien
+                                // Texto secundario
+                                color: colorScheme.onSurfaceVariant,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -126,7 +162,8 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                     );
                   },
                 ),
-
+          
+          const SizedBox(height: 8),
 
           // 4. BOTÓN VER TODAS
           SizedBox(
@@ -135,8 +172,10 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
               onPressed: () =>
                   Provider.of<UiProvider>(context, listen: false).selectedIndex = 1,
               style: TextButton.styleFrom(
-                backgroundColor: AppColors.primaryLight,
-                foregroundColor: AppColors.primaryColor,
+                // Fondo tonal (se ve bien en ambos modos)
+                backgroundColor: colorScheme.secondaryContainer.withOpacity(0.4),
+                // Texto color primario
+                foregroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),

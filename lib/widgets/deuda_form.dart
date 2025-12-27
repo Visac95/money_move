@@ -32,29 +32,40 @@ class DeudaForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final aiProvider = context.watch<AiCategoryProvider>();
+    
+    // Acceso al tema actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    final activeColor = debo ? AppColors.expenseColor : AppColors.incomeColor;
+    final activeColor = debo ? AppColors.expense : AppColors.income;
     String? manualCategory = aiProvider.manualCategory;
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Titulo de la Deuda",
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            Text(
+              "Título de la Deuda",
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant, // Gris adaptable
+                fontWeight: FontWeight.w600
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
+              style: TextStyle(color: colorScheme.onSurface), // Color del texto al escribir
               decoration: InputDecoration(
                 hintText: "Ej. Compra de zapatos",
+                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                // Fondo del input adaptable
+                fillColor: colorScheme.surfaceContainer, 
                 prefixIcon: Icon(
                   Icons.edit_note_rounded,
-                  color: Colors.grey.shade400,
+                  color: colorScheme.onSurfaceVariant, // Icono adaptable
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -68,37 +79,44 @@ class DeudaForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
+            // --- TOGGLE SWITCH ---
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                // Fondo del contenedor del toggle
+                color: colorScheme.surfaceContainerHigh, 
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
-                  _buildToggleOption("Yo debo", true),
-                  _buildToggleOption("Me deben", false),
+                  _buildToggleOption(context, "Yo debo", true),
+                  _buildToggleOption(context, "Me deben", false),
                 ],
               ),
             ),
 
             const SizedBox(height: 15),
 
-            //Involucrado input
+            // Involucrado input
             Text(
               _involucradoText(),
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant, 
+                fontWeight: FontWeight.w600
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: involucradoController,
+              style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: "Nombre del involucrado",
+                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: colorScheme.surfaceContainer,
                 prefixIcon: Icon(
                   Icons.person,
-                  color: Colors.grey.shade400,
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -112,9 +130,13 @@ class DeudaForm extends StatelessWidget {
             ),
 
             // 2. INPUT DE MONTO (Gigante, estilo banco)
-            const Text(
+            const SizedBox(height: 20),
+            Text(
               "Monto",
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant, 
+                fontWeight: FontWeight.w600
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -128,10 +150,11 @@ class DeudaForm extends StatelessWidget {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: activeColor,
+                color: activeColor, // Rojo o Verde se ven bien en ambos modos
               ),
               decoration: InputDecoration(
                 hintText: "0.00",
+                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.3)),
                 prefixText: "\$ ",
                 prefixStyle: TextStyle(
                   fontSize: 40,
@@ -143,6 +166,8 @@ class DeudaForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            
+            // --- SECCIÓN AI / CATEGORÍA ---
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: aiProvider.isLoading
@@ -157,87 +182,82 @@ class DeudaForm extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
+                        Text(
                           "Analizando...",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
                         ),
                       ],
                     )
                   : (aiProvider.suggestedCategory.isNotEmpty ||
-                        manualCategory != null) // Mostramos si hay IA o Manual
-                  ? GestureDetector(
-                      // <--- AQUÍ HACEMOS LA MAGIA
-                      onTap: () async {
-                        // Abrimos el selector manual
-                        final String? selectedManualCategory =
-                            await showDialog<String>(
+                          manualCategory != null) 
+                      ? GestureDetector(
+                          onTap: () async {
+                            final String? selectedManualCategory =
+                                await showDialog<String>(
                               context: context,
                               builder: (BuildContext context) {
-                                return SelectCategoryWindow();
+                                return const SelectCategoryWindow();
                               },
                             );
-                        if (selectedManualCategory != null) {
-                          aiProvider.manualCategory = selectedManualCategory;
-                          manualCategory = selectedManualCategory;
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          // Cambiamos el color si es manual para dar feedback visual
-                          color: manualCategory != null
-                              ? Colors.green.shade50
-                              : AppColors.primaryLight,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: manualCategory != null
-                                ? Colors.green.shade200
-                                : AppColors.primaryColor,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // Cambiamos el ícono: Estrellitas si es IA, Check si es Manual
-                            Icon(
-                              manualCategory != null
-                                  ? Icons.check_circle
-                                  : Icons.auto_awesome,
-                              size: 16,
-                              color: manualCategory != null
-                                  ? Colors.green
-                                  : AppColors.primaryColor,
+                            if (selectedManualCategory != null) {
+                              aiProvider.manualCategory = selectedManualCategory;
+                              manualCategory = selectedManualCategory;
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              // Mostramos la manual si existe, si no, la de la IA
-                              manualCategory != null
-                                  ? "Selecione una categoría."
-                                  : "Categoría: ${aiProvider.suggestedCategory}",
-                              style: TextStyle(
+                            decoration: BoxDecoration(
+                              // Usamos opacidad para que el color de fondo no sea muy brillante en modo oscuro
+                              color: manualCategory != null
+                                  ? Colors.green.withOpacity(0.15)
+                                  : colorScheme.primary.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
                                 color: manualCategory != null
-                                    ? Colors.green.shade700
-                                    : AppColors.primaryColor,
-                                fontWeight: FontWeight.w600,
+                                    ? Colors.green.withOpacity(0.5)
+                                    : colorScheme.primary.withOpacity(0.5),
                               ),
                             ),
-                            // Flechita pequeña para indicar que se puede cambiar
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 16,
-                              color: manualCategory != null
-                                  ? Colors.green
-                                  : AppColors.primaryColor,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  manualCategory != null
+                                      ? Icons.check_circle
+                                      : Icons.auto_awesome,
+                                  size: 16,
+                                  color: manualCategory != null
+                                      ? Colors.green
+                                      : colorScheme.primary,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  manualCategory != null
+                                      ? "Selecione una categoría."
+                                      : "Categoría: ${aiProvider.suggestedCategory}",
+                                  style: TextStyle(
+                                    color: manualCategory != null
+                                        ? Colors.green
+                                        : colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  size: 16,
+                                  color: manualCategory != null
+                                      ? Colors.green
+                                      : colorScheme.primary,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
             ),
             const SizedBox(height: 40),
 
@@ -248,7 +268,9 @@ class DeudaForm extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onSave,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark, // Botón negro moderno
+                  // Usamos el Primary del tema (Azul/Indigo)
+                  backgroundColor: colorScheme.primary, 
+                  foregroundColor: colorScheme.onPrimary, // Texto blanco
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -259,7 +281,6 @@ class DeudaForm extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -279,8 +300,12 @@ class DeudaForm extends StatelessWidget {
   }
 
   // Helper para construir los botones del Toggle
-  Widget _buildToggleOption(String label, bool deboButton) {
-    // Si _isExpense es true y este botón es el de gasto (isExpenseButton == true) -> ACTIVO
+  Widget _buildToggleOption(BuildContext context, String label, bool deboButton) {
+    // Necesitamos el contexto para el tema
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     bool isActive = debo == deboButton;
 
     return Expanded(
@@ -290,12 +315,14 @@ class DeudaForm extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isActive ? Colors.white : Colors.transparent,
+            // En modo activo: Color de superficie (blanco/gris oscuro). Inactivo: transparente
+            color: isActive ? colorScheme.surface : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: isActive
+            // Sombra solo en modo claro
+            boxShadow: (isActive && !isDark)
                 ? [
                     BoxShadow(
-                      color: const Color.fromARGB(133, 0, 0, 0),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -309,9 +336,9 @@ class DeudaForm extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: isActive
                   ? (deboButton
-                        ? AppColors.expenseColor
-                        : AppColors.incomeColor)
-                  : Colors.grey,
+                      ? AppColors.expense
+                      : AppColors.income)
+                  : colorScheme.onSurfaceVariant, // Color gris adaptable para inactivos
             ),
           ),
         ),

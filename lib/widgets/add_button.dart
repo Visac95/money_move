@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
+// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
 
@@ -8,13 +8,16 @@ class AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos un Container decorado para simular un FAB
-    // Esto permite que el PopupMenuButton sea el dueño del click
+    // Acceso a los colores del tema
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      height: 56, // Tamaño estándar de un FAB
+      height: 56, 
       width: 56,
       decoration: BoxDecoration(
-        color: AppColors.primaryLight, // Tu color principal
+        // Antes: AppColors.primaryLight
+        // Ahora: colorScheme.primary (El color principal de tu app)
+        color: colorScheme.primary, 
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
@@ -25,36 +28,48 @@ class AddButton extends StatelessWidget {
         ],
       ),
       child: PopupMenuButton<String>(
-        // El icono "+" blanco
-        icon: const Icon(Icons.add, color: AppColors.transactionListIconColor, size: 28),
+        // El icono "+" debe contrastar con el fondo primario.
+        // Usamos onPrimary (generalmente blanco).
+        icon: Icon(Icons.add, color: colorScheme.onPrimary, size: 28),
         
-        // Ajustamos la posición para que el menú salga un poco más arriba
-        offset: const Offset(0, -120), 
+        offset: const Offset(0, -120),
         
-        // Forma redondeada del menú
+        // El color del fondo del menú emergente
+        color: colorScheme.surface,
+        surfaceTintColor: colorScheme.surfaceTint, // Pequeño tinte en Material 3
+
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         
         onSelected: (value) {
           _handleMenuSelection(context, value);
         },
         itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: "transaccion", // Ojo con la ortografía aquí
+          PopupMenuItem(
+            value: "transaccion",
             child: Row(
               children: [
-                Icon(Icons.receipt_long_rounded, color: Colors.blueGrey),
-                SizedBox(width: 10),
-                Text("Nueva Transacción"),
+                // Icono azulado/gris que combina con el tema
+                Icon(Icons.receipt_long_rounded, color: colorScheme.primary),
+                const SizedBox(width: 10),
+                Text(
+                  "Nueva Transacción",
+                  // Texto adaptable: Negro (Día) / Blanco (Noche)
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
               ],
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: "deuda",
             child: Row(
               children: [
-                Icon(Icons.handshake_outlined, color: Colors.redAccent),
-                SizedBox(width: 10),
-                Text("Nueva Deuda", style: TextStyle(color: Colors.redAccent)),
+                // Usamos el color de error del tema para mantener coherencia (suele ser rojo)
+                Icon(Icons.handshake_outlined, color: colorScheme.error),
+                const SizedBox(width: 10),
+                Text(
+                  "Nueva Deuda", 
+                  style: TextStyle(color: colorScheme.error),
+                ),
               ],
             ),
           ),
@@ -64,12 +79,10 @@ class AddButton extends StatelessWidget {
   }
 
   void _handleMenuSelection(BuildContext context, String value) {
-    // Aquí tenías un error: 'trasnaccion' vs 'transaccion'
     if (value == "transaccion") {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
       );
-      print("Ir a Transacción");
     } else if (value == "deuda") {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const AddDeudaScreen()),
