@@ -74,7 +74,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   separatorBuilder: (_, __) => Divider(
                     height: 16, 
                     thickness: 0.5, 
-                    color: colorScheme.outlineVariant.withOpacity(0.5)
+                    color: Colors.transparent
                   ),
                   itemBuilder: (context, index) {
                     final transaction = lista[index];

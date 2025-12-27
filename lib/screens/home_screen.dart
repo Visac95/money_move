@@ -19,8 +19,6 @@ class HomeScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      // ELIMINADO: backgroundColor: AppColors.backgroundColor, 
-      // Ahora el Theme en main.dart se encarga del fondo automáticamente.
       
       appBar: AppBar(
         // Opcional: Si quieres la AppBar transparente como en la otra pantalla

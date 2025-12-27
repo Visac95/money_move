@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/config/app_colors.dart';
-// Eliminado: import 'package:money_move/config/app_strings.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRECTO
 import 'package:money_move/widgets/add_deuda_button.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
@@ -20,7 +18,6 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.onSurface,
       appBar: AppBar(
         title: Center(
           child: Text(l10n.titleDeudasScreen), // <--- CAMBIO AQUÍ

@@ -86,7 +86,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get editDeudaText => 'Editar Deuda';
 
   @override
-  String get changeLanguage => 'Idioma cambiado';
+  String get changeLanguage => 'Language changed';
 
   @override
   String get seeAllTransactionsText => 'Ver todos los movimientos';

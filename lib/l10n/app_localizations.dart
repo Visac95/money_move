@@ -251,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @changeLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Language changed'**
+  /// **'Idioma cambiado'**
   String get changeLanguage;
 
   /// No description provided for @seeAllTransactionsText.
