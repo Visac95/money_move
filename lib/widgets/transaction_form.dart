@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 import '../config/app_colors.dart'; 
@@ -239,7 +240,7 @@ class TransactionForm extends StatelessWidget {
                                 Text(
                                   manualCategory != null
                                       ? strings.selectCategoryText
-                                      : "${strings.category}: ${aiProvider.suggestedCategory}",
+                                      : "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}",
                                   style: TextStyle(
                                     color: manualCategory != null
                                         ? (isDark ? Colors.greenAccent : Colors.green.shade700)

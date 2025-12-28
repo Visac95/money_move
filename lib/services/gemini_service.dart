@@ -14,7 +14,7 @@ class GeminiService {
   Future<String> classifyTransaction(String transactionTitle) async {
 
     final String categoriesString = AppConstants.categories
-        .map((cat) => cat.toUpperCase())
+        .map((cat) => cat)
         .join(', ');
 
     String prompt =
