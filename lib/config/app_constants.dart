@@ -2,40 +2,54 @@ import 'package:flutter/material.dart';
 
 class AppConstants {
 
+  // 1. Estas son las LLAVES INTERNAS. 
+  // Esto es lo que se guarda en la Base de Datos (Firebase/SQLite).
+  static const String catFood = 'cat_food';
+  static const String catTransport = 'cat_transport';
+  static const String catLeisure = 'cat_leisure';
+  static const String catHealth = 'cat_health';
+  static const String catEducation = 'cat_education';
+  static const String catChurch = 'cat_church';
+  static const String catJob = 'cat_job';
+  static const String catPet = 'cat_pet';
+  static const String catHome = 'cat_home';
+  static const String catServices = 'cat_services';
+  static const String catDebt = 'cat_debt';
+  static const String catOthers = 'cat_others';
+
+  // Lista de claves para iterar
   static const List<String> categories = [
-    "COMIDA",
-    "TRANSPORTE",
-    "OCIO",
-    "SALUD",
-    "EDUCACION",
-    "IGLESIA",
-    "EMPLEO",
-    "MASCOTA",
-    "HOGAR",
-    "SERVICIOS",
-    "DEUDAS",
-    "OTROS",
+    catFood,
+    catTransport,
+    catLeisure,
+    catHealth,
+    catEducation,
+    catChurch,
+    catJob,
+    catPet,
+    catHome,
+    catServices,
+    catDebt,
+    catOthers,
   ];
 
-  // NUEVO: Mapa de íconos
+  // Mapa de íconos usando las CLAVES
   static const Map<String, IconData> categoryIcons = {
-    'COMIDA': Icons.fastfood,
-    'TRANSPORTE': Icons.directions_bus,
-    'SALUD': Icons.local_hospital,
-    'OCIO': Icons.movie,
-    "HOGAR": Icons.house,
-    'EDUCACION': Icons.school,
-    'SERVICIOS': Icons.lightbulb,
-    "IGLESIA": Icons.church,
-    "EMPLEO": Icons.work,
-    'OTROS': Icons.category,
-    "MASCOTA": Icons.pets,
-    "DEUDAS" : Icons.receipt_long,
+    catFood: Icons.fastfood,
+    catTransport: Icons.directions_bus,
+    catHealth: Icons.local_hospital,
+    catLeisure: Icons.movie,
+    catHome: Icons.house,
+    catEducation: Icons.school,
+    catServices: Icons.lightbulb,
+    catChurch: Icons.church,
+    catJob: Icons.work,
+    catOthers: Icons.category,
+    catPet: Icons.pets,
+    catDebt : Icons.receipt_long,
   };
 
-  // Función Helper: "Dame el ícono para esta categoría"
-  // Si la categoría no existe en el mapa, devolvemos un ícono por defecto
-  static IconData getIconForCategory(String category) {
-    return categoryIcons[category] ?? Icons.help_outline;
+  static IconData getIconForCategory(String categoryKey) {
+    return categoryIcons[categoryKey] ?? Icons.help_outline;
   }
 }

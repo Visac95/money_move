@@ -87,8 +87,7 @@ class VerTransaction extends StatelessWidget {
               Hero(
                 tag: transaction.id,
                 child: Text(
-                  (transaction.isExpense ? '- ' : '+ ') +
-                      "\$${transaction.monto.toStringAsFixed(2)}",
+                  "${transaction.isExpense ? '- ' : '+ '}\$${transaction.monto.toStringAsFixed(2)}",
                   style: TextStyle(
                     color: mainColor, // Mantenemos rojo/verde
                     fontSize: 48,
@@ -120,7 +119,7 @@ class VerTransaction extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05), // Sombra sutil
+                      color: colorScheme.onSurface, // Sombra sutil
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),

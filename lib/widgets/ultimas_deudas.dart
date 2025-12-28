@@ -73,7 +73,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: lista.length > 2 ? 2 : lista.length,
                   separatorBuilder: (_, __) => Divider(
-                    height: 16, 
+                    height: 1, 
                     thickness: 0.5, 
                     color: Colors.transparent
                   ),
@@ -180,11 +180,11 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Ver todas las deudas",
+                    AppLocalizations.of(context)!.seeAllDeudasText,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 8),

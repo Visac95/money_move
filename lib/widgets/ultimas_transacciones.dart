@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                       Icon(Icons.inbox_rounded, size: 40, color: colorScheme.outline),
                       const SizedBox(height: 8),
                       Text(
-                        "No hay transacciones aún 😴",
+                        AppLocalizations.of(context)!.noTransactionsYet,
                         style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ],
@@ -181,11 +182,11 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Ver todas las transacciones",
+                    AppLocalizations.of(context)!.seeAllTransactionsText,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 8),

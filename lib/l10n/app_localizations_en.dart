@@ -45,6 +45,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category => 'Category';
 
   @override
+  String get cat_food => 'Food';
+
+  @override
+  String get cat_transport => 'Transportation';
+
+  @override
+  String get cat_leisure => 'Leisure';
+
+  @override
+  String get cat_health => 'Health';
+
+  @override
+  String get cat_education => 'Education';
+
+  @override
+  String get cat_church => 'Church';
+
+  @override
+  String get cat_job => 'Job';
+
+  @override
+  String get cat_pet => 'Pet';
+
+  @override
+  String get cat_home => 'Home';
+
+  @override
+  String get cat_services => 'Services';
+
+  @override
+  String get cat_debt => 'Debts';
+
+  @override
+  String get cat_others => 'Others';
+
+  @override
   String get titleTransactionsScreen => 'Transactions';
 
   @override
@@ -92,6 +128,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAllTransactionsText => 'See all transactions';
 
   @override
+  String get seeAllDeudasText => 'See all debts';
+
+  @override
   String get transactionNotExist => 'The transaction does not exist';
 
   @override
@@ -102,4 +141,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incomeReceived => 'Income Received';
+
+  @override
+  String get inputTitleTransactionText => 'Transaction Title';
+
+  @override
+  String get writeTitleTransactionHint => 'Enter transaction title';
+
+  @override
+  String get descriptionTransactionText => 'Transaction Description';
+
+  @override
+  String get optionalHintText => 'Optional';
+
+  @override
+  String get expenseText => 'Expense';
+
+  @override
+  String get incomeText => 'Income';
+
+  @override
+  String get amountText => 'Amount';
+
+  @override
+  String get analizingText => 'Analyzing...';
+
+  @override
+  String get selectCategoryText => 'Select a category';
+
+  @override
+  String get saveTransactionText => 'Save Transaction';
 }

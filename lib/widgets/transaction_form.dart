@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
@@ -64,6 +65,8 @@ class TransactionForm extends StatelessWidget {
         borderSide: BorderSide(color: activeColor, width: 2),
       ),
     );
+    
+    final strings = AppLocalizations.of(context)!;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -73,7 +76,7 @@ class TransactionForm extends StatelessWidget {
           children: [
             // 1. INPUT DE TÍTULO
             Text(
-              "Título de la Transacción",
+              strings.inputTitleTransactionText,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, 
                 fontWeight: FontWeight.w600
@@ -84,7 +87,7 @@ class TransactionForm extends StatelessWidget {
               controller: titleController,
               style: TextStyle(color: colorScheme.onSurface), // Color del texto al escribir
               decoration: inputDecorationTheme.copyWith(
-                hintText: "Escribe el titulo de tu movimiento",
+                hintText: strings.writeTitleTransactionHint,
                 prefixIcon: const Icon(Icons.edit_note_rounded),
               ),
             ),
@@ -92,7 +95,7 @@ class TransactionForm extends StatelessWidget {
 
             // 2. INPUT DE DESCRIPCIÓN
             Text(
-              "Descripción de la Transacción",
+              strings.descriptionTransactionText,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, 
                 fontWeight: FontWeight.w600
@@ -103,7 +106,7 @@ class TransactionForm extends StatelessWidget {
               controller: descriptionController,
               style: TextStyle(color: colorScheme.onSurface),
               decoration: inputDecorationTheme.copyWith(
-                hintText: "Opcional",
+                hintText: strings.optionalHintText,
                 prefixIcon: const Icon(Icons.description_outlined),
               ),
             ),
@@ -119,8 +122,8 @@ class TransactionForm extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildToggleOption(context, "Gasto", true, activeColor),
-                  _buildToggleOption(context, "Ingreso", false, activeColor),
+                  _buildToggleOption(context, strings.incomeText, true, activeColor),
+                  _buildToggleOption(context, strings.expenseText, false, activeColor),
                 ],
               ),
             ),
@@ -129,7 +132,7 @@ class TransactionForm extends StatelessWidget {
 
             // 4. INPUT DE MONTO
             Text(
-              "Monto",
+              strings.amountText,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, 
                 fontWeight: FontWeight.w600
@@ -180,7 +183,7 @@ class TransactionForm extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          "Analizando...",
+                          strings.analizingText,
                           style: TextStyle(
                             color: colorScheme.onSurfaceVariant, 
                             fontSize: 12
@@ -235,8 +238,8 @@ class TransactionForm extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Text(
                                   manualCategory != null
-                                      ? "Selecione una categoría."
-                                      : "Categoría: ${aiProvider.suggestedCategory}",
+                                      ? strings.selectCategoryText
+                                      : "${strings.category}: ${aiProvider.suggestedCategory}",
                                   style: TextStyle(
                                     color: manualCategory != null
                                         ? (isDark ? Colors.greenAccent : Colors.green.shade700)
@@ -274,8 +277,8 @@ class TransactionForm extends StatelessWidget {
                   ),
                   elevation: 2,
                 ),
-                child: const Text(
-                  "Guardar Movimiento",
+                child:  Text(
+                  strings.saveTransactionText,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -14,9 +14,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Acceso rápido a los colores del tema actual
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       

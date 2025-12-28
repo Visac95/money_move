@@ -102,9 +102,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Acceso al esquema de colores actual
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       // backgroundColor: AppColors.white, // ELIMINADO: Ahora es automático

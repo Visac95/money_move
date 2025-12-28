@@ -45,6 +45,42 @@ class AppLocalizationsEs extends AppLocalizations {
   String get category => 'Categoría';
 
   @override
+  String get cat_food => 'Comida';
+
+  @override
+  String get cat_transport => 'Transporte';
+
+  @override
+  String get cat_leisure => 'Ocio';
+
+  @override
+  String get cat_health => 'Salud';
+
+  @override
+  String get cat_education => 'Educación';
+
+  @override
+  String get cat_church => 'Iglesia';
+
+  @override
+  String get cat_job => 'Empleo';
+
+  @override
+  String get cat_pet => 'Mascota';
+
+  @override
+  String get cat_home => 'Hogar';
+
+  @override
+  String get cat_services => 'Servicios';
+
+  @override
+  String get cat_debt => 'Deudas';
+
+  @override
+  String get cat_others => 'Otros';
+
+  @override
   String get titleTransactionsScreen => 'Movimientos';
 
   @override
@@ -92,6 +128,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get seeAllTransactionsText => 'Ver todos los movimientos';
 
   @override
+  String get seeAllDeudasText => 'Ver todas las deudas';
+
+  @override
   String get transactionNotExist => 'La transacción no existe';
 
   @override
@@ -102,4 +141,34 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get incomeReceived => 'Ingreso Recibido';
+
+  @override
+  String get inputTitleTransactionText => 'Título del movimiento';
+
+  @override
+  String get writeTitleTransactionHint => 'Escribe el titulo de tu movimiento';
+
+  @override
+  String get descriptionTransactionText => 'Descripción de la Transacción';
+
+  @override
+  String get optionalHintText => 'Opcional';
+
+  @override
+  String get expenseText => 'Gasto';
+
+  @override
+  String get incomeText => 'Ingreso';
+
+  @override
+  String get amountText => 'Cantidad';
+
+  @override
+  String get analizingText => 'Analizando...';
+
+  @override
+  String get selectCategoryText => 'Selecionar una categoría';
+
+  @override
+  String get saveTransactionText => 'Guardar Movimiento';
 }

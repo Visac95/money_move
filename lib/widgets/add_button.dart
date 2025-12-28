@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
@@ -52,7 +53,7 @@ class AddButton extends StatelessWidget {
                 Icon(Icons.receipt_long_rounded, color: colorScheme.primary),
                 const SizedBox(width: 10),
                 Text(
-                  "Nueva Transacción",
+                  AppLocalizations.of(context)!.addTransaction,
                   // Texto adaptable: Negro (Día) / Blanco (Noche)
                   style: TextStyle(color: colorScheme.onSurface),
                 ),
@@ -67,7 +68,7 @@ class AddButton extends StatelessWidget {
                 Icon(Icons.handshake_outlined, color: colorScheme.error),
                 const SizedBox(width: 10),
                 Text(
-                  "Nueva Deuda", 
+                  AppLocalizations.of(context)!.addDeuda,
                   style: TextStyle(color: colorScheme.error),
                 ),
               ],

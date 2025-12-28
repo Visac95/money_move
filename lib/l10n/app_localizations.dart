@@ -170,6 +170,78 @@ abstract class AppLocalizations {
   /// **'Category'**
   String get category;
 
+  /// No description provided for @cat_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get cat_food;
+
+  /// No description provided for @cat_transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation'**
+  String get cat_transport;
+
+  /// No description provided for @cat_leisure.
+  ///
+  /// In en, this message translates to:
+  /// **'Leisure'**
+  String get cat_leisure;
+
+  /// No description provided for @cat_health.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get cat_health;
+
+  /// No description provided for @cat_education.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get cat_education;
+
+  /// No description provided for @cat_church.
+  ///
+  /// In en, this message translates to:
+  /// **'Church'**
+  String get cat_church;
+
+  /// No description provided for @cat_job.
+  ///
+  /// In en, this message translates to:
+  /// **'Job'**
+  String get cat_job;
+
+  /// No description provided for @cat_pet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get cat_pet;
+
+  /// No description provided for @cat_home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get cat_home;
+
+  /// No description provided for @cat_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get cat_services;
+
+  /// No description provided for @cat_debt.
+  ///
+  /// In en, this message translates to:
+  /// **'Debts'**
+  String get cat_debt;
+
+  /// No description provided for @cat_others.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get cat_others;
+
   /// No description provided for @titleTransactionsScreen.
   ///
   /// In en, this message translates to:
@@ -260,6 +332,12 @@ abstract class AppLocalizations {
   /// **'See all transactions'**
   String get seeAllTransactionsText;
 
+  /// No description provided for @seeAllDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'See all debts'**
+  String get seeAllDeudasText;
+
   /// No description provided for @transactionNotExist.
   ///
   /// In en, this message translates to:
@@ -283,6 +361,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Income Received'**
   String get incomeReceived;
+
+  /// No description provided for @inputTitleTransactionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Title'**
+  String get inputTitleTransactionText;
+
+  /// No description provided for @writeTitleTransactionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter transaction title'**
+  String get writeTitleTransactionHint;
+
+  /// No description provided for @descriptionTransactionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Description'**
+  String get descriptionTransactionText;
+
+  /// No description provided for @optionalHintText.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optionalHintText;
+
+  /// No description provided for @expenseText.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expenseText;
+
+  /// No description provided for @incomeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get incomeText;
+
+  /// No description provided for @amountText.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amountText;
+
+  /// No description provided for @analizingText.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing...'**
+  String get analizingText;
+
+  /// No description provided for @selectCategoryText.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category'**
+  String get selectCategoryText;
+
+  /// No description provided for @saveTransactionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Transaction'**
+  String get saveTransactionText;
 }
 
 class _AppLocalizationsDelegate
