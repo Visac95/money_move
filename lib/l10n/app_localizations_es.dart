@@ -110,6 +110,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deletedTransactionMessage => 'Movimiento eliminado';
 
   @override
+  String get deletedDeudaMessege => 'Deuda Eliminada';
+
+  @override
   String get titleDeudasScreen => 'Deudas';
 
   @override
@@ -171,4 +174,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get saveTransactionText => 'Guardar Movimiento';
+
+  @override
+  String get payableText => 'POR PAGAR';
+
+  @override
+  String get receivableText => 'POR COBRAR';
+
+  @override
+  String get withInvolucradoText => 'Con';
+
+  @override
+  String get venceText => 'Vence';
+
+  @override
+  String get allAlrightDeudasText => 'Todo saldado 🎉';
+
+  @override
+  String get noOutstandingDeudas => 'No tienes deudas pendientes';
 }

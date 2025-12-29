@@ -33,6 +33,7 @@
     "deleteTransactionquestionText": "Do you want to delete this transaction?",
     "deleteTransactionText": "Delete Transaction",
     "deletedTransactionMessage": "Transaction deleted",
+    "deletedDeudaMessege": "Debt deleted",
     "titleDeudasScreen": "Debts",
     "noDeudasYet": "No debts yet 😴",
     "addDeuda": "Add Debt",
@@ -53,5 +54,11 @@
     "amountText": "Amount",
     "analizingText": "Analyzing...",
     "selectCategoryText": "Select a category",
-    "saveTransactionText": "Save Transaction"
+    "saveTransactionText": "Save Transaction",
+    "payableText": "Payable",
+    "receivableText" : "Receivable",
+    "withInvolucradoText": "With",
+    "venceText": "Due",
+    "allAlrightDeudasText": "All settled 🎉",
+    "noOutstandingDeudas": "You have no outstanding debts"
 }

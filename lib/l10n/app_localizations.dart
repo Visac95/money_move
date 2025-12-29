@@ -296,6 +296,12 @@ abstract class AppLocalizations {
   /// **'Transaction deleted'**
   String get deletedTransactionMessage;
 
+  /// No description provided for @deletedDeudaMessege.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt deleted'**
+  String get deletedDeudaMessege;
+
   /// No description provided for @titleDeudasScreen.
   ///
   /// In en, this message translates to:
@@ -421,6 +427,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save Transaction'**
   String get saveTransactionText;
+
+  /// No description provided for @payableText.
+  ///
+  /// In en, this message translates to:
+  /// **'Payable'**
+  String get payableText;
+
+  /// No description provided for @receivableText.
+  ///
+  /// In en, this message translates to:
+  /// **'Receivable'**
+  String get receivableText;
+
+  /// No description provided for @withInvolucradoText.
+  ///
+  /// In en, this message translates to:
+  /// **'With'**
+  String get withInvolucradoText;
+
+  /// No description provided for @venceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Due'**
+  String get venceText;
+
+  /// No description provided for @allAlrightDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'All settled 🎉'**
+  String get allAlrightDeudasText;
+
+  /// No description provided for @noOutstandingDeudas.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no outstanding debts'**
+  String get noOutstandingDeudas;
 }
 
 class _AppLocalizationsDelegate

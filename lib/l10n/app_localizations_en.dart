@@ -110,6 +110,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletedTransactionMessage => 'Transaction deleted';
 
   @override
+  String get deletedDeudaMessege => 'Debt deleted';
+
+  @override
   String get titleDeudasScreen => 'Debts';
 
   @override
@@ -171,4 +174,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveTransactionText => 'Save Transaction';
+
+  @override
+  String get payableText => 'Payable';
+
+  @override
+  String get receivableText => 'Receivable';
+
+  @override
+  String get withInvolucradoText => 'With';
+
+  @override
+  String get venceText => 'Due';
+
+  @override
+  String get allAlrightDeudasText => 'All settled 🎉';
+
+  @override
+  String get noOutstandingDeudas => 'You have no outstanding debts';
 }

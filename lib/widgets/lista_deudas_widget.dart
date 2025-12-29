@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     // Esto funciona perfecto en Dark Mode porque se mezcla con el gris oscuro.
     final Color chipBgColor = mainColor.withOpacity(isDark ? 0.15 : 0.1);
 
-    final String label = soyDeudor ? "POR PAGAR" : "POR COBRAR";
+    final strings = AppLocalizations.of(context)!;
+
+    final String label = soyDeudor ? strings.payableText : strings.receivableText;
     final IconData iconStatus = soyDeudor
         ? Icons.arrow_outward_rounded
         : Icons.arrow_downward_rounded;
@@ -183,7 +186,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  "Con: ${deuda.involucrado}",
+                                  "${strings.withInvolucradoText}: ${deuda.involucrado}",
                                   style: TextStyle(
                                     color: colorScheme.onSurfaceVariant, // Texto secundario
                                     fontSize: 13,
@@ -216,7 +219,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "Vence: ${_formatDate(deuda.fechaLimite)}",
+                                    "${strings.venceText}: ${_formatDate(deuda.fechaLimite)}",
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: colorScheme.onSurfaceVariant,
@@ -245,6 +248,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     DeudaProvider provider,
     ColorScheme colorScheme,
   ) {
+    final strings = AppLocalizations.of(context)!;
     return SizedBox(
       height: 24,
       width: 24,
@@ -258,7 +262,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
             provider.deleteDeuda(deuda.id);
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text('Deuda eliminada')));
+            ).showSnackBar( SnackBar(content: Text(strings.deletedDeudaMessege)));
           }
           if (value == "editar") {
             Navigator.of(context).push(
@@ -275,7 +279,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
               children: [
                 Icon(Icons.edit, size: 18, color: colorScheme.primary),
                 const SizedBox(width: 8),
-                Text("Editar", style: TextStyle(color: colorScheme.onSurface)),
+                Text(strings.editText, style: TextStyle(color: colorScheme.onSurface)),
               ],
             ),
           ),
@@ -285,7 +289,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
               children: [
                 const Icon(Icons.delete, color: Colors.red, size: 18),
                 const SizedBox(width: 8),
-                const Text("Borrar", style: TextStyle(color: Colors.red)),
+                 Text(strings.deleteText, style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
@@ -295,7 +299,10 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   }
 
   Widget _buildEmptyState(ColorScheme colorScheme) {
+    final strings = AppLocalizations.of(context)!;
+
     return Center(
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -307,7 +314,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           ),
           const SizedBox(height: 16),
           Text(
-            "Todo saldado 🎉",
+            strings.allAlrightDeudasText,
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 18,
@@ -316,7 +323,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           ),
           const SizedBox(height: 8),
           Text(
-            "No tienes deudas pendientes",
+            strings.noOutstandingDeudas,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant, 
               fontSize: 14,

@@ -33,6 +33,7 @@
     "deleteTransactionquestionText": "¿Desea eliminar este movimiento?",
     "deleteTransactionText": "Eliminar Movimiento",
     "deletedTransactionMessage": "Movimiento eliminado",
+    "deletedDeudaMessege": "Deuda Eliminada",
     "titleDeudasScreen": "Deudas",
     "noDeudasYet": "No hay deudas aún 😴",
     "addDeuda": "Añadir Deuda",
@@ -53,5 +54,11 @@
     "amountText": "Cantidad",
     "analizingText": "Analizando...",
     "selectCategoryText": "Selecionar una categoría",
-    "saveTransactionText": "Guardar Movimiento"
+    "saveTransactionText": "Guardar Movimiento",
+    "payableText": "POR PAGAR",
+    "receivableText" : "POR COBRAR",
+    "withInvolucradoText": "Con",
+    "venceText": "Vence",
+    "allAlrightDeudasText": "Todo saldado 🎉",
+    "noOutstandingDeudas": "No tienes deudas pendientes"
 }
