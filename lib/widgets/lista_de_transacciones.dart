@@ -5,6 +5,8 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/screens/ver_transaction.dart';
+import 'package:money_move/utils/date_formater.dart';
+import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
 class ListaDeTransacciones extends StatelessWidget {
@@ -81,10 +83,6 @@ class _TransactionCard extends StatelessWidget {
 
   const _TransactionCard({required this.transaction});
 
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -92,18 +90,16 @@ class _TransactionCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final bool isExpense = transaction.isExpense;
-    final Color amountColor = isExpense
-        ? AppColors.expense
-        : AppColors.income;
+    final Color amountColor = isExpense ? AppColors.expense : AppColors.income;
 
     return Container(
       decoration: BoxDecoration(
         // Fondo adaptable: blanco en light, gris oscuro en dark
-        color: colorScheme.surfaceContainerLow, 
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
         // Sombra solo en modo claro. En modo oscuro se ve mal.
-        boxShadow: isDark 
-            ? [] 
+        boxShadow: isDark
+            ? []
             : [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
@@ -139,13 +135,13 @@ class _TransactionCard extends StatelessWidget {
                   width: 50,
                   decoration: BoxDecoration(
                     // Fondo del icono basado en el color primario del tema
-                    color: colorScheme.primaryContainer, 
+                    color: colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
                     AppConstants.getIconForCategory(transaction.categoria),
                     // Color del icono que contrasta con el primaryContainer
-                    color: colorScheme.onPrimaryContainer, 
+                    color: colorScheme.onPrimaryContainer,
                     size: 26,
                   ),
                 ),
@@ -173,11 +169,12 @@ class _TransactionCard extends StatelessWidget {
                           Icon(
                             Icons.access_time_rounded,
                             size: 12,
-                            color: colorScheme.onSurfaceVariant, // Color gris suave
+                            color: colorScheme
+                                .onSurfaceVariant, // Color gris suave
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            _formatDate(transaction.fecha),
+                            formatDate(transaction.fecha),
                             style: TextStyle(
                               color: colorScheme.onSurfaceVariant,
                               fontSize: 13,
@@ -233,13 +230,25 @@ class _TransactionCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       onSelected: (value) {
         if (value == "borrar") {
-          Provider.of<TransactionProvider>(
-            context,
-            listen: false,
-          ).deleteTransaction(transaction.id);
-          ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text(AppLocalizations.of(context)!.deletedTransactionMessage)),
-          );
+          // Provider.of<TransactionProvider>(
+          //   context,
+          //   listen: false,
+          // ).deleteTransaction(transaction.id);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text(
+          //       AppLocalizations.of(context)!.deletedTransactionMessage,
+          //     ),
+          //   ),
+          // );
+
+          UiUtils.showDeleteConfirmation(context, () {
+            // Esto solo se ejecuta si el usuario dice "SÍ"
+            Provider.of<TransactionProvider>(
+              context,
+              listen: false,
+            ).deleteTransaction(transaction.id);
+          });
         }
         if (value == "editar") {
           Navigator.of(context).push(

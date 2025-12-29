@@ -30,7 +30,6 @@
     "chooseCategoryManualTitle": "Elija la categoría para su movimiento",
     "editTransaccionText": "Editar Movimiento",
     "accitionNotUndone": "Esta acción no se puede deshacer.",
-    "deleteTransactionquestionText": "¿Desea eliminar este movimiento?",
     "deleteTransactionText": "Eliminar Movimiento",
     "deletedTransactionMessage": "Movimiento eliminado",
     "deletedDeudaMessege": "Deuda Eliminada",
@@ -74,5 +73,6 @@
     "incomesText": "Ingresos",
     "expencesText": "Gastos",
     "lastTransactionsText": "Ultimos movimientos",
-    "lastDeudasText": "Deudas pendientes"
+    "lastDeudasText": "Deudas pendientes",
+    "areYouSureTitle": "¿Estás seguro?"
 }

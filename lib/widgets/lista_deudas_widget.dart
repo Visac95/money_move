@@ -3,6 +3,8 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
+import 'package:money_move/utils/date_formater.dart';
+import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -19,10 +21,6 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   void initState() {
     super.initState();
     Provider.of<DeudaProvider>(context, listen: false).loadDeudas();
-  }
-
-  String _formatDate(DateTime date) {
-    return "${date.day}/${date.month}/${date.year}";
   }
 
   @override
@@ -219,7 +217,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "${strings.venceText}: ${_formatDate(deuda.fechaLimite)}",
+                                    "${strings.venceText}: ${formatDate(deuda.fechaLimite)}",
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: colorScheme.onSurfaceVariant,
@@ -259,10 +257,12 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         onSelected: (value) {
           if (value == "borrar") {
-            provider.deleteDeuda(deuda.id);
-            ScaffoldMessenger.of(
+            UiUtils.showDeleteConfirmation(context, () {
+            Provider.of<DeudaProvider>(
               context,
-            ).showSnackBar( SnackBar(content: Text(strings.deletedDeudaMessege)));
+              listen: false,
+            ).deleteDeuda(deuda.id);
+          });
           }
           if (value == "editar") {
             Navigator.of(context).push(

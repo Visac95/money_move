@@ -4,6 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
+import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
 
@@ -39,7 +40,7 @@ class VerTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
     Transaction? transaction = provider.getTransactionById(id);
-    
+
     // Acceso rápido al tema actual (Esto es lo que hace funcionar el modo oscuro)
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -59,8 +60,8 @@ class VerTransaction extends StatelessWidget {
 
     return Scaffold(
       // El color de fondo ahora lo decide el main.dart automáticamente
-      backgroundColor: theme.scaffoldBackgroundColor, 
-      
+      backgroundColor: theme.scaffoldBackgroundColor,
+
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.transactionDetailsTitle,
@@ -102,7 +103,7 @@ class VerTransaction extends StatelessWidget {
                     : AppLocalizations.of(context)!.incomeReceived,
                 style: TextStyle(
                   // Usamos 'outline' (nuestro gris secundario definido en main)
-                  color: colorScheme.outline, 
+                  color: colorScheme.outline,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -115,7 +116,7 @@ class VerTransaction extends StatelessWidget {
                 padding: const EdgeInsets.all(25),
                 decoration: BoxDecoration(
                   // Aquí la magia: surface es Blanco(Día) o Gris Oscuro(Noche)
-                  color: colorScheme.surface, 
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -137,7 +138,9 @@ class VerTransaction extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(
-                            AppConstants.getIconForCategory(transaction.categoria),
+                            AppConstants.getIconForCategory(
+                              transaction.categoria,
+                            ),
                             size: 30,
                             color: mainColor,
                           ),
@@ -167,7 +170,7 @@ class VerTransaction extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-                    const Divider(), 
+                    const Divider(),
                     const SizedBox(height: 20),
 
                     // Título y Descripción
@@ -227,14 +230,14 @@ class VerTransaction extends StatelessWidget {
                           EditTransactionScreen(transaction: transaction),
                     ),
                   ),
-                  icon: Icon(Icons.edit_rounded, color: colorScheme.surface), 
+                  icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
                   label: Text(
                     AppLocalizations.of(context)!.editTransaccionText,
                     style: TextStyle(color: colorScheme.surface, fontSize: 16),
                   ),
                   style: ElevatedButton.styleFrom(
                     // Usamos el color Primario del tema (Tu Indigo)
-                    backgroundColor: colorScheme.primary, 
+                    backgroundColor: colorScheme.primary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -251,7 +254,13 @@ class VerTransaction extends StatelessWidget {
                 height: 55,
                 child: TextButton.icon(
                   onPressed: () {
-                    _showDeleteConfirmation(context, id);
+                    UiUtils.showDeleteConfirmation(context, () {
+                      // Esto solo se ejecuta si el usuario dice "SÍ"
+                      Provider.of<TransactionProvider>(
+                        context,
+                        listen: false,
+                      ).deleteTransaction(transaction.id);
+                    });
                   },
                   icon: Icon(Icons.delete_outline, color: colorScheme.error),
                   label: Text(
@@ -279,72 +288,19 @@ class VerTransaction extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(color: theme.colorScheme.outline, fontSize: 14)),
+        Text(
+          label,
+          style: TextStyle(color: theme.colorScheme.outline, fontSize: 14),
+        ),
         Text(
           value,
           style: TextStyle(
-            fontSize: 16, 
+            fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface, 
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ],
     );
-  }
-
-  // Popup de eliminación
-  Future<void> _showDeleteConfirmation(BuildContext context, String id) async {
-    final theme = Theme.of(context);
-    
-    final bool? confirm = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // Fondo del diálogo automático según el tema
-          backgroundColor: theme.colorScheme.surface, 
-          title: Text(
-            AppLocalizations.of(context)!.deleteTransactionquestionText,
-            style: TextStyle(color: theme.colorScheme.onSurface),
-          ),
-          content: Text(
-            AppLocalizations.of(context)!.accitionNotUndone,
-            style: TextStyle(color: theme.colorScheme.onSurface),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                AppLocalizations.of(context)!.cancelText,
-                style: TextStyle(color: theme.colorScheme.primary),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                AppLocalizations.of(context)!.deleteTransactionText,
-                style: TextStyle(color: theme.colorScheme.error),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirm == true) {
-      if (!context.mounted) return; // Buena práctica de seguridad
-      final provider = Provider.of<TransactionProvider>(context, listen: false);
-      
-      await provider.deleteTransaction(id);
-
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.deletedTransactionMessage),
-        ),
-      );
-    }
   }
 }

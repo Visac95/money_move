@@ -278,12 +278,6 @@ abstract class AppLocalizations {
   /// **'This action cannot be undone.'**
   String get accitionNotUndone;
 
-  /// No description provided for @deleteTransactionquestionText.
-  ///
-  /// In en, this message translates to:
-  /// **'Do you want to delete this transaction?'**
-  String get deleteTransactionquestionText;
-
   /// No description provided for @deleteTransactionText.
   ///
   /// In en, this message translates to:
@@ -547,6 +541,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Outstanding debts'**
   String get lastDeudasText;
+
+  /// No description provided for @areYouSureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re sure?'**
+  String get areYouSureTitle;
 }
 
 class _AppLocalizationsDelegate

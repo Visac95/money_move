@@ -100,10 +100,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get accitionNotUndone => 'Esta acción no se puede deshacer.';
 
   @override
-  String get deleteTransactionquestionText =>
-      '¿Desea eliminar este movimiento?';
-
-  @override
   String get deleteTransactionText => 'Eliminar Movimiento';
 
   @override
@@ -235,4 +231,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lastDeudasText => 'Deudas pendientes';
+
+  @override
+  String get areYouSureTitle => '¿Estás seguro?';
 }

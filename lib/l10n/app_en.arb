@@ -30,7 +30,6 @@
     "chooseCategoryManualTitle": "Choose category for your transaction",
     "editTransaccionText": "Edit Transaction",
     "accitionNotUndone": "This action cannot be undone.",
-    "deleteTransactionquestionText": "Do you want to delete this transaction?",
     "deleteTransactionText": "Delete Transaction",
     "deletedTransactionMessage": "Transaction deleted",
     "deletedDeudaMessege": "Debt deleted",
@@ -74,5 +73,6 @@
     "incomesText": "Income",
     "expencesText": "Expenses",
     "lastTransactionsText": "Recent transactions",
-    "lastDeudasText": "Outstanding debts"
+    "lastDeudasText": "Outstanding debts",
+    "areYouSureTitle": "You're sure?"
 }
