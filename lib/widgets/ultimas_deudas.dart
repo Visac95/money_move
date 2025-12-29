@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
-import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
+import 'package:money_move/utils/ui_utils.dart'; // Asegúrate de tener esto si usas utilidades, si no, se puede quitar
 import 'package:provider/provider.dart';
 
 class UltimasDeudas extends StatefulWidget {
@@ -15,39 +15,35 @@ class UltimasDeudas extends StatefulWidget {
 
 class _UltimasDeudasState extends State<UltimasDeudas> {
   
-  // Función auxiliar para la fecha (Día/Mes/Año)
+  // Formateador de fecha simple
   String _formatDate(DateTime date) {
     String day = date.day.toString().padLeft(2, '0');
     String month = date.month.toString().padLeft(2, '0');
-    String year = date.year.toString();
-    return "$day/$month/$year";
+    return "$day/$month"; // Solo mostramos día y mes para ahorrar espacio
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<DeudaProvider>(context);
-    final lista = provider.deudas;
+    // Tomamos solo las últimas 2 o 3 deudas para la vista previa
+    final lista = provider.deudas; 
 
-    // Accedemos al tema
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-
     final strings = AppLocalizations.of(context)!;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        // Fondo adaptable (blanco en light, gris oscuro en dark)
-        color: colorScheme.surfaceContainer, 
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
-        // Sombra suave solo en modo claro
-        boxShadow: isDark 
-            ? [] 
+        boxShadow: isDark
+            ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1), // Sombra más sutil
+                  color: Colors.grey.withOpacity(0.1),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -55,40 +51,40 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
       ),
       child: Column(
         children: [
+          // --- ENCABEZADO ---
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 1,
-            ), // Espacio abajo del título
+            padding: const EdgeInsets.only(bottom: 10),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Separa texto e icono
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   strings.lastDeudasText,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold, // Negrita para jerarquía
-                    color: colorScheme
-                        .onSurface, // Color principal (no gris claro)
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 Icon(
-                  Icons.history_rounded,
-                  color: colorScheme.outline, // Icono sutil
+                  Icons.handshake_rounded, // Icono diferente a "history" para diferenciarlo
+                  color: colorScheme.outline,
                   size: 20,
                 ),
               ],
             ),
           ),
+
+          // --- LISTA O EMPTY STATE ---
           lista.isEmpty
               ? Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Column(
                     children: [
-                      Icon(Icons.check_circle_outline, size: 40, color: colorScheme.secondary),
+                      Icon(Icons.check_circle_outline, 
+                           size: 40, color: colorScheme.tertiary), // Color distinto al de transacciones
                       const SizedBox(height: 8),
                       Text(
-                        AppLocalizations.of(context)!.noDeudasYet,
+                        strings.noOutstandingDeudas,
                         style: TextStyle(color: colorScheme.onSurfaceVariant),
                         textAlign: TextAlign.center,
                       ),
@@ -98,109 +94,135 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
               : ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
+                  // Mostramos máximo 2 elementos en el widget del home
                   itemCount: lista.length > 2 ? 2 : lista.length,
-                  separatorBuilder: (_, __) => Divider(
-                    height: 1, 
-                    thickness: 0.5, 
-                    color: Colors.transparent
-                  ),
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    final transaction = lista[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      
-                      // 1. ÍCONO DE CATEGORÍA
-                      leading: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          // Usamos colores del contenedor primario del tema
-                          color: colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          AppConstants.getIconForCategory(transaction.categoria),
-                          // El color del icono contrasta con el contenedor
-                          color: colorScheme.onPrimaryContainer,
-                          size: 22,
-                        ),
-                      ),
+                    final deuda = lista[index];
+                    
+                    // --- LÓGICA DE COLORES DE TU REFERENCIA ---
+                    final bool soyDeudor = deuda.debo;
+                    final Color statusColor = soyDeudor 
+                        ? AppColors.accent // Rojo/Naranja
+                        : AppColors.income; // Verde
+                    
+                    // Icono direccional
+                    final IconData statusIcon = soyDeudor
+                        ? Icons.arrow_outward_rounded // Sale dinero
+                        : Icons.arrow_downward_rounded; // Entra dinero
 
-                      // 2. TÍTULO
-                      title: Text(
-                        transaction.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          // Texto principal adaptable
-                          color: colorScheme.onSurface,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-
-                      // 3. SUBTÍTULO (MONTO + FECHA)
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Row(
-                          children: [
-                            // A. El Monto
-                            Text(
-                              (transaction.debo ? '-' : '+') +
-                                  transaction.monto.toStringAsFixed(2),
+                    return InkWell(
+                      // Opcional: Si quieres que al tocar vaya al detalle, implementa onTap aquí
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                         // Aquí podrías navegar a editar deuda si quisieras
+                      },
+                      child: Row(
+                        children: [
+                          // 1. AVATAR CON INICIAL (Diferenciador clave de transacciones)
+                          Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: colorScheme.surfaceContainerHighest,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              deuda.involucrado.isNotEmpty 
+                                  ? deuda.involucrado[0].toUpperCase() 
+                                  : "?",
                               style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                // Mantenemos rojo/verde semántico, pero aseguramos que se vean
-                                color: transaction.debo
-                                    ? AppColors.expense
-                                    : AppColors.income,
-                                fontSize: 14,
-                              ),
-                            ),
-
-                            // B. Separador (Puntito)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                              child: Icon(
-                                Icons.circle, 
-                                size: 4, 
-                                color: colorScheme.outline
-                              ),
-                            ),
-
-                            // C. La Fecha
-                            Icon(
-                              Icons.calendar_today_rounded, 
-                              size: 12, 
-                              color: colorScheme.onSurfaceVariant
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              _formatDate(transaction.fechaInicio),
-                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                                 color: colorScheme.onSurfaceVariant,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          
+                          const SizedBox(width: 12),
+                          
+                          // 2. DATOS DE LA DEUDA
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  deuda.title,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Row(
+                                  children: [
+                                    Icon(Icons.person, size: 12, color: colorScheme.outline),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        deuda.involucrado,
+                                        style: TextStyle(
+                                          color: colorScheme.onSurfaceVariant,
+                                          fontSize: 12,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // 3. MONTO Y ESTADO
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(statusIcon, size: 14, color: statusColor),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "\$${deuda.monto.toStringAsFixed(2)}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 15,
+                                      color: statusColor, // Usamos el color semántico
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                "${strings.venceText}: ${_formatDate(deuda.fechaLimite)}",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: colorScheme.outline,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
                     );
                   },
                 ),
-          
-          const SizedBox(height: 1),
 
-          // 4. BOTÓN VER TODAS
+          const SizedBox(height: 10),
+
+          // --- BOTÓN VER TODAS ---
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () =>
-                  Provider.of<UiProvider>(context, listen: false).selectedIndex = 1,
+              onPressed: () => Provider.of<UiProvider>(context, listen: false)
+                  .selectedIndex = 2, // Cambiado a 2 asumiendo que "Deudas" es la 3ra pestaña
               style: TextButton.styleFrom(
-                // Fondo tonal (funciona genial en dark y light)
                 backgroundColor: colorScheme.secondaryContainer.withOpacity(0.4),
-                // Texto del color primario o onSecondaryContainer
                 foregroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -211,11 +233,11 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.seeAllDeudasText,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    strings.seeAllDeudasText,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 8),
-                  Icon(Icons.arrow_forward_rounded, size: 18),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.arrow_forward_rounded, size: 18),
                 ],
               ),
             ),
