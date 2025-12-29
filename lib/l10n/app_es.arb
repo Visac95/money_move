@@ -60,5 +60,17 @@
     "withInvolucradoText": "Con",
     "venceText": "Vence",
     "allAlrightDeudasText": "Todo saldado 🎉",
-    "noOutstandingDeudas": "No tienes deudas pendientes"
+    "noOutstandingDeudas": "No tienes deudas pendientes",
+    "transactionsWillAppearHereText": "Tus transacciones aparecerán aquí",
+    "deudaTitleText": "Título de la Deuda",
+    "deudaEjTitleText": "Ej. Compra de zapatos",
+    "yoDeboText": "Yo debo",
+    "meDebenText": "Me deben",
+    "involucradoNameHint": "Nombre del involucrado",
+    "saveDeudaText": "Guardar Deuda",
+    "quienLeDeboText": "¿A quien le debo?",
+    "quienMeDebeText": "¿Quien me debe?",
+    "totalBalanceText": "Balance total",
+    "incomesText": "Ingresos",
+    "expencesText": "Gastos"
 }

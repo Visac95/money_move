@@ -463,6 +463,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have no outstanding debts'**
   String get noOutstandingDeudas;
+
+  /// No description provided for @transactionsWillAppearHereText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your transactions will appear here'**
+  String get transactionsWillAppearHereText;
+
+  /// No description provided for @deudaTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Title'**
+  String get deudaTitleText;
+
+  /// No description provided for @deudaEjTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Ex. Shoe purchase'**
+  String get deudaEjTitleText;
+
+  /// No description provided for @yoDeboText.
+  ///
+  /// In en, this message translates to:
+  /// **'I owe'**
+  String get yoDeboText;
+
+  /// No description provided for @meDebenText.
+  ///
+  /// In en, this message translates to:
+  /// **'They owe me'**
+  String get meDebenText;
+
+  /// No description provided for @involucradoNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Person\'s name'**
+  String get involucradoNameHint;
+
+  /// No description provided for @saveDeudaText.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Debt'**
+  String get saveDeudaText;
+
+  /// No description provided for @quienLeDeboText.
+  ///
+  /// In en, this message translates to:
+  /// **'Who do I owe?'**
+  String get quienLeDeboText;
+
+  /// No description provided for @quienMeDebeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Who owes me?'**
+  String get quienMeDebeText;
+
+  /// No description provided for @totalBalanceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Balance'**
+  String get totalBalanceText;
+
+  /// No description provided for @incomesText.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get incomesText;
+
+  /// No description provided for @expencesText.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get expencesText;
 }
 
 class _AppLocalizationsDelegate

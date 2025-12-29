@@ -54,7 +54,7 @@ class ListaDeTransacciones extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            "Sin movimientos",
+            AppLocalizations.of(context)!.noTransactionsYet,
             style: TextStyle(
               color: colorScheme.onSurface, // Texto principal
               fontSize: 18,
@@ -63,7 +63,7 @@ class ListaDeTransacciones extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            "Tus transacciones aparecerán aquí",
+            AppLocalizations.of(context)!.transactionsWillAppearHereText,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant, // Texto secundario
               fontSize: 14,

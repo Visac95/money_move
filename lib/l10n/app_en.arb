@@ -60,5 +60,17 @@
     "withInvolucradoText": "With",
     "venceText": "Due",
     "allAlrightDeudasText": "All settled 🎉",
-    "noOutstandingDeudas": "You have no outstanding debts"
+    "noOutstandingDeudas": "You have no outstanding debts",
+    "transactionsWillAppearHereText": "Your transactions will appear here",
+    "deudaTitleText": "Debt Title",
+    "deudaEjTitleText": "Ex. Shoe purchase",
+    "yoDeboText": "I owe",
+    "meDebenText": "They owe me",
+    "involucradoNameHint": "Person's name",
+    "saveDeudaText": "Save Debt",
+    "quienLeDeboText": "Who do I owe?",
+    "quienMeDebeText": "Who owes me?",
+    "totalBalanceText": "Total Balance",
+    "incomesText": "Income",
+    "expencesText": "Expenses"
 }

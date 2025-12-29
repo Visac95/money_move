@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,8 @@ class BalanceCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+
+    final strings = AppLocalizations.of(context)!;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -41,7 +44,7 @@ class BalanceCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "Balance total",
+                  strings.totalBalanceText,
                   style: TextStyle(
                     // Color secundario (grisáceo adaptable)
                     color: colorScheme.onSurface.withOpacity(0.6),
@@ -87,7 +90,7 @@ class BalanceCard extends StatelessWidget {
                 // BLOQUE INGRESOS
                 _buildSummaryColumn(
                   context, // Pasamos el contexto para los estilos
-                  label: "Ingresos",
+                  label: strings.incomesText,
                   amount: provider.totalIngresos,
                   icon: Icons.arrow_upward_rounded,
                   color: AppColors.income, // Mantenemos el verde semántico
@@ -104,7 +107,7 @@ class BalanceCard extends StatelessWidget {
                 // BLOQUE GASTOS
                 _buildSummaryColumn(
                   context,
-                  label: "Gastos",
+                  label: strings.expencesText,
                   amount: provider.totalEgresos,
                   icon: Icons.arrow_downward_rounded,
                   color: AppColors.expense, // Mantenemos el rojo semántico

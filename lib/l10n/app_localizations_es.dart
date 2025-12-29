@@ -192,4 +192,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noOutstandingDeudas => 'No tienes deudas pendientes';
+
+  @override
+  String get transactionsWillAppearHereText =>
+      'Tus transacciones aparecerán aquí';
+
+  @override
+  String get deudaTitleText => 'Título de la Deuda';
+
+  @override
+  String get deudaEjTitleText => 'Ej. Compra de zapatos';
+
+  @override
+  String get yoDeboText => 'Yo debo';
+
+  @override
+  String get meDebenText => 'Me deben';
+
+  @override
+  String get involucradoNameHint => 'Nombre del involucrado';
+
+  @override
+  String get saveDeudaText => 'Guardar Deuda';
+
+  @override
+  String get quienLeDeboText => '¿A quien le debo?';
+
+  @override
+  String get quienMeDebeText => '¿Quien me debe?';
+
+  @override
+  String get totalBalanceText => 'Balance total';
+
+  @override
+  String get incomesText => 'Ingresos';
+
+  @override
+  String get expencesText => 'Gastos';
 }

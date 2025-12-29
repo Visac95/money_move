@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -40,6 +42,8 @@ class DeudaForm extends StatelessWidget {
     final activeColor = debo ? AppColors.expense : AppColors.income;
     String? manualCategory = aiProvider.manualCategory;
 
+    final strings = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.4),
@@ -47,7 +51,7 @@ class DeudaForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Título de la Deuda",
+              strings.deudaTitleText,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, // Gris adaptable
                 fontWeight: FontWeight.w600
@@ -58,7 +62,7 @@ class DeudaForm extends StatelessWidget {
               controller: titleController,
               style: TextStyle(color: colorScheme.onSurface), // Color del texto al escribir
               decoration: InputDecoration(
-                hintText: "Ej. Compra de zapatos",
+                hintText: strings.deudaEjTitleText,
                 hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
                 filled: true,
                 // Fondo del input adaptable
@@ -89,8 +93,8 @@ class DeudaForm extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildToggleOption(context, "Yo debo", true),
-                  _buildToggleOption(context, "Me deben", false),
+                  _buildToggleOption(context, strings.yoDeboText, true),
+                  _buildToggleOption(context, strings.meDebenText, false),
                 ],
               ),
             ),
@@ -99,7 +103,7 @@ class DeudaForm extends StatelessWidget {
 
             // Involucrado input
             Text(
-              _involucradoText(),
+              _involucradoText(context),
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, 
                 fontWeight: FontWeight.w600
@@ -110,7 +114,7 @@ class DeudaForm extends StatelessWidget {
               controller: involucradoController,
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
-                hintText: "Nombre del involucrado",
+                hintText: strings.involucradoNameHint,
                 hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -132,7 +136,7 @@ class DeudaForm extends StatelessWidget {
             // 2. INPUT DE MONTO (Gigante, estilo banco)
             const SizedBox(height: 20),
             Text(
-              "Monto",
+              strings.amountText,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant, 
                 fontWeight: FontWeight.w600
@@ -183,7 +187,7 @@ class DeudaForm extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          "Analizando...",
+                          strings.analizingText,
                           style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
                         ),
                       ],
@@ -236,8 +240,8 @@ class DeudaForm extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Text(
                                   manualCategory != null
-                                      ? "Selecione una categoría."
-                                      : "Categoría: ${aiProvider.suggestedCategory}",
+                                      ? strings.selectCategoryText
+                                      : "${strings.category}: ${aiProvider.suggestedCategory}",
                                   style: TextStyle(
                                     color: manualCategory != null
                                         ? Colors.green
@@ -276,8 +280,8 @@ class DeudaForm extends StatelessWidget {
                   ),
                   elevation: 2,
                 ),
-                child: const Text(
-                  "Guardar Deuda",
+                child:  Text(
+                  strings.saveDeudaText,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -291,11 +295,12 @@ class DeudaForm extends StatelessWidget {
     );
   }
 
-  String _involucradoText() {
+  String _involucradoText(BuildContext context) {
+    
     if (debo) {
-      return "A quien le debo";
+      return AppLocalizations.of(context)!.quienMeDebeText;
     } else {
-      return "Quien me debe";
+      return AppLocalizations.of(context)!.quienLeDeboText;
     }
   }
 
