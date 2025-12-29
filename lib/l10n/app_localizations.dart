@@ -535,6 +535,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Expenses'**
   String get expencesText;
+
+  /// No description provided for @lastTransactionsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent transactions'**
+  String get lastTransactionsText;
+
+  /// No description provided for @lastDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding debts'**
+  String get lastDeudasText;
 }
 
 class _AppLocalizationsDelegate

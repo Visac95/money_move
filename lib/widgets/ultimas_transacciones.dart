@@ -14,7 +14,6 @@ class UltimasTransacciones extends StatefulWidget {
 }
 
 class _UltimasTransaccionesState extends State<UltimasTransacciones> {
-  
   // Función auxiliar para la fecha (Día/Mes/Año)
   String _formatDate(DateTime date) {
     String day = date.day.toString().padLeft(2, '0');
@@ -28,10 +27,10 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
 
-    // Accedemos al tema actual
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final strings = AppLocalizations.of(context)!;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -41,8 +40,8 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
         color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(20),
         // Sombra solo en modo claro
-        boxShadow: isDark 
-            ? [] 
+        boxShadow: isDark
+            ? []
             : [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
@@ -53,15 +52,46 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
       ),
       child: Column(
         children: [
+          // Opción 1: Título a la izquierda con ícono de historial
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 1,
+            ), // Espacio abajo del título
+            child: Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Separa texto e icono
+              children: [
+                Text(
+                  strings.lastTransactionsText,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold, // Negrita para jerarquía
+                    color: colorScheme
+                        .onSurface, // Color principal (no gris claro)
+                  ),
+                ),
+                Icon(
+                  Icons.history_rounded,
+                  color: colorScheme.outline, // Icono sutil
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+
           lista.isEmpty
               ? Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      Icon(Icons.inbox_rounded, size: 40, color: colorScheme.outline),
+                      Icon(
+                        Icons.inbox_rounded,
+                        size: 40,
+                        color: colorScheme.outline,
+                      ),
                       const SizedBox(height: 8),
                       Text(
-                        AppLocalizations.of(context)!.noTransactionsYet,
+                        strings!.noTransactionsYet,
                         style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ],
@@ -73,15 +103,15 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   itemCount: lista.length > 2 ? 2 : lista.length,
                   // Divider sutil en lugar de espacio vacío
                   separatorBuilder: (_, __) => Divider(
-                    height: 16, 
-                    thickness: 0.5, 
-                    color: Colors.transparent
+                    height: 1,
+                    thickness: 0.5,
+                    color: Colors.transparent,
                   ),
                   itemBuilder: (context, index) {
                     final transaction = lista[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
-                      
+
                       // 1. ÍCONO DE CATEGORÍA
                       leading: Container(
                         padding: const EdgeInsets.all(12),
@@ -91,7 +121,9 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          AppConstants.getIconForCategory(transaction.categoria),
+                          AppConstants.getIconForCategory(
+                            transaction.categoria,
+                          ),
                           // Color del icono que contrasta con el fondo
                           color: colorScheme.onPrimaryContainer,
                           size: 22,
@@ -132,20 +164,22 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
 
                             // B. Separador (Puntito)
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6.0,
+                              ),
                               child: Icon(
-                                Icons.circle, 
-                                size: 4, 
+                                Icons.circle,
+                                size: 4,
                                 // Color gris suave adaptable
-                                color: colorScheme.outline
+                                color: colorScheme.outline,
                               ),
                             ),
 
                             // C. La Fecha
                             Icon(
-                              Icons.calendar_today_rounded, 
-                              size: 12, 
-                              color: colorScheme.onSurfaceVariant
+                              Icons.calendar_today_rounded,
+                              size: 12,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -163,18 +197,22 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                     );
                   },
                 ),
-          
-          const SizedBox(height: 8),
+
+          const SizedBox(height: 1),
 
           // 4. BOTÓN VER TODAS
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () =>
-                  Provider.of<UiProvider>(context, listen: false).selectedIndex = 1,
+              onPressed: () => Provider.of<UiProvider>(
+                context,
+                listen: false,
+              ).selectedIndex = 1,
               style: TextButton.styleFrom(
                 // Fondo tonal (se ve bien en ambos modos)
-                backgroundColor: colorScheme.secondaryContainer.withOpacity(0.4),
+                backgroundColor: colorScheme.secondaryContainer.withOpacity(
+                  0.4,
+                ),
                 // Texto color primario
                 foregroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -182,7 +220,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child:  Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(

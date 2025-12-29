@@ -123,8 +123,8 @@ class TransactionForm extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildToggleOption(context, strings.incomeText, true, activeColor),
-                  _buildToggleOption(context, strings.expenseText, false, activeColor),
+                  _buildToggleOption(context, strings.expencesText, true, activeColor),
+                  _buildToggleOption(context, strings.incomeText, false, activeColor),
                 ],
               ),
             ),

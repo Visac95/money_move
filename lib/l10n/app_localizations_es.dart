@@ -229,4 +229,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get expencesText => 'Gastos';
+
+  @override
+  String get lastTransactionsText => 'Ultimos movimientos';
+
+  @override
+  String get lastDeudasText => 'Deudas pendientes';
 }

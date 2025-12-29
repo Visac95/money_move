@@ -72,5 +72,7 @@
     "quienMeDebeText": "Who owes me?",
     "totalBalanceText": "Total Balance",
     "incomesText": "Income",
-    "expencesText": "Expenses"
+    "expencesText": "Expenses",
+    "lastTransactionsText": "Recent transactions",
+    "lastDeudasText": "Outstanding debts"
 }

@@ -33,6 +33,8 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
+    final strings = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       padding: const EdgeInsets.all(16),
@@ -53,6 +55,31 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
       ),
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 1,
+            ), // Espacio abajo del título
+            child: Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Separa texto e icono
+              children: [
+                Text(
+                  strings.lastDeudasText,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold, // Negrita para jerarquía
+                    color: colorScheme
+                        .onSurface, // Color principal (no gris claro)
+                  ),
+                ),
+                Icon(
+                  Icons.history_rounded,
+                  color: colorScheme.outline, // Icono sutil
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
           lista.isEmpty
               ? Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -162,7 +189,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   },
                 ),
           
-          const SizedBox(height: 8),
+          const SizedBox(height: 1),
 
           // 4. BOTÓN VER TODAS
           SizedBox(
