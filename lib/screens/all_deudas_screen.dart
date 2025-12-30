@@ -38,7 +38,6 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
   }
 
   Widget _deudaTitle (String title){
-    final strings = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 1),

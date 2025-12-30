@@ -4,6 +4,7 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class DeudaForm extends StatelessWidget {
   final VoidCallback onSave;
   final Deuda? deuda;
   final bool? isEditMode;
+  // Eliminado: final String? category; (Ya no se necesita, usamos Provider)
 
   DeudaForm({
     super.key,
@@ -32,16 +34,49 @@ class DeudaForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Usamos watch para reconstruir si cambia el estado del provider (IA o Manual)
     final aiProvider = context.watch<AiCategoryProvider>();
-    
-    // Acceso al tema actual
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    final activeColor = debo ? AppColors.expense : AppColors.income;
-    String? manualCategory = aiProvider.manualCategory;
-
+    final isDark = theme.brightness == Brightness.dark;
     final strings = AppLocalizations.of(context)!;
+
+    final activeColor = debo ? AppColors.accent : AppColors.income;
+
+    // --- LÓGICA DE ESTADO DEL BOTÓN DE CATEGORÍA ---
+    // La lógica ahora es universal: EditDeudaScreen ya cargó la categoría en 'manualCategory'
+    final bool hasManual = aiProvider.manualCategory != null;
+    final bool hasSuggestion = aiProvider.suggestedCategory.isNotEmpty;
+
+    Color chipBgColor;
+    Color chipBorderColor;
+    Color chipTextColor;
+    IconData chipIcon;
+    String chipLabel;
+
+    if (hasManual) {
+      // 1. MANUAL (Usuario eligió o estamos editando una existente) -> VERDE
+      chipBgColor = Colors.green.withOpacity(isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withOpacity(0.5);
+      chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
+      chipIcon = Icons.check_circle;
+      chipLabel = getCategoryName(context, aiProvider.manualCategory!);
+    } else if (hasSuggestion) {
+      // 2. SUGERENCIA IA -> COLOR PRIMARY
+      chipBgColor = colorScheme.primary.withOpacity(isDark ? 0.2 : 0.1);
+      chipBorderColor = colorScheme.primary.withOpacity(0.5);
+      chipTextColor = isDark ? Colors.white : colorScheme.primary;
+      chipIcon = Icons.auto_awesome;
+      chipLabel = "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
+    } else {
+      // 3. ESTADO INICIAL -> GRIS / "CATEGORÍA"
+      chipBgColor = colorScheme.surfaceContainerHighest;
+      chipBorderColor = Colors.transparent;
+      chipTextColor = colorScheme.onSurfaceVariant;
+      chipIcon = Icons.category_outlined;
+      chipLabel = strings.category;
+    }
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -52,23 +87,24 @@ class DeudaForm extends StatelessWidget {
             Text(
               strings.deudaTitleText,
               style: TextStyle(
-                color: colorScheme.onSurfaceVariant, // Gris adaptable
-                fontWeight: FontWeight.w600
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
-              style: TextStyle(color: colorScheme.onSurface), // Color del texto al escribir
+              style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.deudaEjTitleText,
-                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
+                hintStyle: TextStyle(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                ),
                 filled: true,
-                // Fondo del input adaptable
-                fillColor: colorScheme.surfaceContainer, 
+                fillColor: colorScheme.surfaceContainer,
                 prefixIcon: Icon(
                   Icons.edit_note_rounded,
-                  color: colorScheme.onSurfaceVariant, // Icono adaptable
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -82,12 +118,11 @@ class DeudaForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // --- TOGGLE SWITCH ---
+            // --- TOGGLE SWITCH (Yo debo / Me deben) ---
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                // Fondo del contenedor del toggle
-                color: colorScheme.surfaceContainerHigh, 
+                color: colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -100,12 +135,12 @@ class DeudaForm extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            // Involucrado input
+            // Input Involucrado
             Text(
               _involucradoText(context),
               style: TextStyle(
-                color: colorScheme.onSurfaceVariant, 
-                fontWeight: FontWeight.w600
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
@@ -114,7 +149,9 @@ class DeudaForm extends StatelessWidget {
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.involucradoNameHint,
-                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
+                hintStyle: TextStyle(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
                 prefixIcon: Icon(
@@ -132,13 +169,13 @@ class DeudaForm extends StatelessWidget {
               ),
             ),
 
-            // 2. INPUT DE MONTO (Gigante, estilo banco)
+            // Input Monto
             const SizedBox(height: 20),
             Text(
               strings.amountText,
               style: TextStyle(
-                color: colorScheme.onSurfaceVariant, 
-                fontWeight: FontWeight.w600
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
@@ -153,28 +190,32 @@ class DeudaForm extends StatelessWidget {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: activeColor, // Rojo o Verde se ven bien en ambos modos
+                color: activeColor,
               ),
               decoration: InputDecoration(
                 hintText: "0.00",
-                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.3)),
+                hintStyle: TextStyle(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+                ),
                 prefixText: "\$ ",
                 prefixStyle: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   color: activeColor,
                 ),
-                border: InputBorder.none, // Sin borde, super limpio
+                border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
             ),
+
             const SizedBox(height: 16),
-            
-            // --- SECCIÓN AI / CATEGORÍA ---
+
+            // --- SECCIÓN AI / CATEGORÍA (OPTIMIZADA) ---
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: aiProvider.isLoading
                   ? Row(
+                      key: const ValueKey('loading'),
                       children: [
                         SizedBox(
                           width: 16,
@@ -187,101 +228,81 @@ class DeudaForm extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           strings.analizingText,
-                          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+                          style: TextStyle(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     )
-                  : (aiProvider.suggestedCategory.isNotEmpty ||
-                          manualCategory != null) 
-                      ? GestureDetector(
-                          onTap: () async {
-                            final String? selectedManualCategory =
-                                await showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const SelectCategoryWindow();
-                              },
-                            );
-                            if (selectedManualCategory != null) {
-                              aiProvider.manualCategory = selectedManualCategory;
-                              manualCategory = selectedManualCategory;
-                            }
+                  : GestureDetector(
+                      key: const ValueKey('button'),
+                      onTap: () async {
+                        final String? selectedManualCategory =
+                            await showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const SelectCategoryWindow();
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              // Usamos opacidad para que el color de fondo no sea muy brillante en modo oscuro
-                              color: manualCategory != null
-                                  ? Colors.green.withOpacity(0.15)
-                                  : colorScheme.primary.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: manualCategory != null
-                                    ? Colors.green.withOpacity(0.5)
-                                    : colorScheme.primary.withOpacity(0.5),
+                        );
+                        // Si selecciona algo, actualizamos el Provider (esto pone el botón verde)
+                        if (selectedManualCategory != null) {
+                          aiProvider.manualCategory = selectedManualCategory;
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: chipBgColor,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: chipBorderColor),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(chipIcon, size: 16, color: chipTextColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              chipLabel,
+                              style: TextStyle(
+                                color: chipTextColor,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  manualCategory != null
-                                      ? Icons.check_circle
-                                      : Icons.auto_awesome,
-                                  size: 16,
-                                  color: manualCategory != null
-                                      ? Colors.green
-                                      : colorScheme.primary,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  manualCategory != null
-                                      ? strings.selectCategoryText
-                                      : "${strings.category}: ${aiProvider.suggestedCategory}",
-                                  style: TextStyle(
-                                    color: manualCategory != null
-                                        ? Colors.green
-                                        : colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 16,
-                                  color: manualCategory != null
-                                      ? Colors.green
-                                      : colorScheme.primary,
-                                ),
-                              ],
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 16,
+                              color: chipTextColor,
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+                          ],
+                        ),
+                      ),
+                    ),
             ),
+
             const SizedBox(height: 40),
 
-            // 5. BOTÓN DE GUARDAR (Full Width)
+            // Botón Guardar
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 onPressed: onSave,
                 style: ElevatedButton.styleFrom(
-                  // Usamos el Primary del tema (Azul/Indigo)
-                  backgroundColor: colorScheme.primary, 
-                  foregroundColor: colorScheme.onPrimary, // Texto blanco
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                   elevation: 2,
                 ),
-                child:  Text(
+                child: Text(
                   strings.saveDeudaText,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -295,7 +316,6 @@ class DeudaForm extends StatelessWidget {
   }
 
   String _involucradoText(BuildContext context) {
-    
     if (debo) {
       return AppLocalizations.of(context)!.quienMeDebeText;
     } else {
@@ -303,9 +323,11 @@ class DeudaForm extends StatelessWidget {
     }
   }
 
-  // Helper para construir los botones del Toggle
-  Widget _buildToggleOption(BuildContext context, String label, bool deboButton) {
-    // Necesitamos el contexto para el tema
+  Widget _buildToggleOption(
+    BuildContext context,
+    String label,
+    bool deboButton,
+  ) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -319,10 +341,8 @@ class DeudaForm extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            // En modo activo: Color de superficie (blanco/gris oscuro). Inactivo: transparente
             color: isActive ? colorScheme.surface : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            // Sombra solo en modo claro
             boxShadow: (isActive && !isDark)
                 ? [
                     BoxShadow(
@@ -339,10 +359,8 @@ class DeudaForm extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: isActive
-                  ? (deboButton
-                      ? AppColors.expense
-                      : AppColors.income)
-                  : colorScheme.onSurfaceVariant, // Color gris adaptable para inactivos
+                  ? (deboButton ? AppColors.accent : AppColors.income)
+                  : colorScheme.onSurfaceVariant,
             ),
           ),
         ),

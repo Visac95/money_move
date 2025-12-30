@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita aquí
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/transaction_provider.dart';
@@ -7,7 +8,6 @@ import 'package:money_move/widgets/transaction_form.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
 
 class EditTransactionScreen extends StatefulWidget {
   final Transaction transaction;
@@ -24,25 +24,62 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   late bool isExpense;
   Timer? debounce;
-  String? manualCategory;
+  // Eliminado: String? manualCategory; (Usamos el Provider)
 
   @override
   void initState() {
     super.initState();
-    // Carga de datos iniciales
+    // 1. Carga de datos de texto
     isExpense = widget.transaction.isExpense;
     titleController.text = widget.transaction.title;
     amountController.text = widget.transaction.monto.toStringAsFixed(2);
     descriptionController.text = widget.transaction.description;
+
+    // 2. Listener para IA (Por si el usuario borra la categoría manual y escribe algo nuevo)
+    titleController.addListener(_classifyTitle);
+
+    // 3. PRE-CARGA DE CATEGORÍA EXISTENTE
+    // Usamos addPostFrameCallback para interactuar con el Provider después del primer build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
+        // Marcamos la categoría existente como MANUAL.
+        // Esto hace que el botón aparezca VERDE y la IA no la toque.
+        aiProvider.manualCategory = widget.transaction.categoria;
+      }
+    });
   }
 
   @override
   void dispose() {
+    // IMPORTANTE: Limpiar el provider al salir para que no afecte a otras pantallas
+    // Lo hacemos en un microtask para asegurar que no choque con el unmount
+    Future.microtask(() {
+       // Verificamos mounted o contexto si es necesario, pero aquí solo limpiamos recursos estáticos
+    });
+    // Nota: Es mejor limpiar el provider en el onSave o al salir explícitamente. 
+    // Aquí solo limpiamos controllers.
     debounce?.cancel();
     titleController.dispose();
     amountController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+
+  // Lógica IA Idéntica a AddTransaction
+  void _classifyTitle() {
+    final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
+
+    // Si ya hay una categoría (la original o una nueva manual), la IA no hace nada.
+    if (aiProvider.manualCategory != null) return;
+
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(milliseconds: 1000), () {
+      if (aiProvider.manualCategory != null) return;
+      if (titleController.text.trim().isNotEmpty) {
+        aiProvider.requestClassification(titleController.text);
+      }
+    });
   }
 
   Future<void> _saveTransaction() async {
@@ -58,16 +95,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
-    // 2. OBTENEMOS LA CATEGORÍA SUGERIDA O MANUAL
-    String categoryToSave = aiProvider.suggestedCategory;
-    String? manualCategoryFromProvider = aiProvider.manualCategory;
+    // 2. DECISIÓN DE CATEGORÍA
+    String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
 
-    // Lógica de decisión:
-    if (manualCategoryFromProvider != null) {
-      categoryToSave = manualCategoryFromProvider;
-    } else if (categoryToSave.isEmpty || categoryToSave == 'manual_category') {
-      
-      if (!mounted) return; // Seguridad de contexto
+    // 3. SI NO HAY CATEGORÍA
+    if (finalCategory.isEmpty || finalCategory == 'manual_category') {
+      if (!mounted) return;
 
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
@@ -77,17 +110,18 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       );
 
       if (selectedManualCategory != null) {
-        categoryToSave = selectedManualCategory;
+        finalCategory = selectedManualCategory;
       } else {
         return; // Canceló
       }
     }
     
+    // 4. ACTUALIZAR
     final Transaction transactionActualizada = widget.transaction.update(
       title: titleController.text,
       monto: enteredAmount,
       description: descriptionController.text,
-      categoria: manualCategoryFromProvider ?? categoryToSave,
+      categoria: finalCategory,
       isExpense: isExpense,
     );
     
@@ -96,7 +130,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     
     Navigator.of(context).pop();
 
-    // Reseteamos el provider
+    // Reseteamos el provider para la próxima vez
     aiProvider.resetCategory();
   }
 
@@ -104,37 +138,41 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      // backgroundColor: AppColors.white, // ELIMINADO: Ahora es automático
-      
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.editTransaccionText,
-          style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            // Color de texto adaptable (Negro día / Blanco noche)
-            color: colorScheme.onSurface 
+    return PopScope(
+      // Aseguramos limpiar el provider si el usuario da "Atrás" sin guardar
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+           Provider.of<AiCategoryProvider>(context, listen: false).resetCategory();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.editTransaccionText,
+            style: TextStyle(
+              fontWeight: FontWeight.bold, 
+              color: colorScheme.onSurface 
+            ),
           ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: IconThemeData(color: colorScheme.onSurface),
         ),
-        backgroundColor: Colors.transparent, // O colorScheme.surface
-        elevation: 0,
-        // Icono de "atrás" adaptable
-        iconTheme: IconThemeData(color: colorScheme.onSurface),
-      ),
-      
-      body: TransactionForm(
-        titleController: titleController,
-        amountController: amountController,
-        descriptionController: descriptionController,
-        isExpense: isExpense,
-        onTypeChanged: (bool value) {
-          setState(() {
-            isExpense = value;
-          });
-        },
-        onSave: _saveTransaction,
-        transaction: widget.transaction,
-        isEditMode: true,
+        
+        body: TransactionForm(
+          titleController: titleController,
+          amountController: amountController,
+          descriptionController: descriptionController,
+          isExpense: isExpense,
+          onTypeChanged: (bool value) {
+            setState(() {
+              isExpense = value;
+            });
+          },
+          onSave: _saveTransaction,
+          transaction: widget.transaction,
+          isEditMode: true,
+        ),
       ),
     );
   }
