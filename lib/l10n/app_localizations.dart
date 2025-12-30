@@ -547,6 +547,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'re sure?'**
   String get areYouSureTitle;
+
+  /// No description provided for @deudasPorPagarText.
+  ///
+  /// In en, this message translates to:
+  /// **'Debts to pay'**
+  String get deudasPorPagarText;
+
+  /// No description provided for @deudasPorCobrarText.
+  ///
+  /// In en, this message translates to:
+  /// **'Debts to collect'**
+  String get deudasPorCobrarText;
+
+  /// No description provided for @pagadaText.
+  ///
+  /// In en, this message translates to:
+  /// **'PAID'**
+  String get pagadaText;
+
+  /// No description provided for @progressText.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progressText;
+
+  /// No description provided for @abonadoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get abonadoText;
+
+  /// No description provided for @restanteText.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get restanteText;
+
+  /// No description provided for @toText.
+  ///
+  /// In en, this message translates to:
+  /// **'to'**
+  String get toText;
+
+  /// No description provided for @fromText.
+  ///
+  /// In en, this message translates to:
+  /// **'from'**
+  String get fromText;
 }
 
 class _AppLocalizationsDelegate

@@ -74,5 +74,13 @@
     "expencesText": "Gastos",
     "lastTransactionsText": "Ultimos movimientos",
     "lastDeudasText": "Deudas pendientes",
-    "areYouSureTitle": "¿Estás seguro?"
+    "areYouSureTitle": "¿Estás seguro?",
+    "deudasPorPagarText": "Deudas por pagar",
+    "deudasPorCobrarText": "Deudas por cobrar",
+    "pagadaText": "PAGADA",
+    "progressText": "Progreso",
+    "abonadoText": "Abonado",
+    "restanteText": "Restante",
+    "toText": "a",
+    "fromText": "de"
 }

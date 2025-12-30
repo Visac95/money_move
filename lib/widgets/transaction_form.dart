@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
-import '../config/app_colors.dart'; 
-import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class TransactionForm extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController amountController;
-
   bool isExpense;
-
-  final Function(bool) onTypeChanged; 
-  final VoidCallback onSave; 
-
+  final Function(bool) onTypeChanged;
+  final VoidCallback onSave;
   final Transaction? transaction;
   final bool? isEditMode;
 
@@ -37,24 +34,52 @@ class TransactionForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final aiProvider = context.watch<AiCategoryProvider>();
-    
-    // Accedemos al tema actual
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final strings = AppLocalizations.of(context)!;
 
-    // Color dinámico según selección (Gasto / Ingreso)
-    final activeColor = isExpense
-        ? AppColors.expense
-        : AppColors.income;
-        
-    String? manualCategory = aiProvider.manualCategory;
+    final activeColor = isExpense ? AppColors.expense : AppColors.income;
 
-    // Estilo común para los inputs
+    // --- LÓGICA DE ESTADO DEL BOTÓN ---
+    final bool hasManual = aiProvider.manualCategory != null;
+    final bool hasSuggestion = aiProvider.suggestedCategory.isNotEmpty;
+    
+    Color chipBgColor;
+    Color chipBorderColor;
+    Color chipTextColor;
+    IconData chipIcon;
+    String chipLabel;
+
+    if (hasManual) {
+      // 1. MANUAL (Usuario eligió) -> VERDE
+      chipBgColor = Colors.green.withOpacity(isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withOpacity(0.5);
+      chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
+      chipIcon = Icons.check_circle;
+      chipLabel = getCategoryName(context, aiProvider.manualCategory!);
+    } else if (hasSuggestion) {
+      // 2. SUGERENCIA IA -> COLOR PRIMARY
+      chipBgColor = AppColors.brandPrimary.withOpacity(isDark ? 0.2 : 0.1);
+      chipBorderColor = AppColors.brandPrimary.withOpacity(0.5);
+      chipTextColor = isDark ? Colors.white : AppColors.brandPrimary;
+      chipIcon = Icons.auto_awesome;
+      chipLabel = "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
+    } else {
+      // 3. ESTADO INICIAL (Ni manual, ni IA aún) -> GRIS / "CATEGORÍA"
+      // Esto aparecerá apenas abras la pantalla
+      chipBgColor = colorScheme.surfaceContainerHighest;
+      chipBorderColor = Colors.transparent; 
+      chipTextColor = colorScheme.onSurfaceVariant;
+      chipIcon = Icons.category_outlined; 
+      // Aquí forzamos que diga "Categoría" o "Seleccionar"
+      chipLabel = strings.category; 
+    }
+
+    // Estilos inputs
     final inputDecorationTheme = InputDecoration(
       filled: true,
-      // Color de fondo adaptable: Gris suave en Light, Gris oscuro en Dark
-      fillColor: colorScheme.surfaceContainerHighest, 
+      fillColor: colorScheme.surfaceContainerHighest,
       prefixIconColor: colorScheme.onSurfaceVariant,
       hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
       border: OutlineInputBorder(
@@ -66,8 +91,6 @@ class TransactionForm extends StatelessWidget {
         borderSide: BorderSide(color: activeColor, width: 2),
       ),
     );
-    
-    final strings = AppLocalizations.of(context)!;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -75,18 +98,15 @@ class TransactionForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. INPUT DE TÍTULO
+            // 1. TÍTULO
             Text(
               strings.inputTitleTransactionText,
-              style: TextStyle(
-                color: colorScheme.onSurfaceVariant, 
-                fontWeight: FontWeight.w600
-              ),
+              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
-              style: TextStyle(color: colorScheme.onSurface), // Color del texto al escribir
+              style: TextStyle(color: colorScheme.onSurface),
               decoration: inputDecorationTheme.copyWith(
                 hintText: strings.writeTitleTransactionHint,
                 prefixIcon: const Icon(Icons.edit_note_rounded),
@@ -94,13 +114,10 @@ class TransactionForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // 2. INPUT DE DESCRIPCIÓN
+            // 2. DESCRIPCIÓN
             Text(
               strings.descriptionTransactionText,
-              style: TextStyle(
-                color: colorScheme.onSurfaceVariant, 
-                fontWeight: FontWeight.w600
-              ),
+              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -113,11 +130,10 @@ class TransactionForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // 3. TOGGLE PERSONALIZADO (Gasto vs Ingreso)
+            // 3. TOGGLE TIPO
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                // Fondo del contenedor del toggle
                 color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -131,159 +147,106 @@ class TransactionForm extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // 4. INPUT DE MONTO
+            // 4. MONTO
             Text(
               strings.amountText,
-              style: TextStyle(
-                color: colorScheme.onSurfaceVariant, 
-                fontWeight: FontWeight.w600
-              ),
+              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-              ],
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: activeColor,
-              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: activeColor),
               decoration: InputDecoration(
                 hintText: "0.00",
                 hintStyle: TextStyle(color: colorScheme.outline.withOpacity(0.3)),
                 prefixText: "\$ ",
-                prefixStyle: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: activeColor,
-                ),
+                prefixStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: activeColor),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
             ),
 
-            // 5. CHIP DE IA / CATEGORÍA
+            // 5. BOTÓN DE CATEGORÍA (Con AnimatedSwitcher)
             const SizedBox(height: 16),
+            
+            // La lógica es: Si está cargando -> Spinner.
+            // Si NO está cargando (incluso al inicio) -> Botón configurado arriba (Estado 1, 2 o 3).
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: aiProvider.isLoading
                   ? Row(
+                      key: const ValueKey('loading'),
                       children: [
                         SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: activeColor,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: activeColor),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           strings.analizingText,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant, 
-                            fontSize: 12
-                          ),
+                          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
                         ),
                       ],
                     )
-                  : (aiProvider.suggestedCategory.isNotEmpty || manualCategory != null)
-                      ? GestureDetector(
-                          onTap: () async {
-                            final String? selectedManualCategory =
-                                await showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SelectCategoryWindow();
-                              },
-                            );
-                            if (selectedManualCategory != null) {
-                              aiProvider.manualCategory = selectedManualCategory;
-                              manualCategory = selectedManualCategory;
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              // Usamos withOpacity para que funcione en Dark Mode
-                              color: manualCategory != null
-                                  ? Colors.green.withOpacity(isDark ? 0.2 : 0.1)
-                                  : AppColors.brandPrimary.withOpacity(isDark ? 0.2 : 0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: manualCategory != null
-                                    ? Colors.green.withOpacity(0.5)
-                                    : AppColors.brandPrimary.withOpacity(0.5),
+                  : GestureDetector(
+                      key: const ValueKey('button'),
+                      onTap: () async {
+                        final String? selectedManualCategory = await showDialog<String>(
+                          context: context,
+                          builder: (context) => const SelectCategoryWindow(),
+                        );
+                        
+                        if (selectedManualCategory != null) {
+                          aiProvider.manualCategory = selectedManualCategory;
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: chipBgColor,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: chipBorderColor),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(chipIcon, size: 18, color: chipTextColor),
+                            const SizedBox(width: 8),
+                            Text(
+                              chipLabel,
+                              style: TextStyle(
+                                color: chipTextColor,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  manualCategory != null
-                                      ? Icons.check_circle
-                                      : Icons.auto_awesome,
-                                  size: 16,
-                                  color: manualCategory != null
-                                      ? (isDark ? Colors.greenAccent : Colors.green)
-                                      : (isDark ? AppColors.accent : AppColors.brandPrimary),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  manualCategory != null
-                                      ? strings.selectCategoryText
-                                      : "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}",
-                                  style: TextStyle(
-                                    color: manualCategory != null
-                                        ? (isDark ? Colors.greenAccent : Colors.green.shade700)
-                                        : (isDark ? Colors.white : AppColors.brandPrimary),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 16,
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+                            const SizedBox(width: 4),
+                            Icon(Icons.keyboard_arrow_down, size: 18, color: chipTextColor),
+                          ],
+                        ),
+                      ),
+                    ),
             ),
 
             const SizedBox(height: 40),
 
-            // 6. BOTÓN DE GUARDAR
+            // 6. GUARDAR
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 onPressed: onSave,
                 style: ElevatedButton.styleFrom(
-                  // En dark mode, el negro no se ve. Usamos primaryColor o blanco invertido.
                   backgroundColor: isDark ? AppColors.brandPrimary : AppColors.darkPrimary,
-                  foregroundColor: isDark ? Colors.white : Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 2,
                 ),
-                child:  Text(
+                child: Text(
                   strings.saveTransactionText,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -293,7 +256,6 @@ class TransactionForm extends StatelessWidget {
     );
   }
 
-  // Helper para construir los botones del Toggle
   Widget _buildToggleOption(BuildContext context, String label, bool isExpenseButton, Color activeColor) {
     bool isActive = isExpense == isExpenseButton;
     final theme = Theme.of(context);
@@ -306,19 +268,10 @@ class TransactionForm extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            // El fondo del botón activo cambia según el tema
-            color: isActive 
-                ? (isDark ? theme.colorScheme.surface : Colors.white) 
-                : Colors.transparent,
+            color: isActive ? (isDark ? theme.colorScheme.surface : Colors.white) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: isActive && !isDark // Sin sombra en modo oscuro
-                ? [
-                    const BoxShadow(
-                      color: Color.fromARGB(30, 0, 0, 0),
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ]
+            boxShadow: isActive && !isDark
+                ? [const BoxShadow(color: Color.fromARGB(30, 0, 0, 0), blurRadius: 4, offset: Offset(0, 2))]
                 : [],
           ),
           child: Text(
@@ -326,9 +279,7 @@ class TransactionForm extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isActive
-                  ? activeColor
-                  : theme.colorScheme.onSurfaceVariant, // Color inactivo adaptable
+              color: isActive ? activeColor : theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ),

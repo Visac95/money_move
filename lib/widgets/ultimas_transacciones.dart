@@ -91,7 +91,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        strings!.noTransactionsYet,
+                        strings.noTransactionsYet,
                         style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ],

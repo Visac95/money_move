@@ -230,18 +230,6 @@ class _TransactionCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       onSelected: (value) {
         if (value == "borrar") {
-          // Provider.of<TransactionProvider>(
-          //   context,
-          //   listen: false,
-          // ).deleteTransaction(transaction.id);
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text(
-          //       AppLocalizations.of(context)!.deletedTransactionMessage,
-          //     ),
-          //   ),
-          // );
-
           UiUtils.showDeleteConfirmation(context, () {
             // Esto solo se ejecuta si el usuario dice "SÍ"
             Provider.of<TransactionProvider>(

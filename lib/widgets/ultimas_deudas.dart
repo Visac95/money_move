@@ -3,7 +3,6 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
-import 'package:money_move/utils/ui_utils.dart'; // Asegúrate de tener esto si usas utilidades, si no, se puede quitar
 import 'package:provider/provider.dart';
 
 class UltimasDeudas extends StatefulWidget {

@@ -49,4 +49,12 @@ class DeudaProvider extends ChangeNotifier {
     return _deudas.where((deuda) => !deuda.debo).toList();
   }
 
+  Deuda? getDeudaById(String id) {
+    try {
+      return _deudas.firstWhere((d) => d.id == id);
+    } catch (e) {
+      return null; // Si no se encuentra, retornamos null
+    }
+  }
+
 }

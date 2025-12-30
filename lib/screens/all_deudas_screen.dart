@@ -14,24 +14,52 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
   @override
   Widget build(BuildContext context) {
     // Inicializamos la variable de localización
-    final l10n = AppLocalizations.of(context)!;
+    final strings = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(l10n.titleDeudasScreen), // <--- CAMBIO AQUÍ
+          child: Text(strings.titleDeudasScreen), // <--- CAMBIO AQUÍ
         ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            _deudaTitle(strings.deudasPorPagarText),
             ListaDeudasWidget(deboList: true),
+            _deudaTitle(strings.deudasPorCobrarText),
             ListaDeudasWidget(deboList: false),
           ],
         ),
       ),
       floatingActionButton: const AddDeudaButton(),
     );
+  }
+
+  Widget _deudaTitle (String title){
+    final strings = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                Icon(
+                  Icons.handshake_rounded, // Icono diferente a "history" para diferenciarlo
+                  color: colorScheme.outline,
+                  size: 20,
+                ),
+              ],
+            ),
+          );
   }
 }

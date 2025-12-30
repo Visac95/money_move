@@ -74,5 +74,13 @@
     "expencesText": "Expenses",
     "lastTransactionsText": "Recent transactions",
     "lastDeudasText": "Outstanding debts",
-    "areYouSureTitle": "You're sure?"
+    "areYouSureTitle": "You're sure?",
+    "deudasPorPagarText": "Debts to pay",
+    "deudasPorCobrarText": "Debts to collect",
+    "pagadaText": "PAID",
+    "progressText": "Progress",
+    "abonadoText": "Paid",
+    "restanteText": "Remaining",
+    "toText": "to",
+    "fromText": "from"
 }

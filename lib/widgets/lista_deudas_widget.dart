@@ -3,6 +3,7 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
+import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/date_formater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
@@ -63,10 +64,11 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     final isDark = theme.brightness == Brightness.dark;
 
     // Definimos colores según si YO DEBO o ME DEBEN
-    final bool soyDeudor = deuda.debo; 
+    final bool soyDeudor = deuda.debo;
 
     final Color mainColor = soyDeudor
-        ? AppColors.accent // Color naranja/rojo
+        ? AppColors
+              .accent // Color naranja/rojo
         : AppColors.income; // Color verde
 
     // TRUCO PRO: En lugar de shade50 (que es blanco), usamos opacidad.
@@ -75,7 +77,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
 
     final strings = AppLocalizations.of(context)!;
 
-    final String label = soyDeudor ? strings.payableText : strings.receivableText;
+    final String label = soyDeudor
+        ? strings.payableText
+        : strings.receivableText;
     final IconData iconStatus = soyDeudor
         ? Icons.arrow_outward_rounded
         : Icons.arrow_downward_rounded;
@@ -83,11 +87,11 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     return Container(
       decoration: BoxDecoration(
         // Fondo adaptable
-        color: colorScheme.surfaceContainerLow, 
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         // Sombra solo en modo claro
-        boxShadow: isDark 
-            ? [] 
+        boxShadow: isDark
+            ? []
             : [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
@@ -96,144 +100,170 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                 ),
               ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              // 1. FRANJA LATERAL DE COLOR
-              Container(width: 6, color: mainColor),
+      child: InkWell(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                // 1. FRANJA LATERAL DE COLOR
+                Container(width: 6, color: mainColor),
 
-              // 2. CONTENIDO PRINCIPAL
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Encabezado: Etiqueta y Menú
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Chip de estado
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: chipBgColor, // Color translúcido adaptable
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(iconStatus, size: 12, color: mainColor),
-                                const SizedBox(width: 4),
-                                Text(
-                                  label,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: mainColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Menú de opciones
-                          _buildPopupMenu(context, deuda, provider, colorScheme),
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Información Principal
-                      Row(
-                        children: [
-                          // AVATAR CON INICIAL
-                          CircleAvatar(
-                            radius: 22,
-                            // Fondo del avatar basado en el tema (Primary Container)
-                            backgroundColor: colorScheme.primaryContainer,
-                            child: Text(
-                              deuda.involucrado.isNotEmpty
-                                  ? deuda.involucrado[0].toUpperCase()
-                                  : "?",
-                              style: TextStyle(
-                                // Texto del avatar contrastante
-                                color: colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                // 2. CONTENIDO PRINCIPAL
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Encabezado: Etiqueta y Menú
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Chip de estado
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
                               ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-
-                          // Textos centrales
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  deuda.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: colorScheme.onSurface, // Texto principal
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "${strings.withInvolucradoText}: ${deuda.involucrado}",
-                                  style: TextStyle(
-                                    color: colorScheme.onSurfaceVariant, // Texto secundario
-                                    fontSize: 13,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // MONTO
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "\$${deuda.monto.toStringAsFixed(2)}",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: mainColor, // Mantenemos el color semántico (rojo/verde)
-                                ),
+                              decoration: BoxDecoration(
+                                color:
+                                    chipBgColor, // Color translúcido adaptable
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              const SizedBox(height: 4),
-                              Row(
+                              child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.event_busy_rounded,
-                                    size: 12,
-                                    color: colorScheme.outline, // Icono gris suave
-                                  ),
+                                  Icon(iconStatus, size: 12, color: mainColor),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "${strings.venceText}: ${formatDate(deuda.fechaLimite)}",
+                                    label,
                                     style: TextStyle(
-                                      fontSize: 11,
-                                      color: colorScheme.onSurfaceVariant,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: mainColor,
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                            ),
+                            // Menú de opciones
+                            _buildPopupMenu(
+                              context,
+                              deuda,
+                              provider,
+                              colorScheme,
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Información Principal
+                        Row(
+                          children: [
+                            // AVATAR CON INICIAL
+                            CircleAvatar(
+                              radius: 22,
+                              // Fondo del avatar basado en el tema (Primary Container)
+                              backgroundColor: colorScheme.primaryContainer,
+                              child: Text(
+                                deuda.involucrado.isNotEmpty
+                                    ? deuda.involucrado[0].toUpperCase()
+                                    : "?",
+                                style: TextStyle(
+                                  // Texto del avatar contrastante
+                                  color: colorScheme.onPrimaryContainer,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            // Textos centrales
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    deuda.title,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: colorScheme
+                                          .onSurface, // Texto principal
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    "${strings.withInvolucradoText}: ${deuda.involucrado}",
+                                    style: TextStyle(
+                                      color: colorScheme
+                                          .onSurfaceVariant, // Texto secundario
+                                      fontSize: 13,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // MONTO
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "\$${deuda.monto.toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        mainColor, // Mantenemos el color semántico (rojo/verde)
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.event_busy_rounded,
+                                      size: 12,
+                                      color: colorScheme
+                                          .outline, // Icono gris suave
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "${strings.venceText}: ${formatDate(deuda.fechaLimite)}",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+        ),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => VerDeuda(
+              id: deuda.id,
+              title: deuda.title,
+              description: deuda.description,
+              monto: deuda.monto,
+              involucrado: deuda.involucrado,
+              fechaLimite: deuda.fechaLimite,
+              categoria: deuda.categoria,
+              debo: deuda.debo,
+            ),
           ),
         ),
       ),
@@ -253,16 +283,20 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
       child: PopupMenuButton(
         padding: EdgeInsets.zero,
         color: colorScheme.surfaceContainer, // Fondo del menú
-        icon: Icon(Icons.more_vert, size: 20, color: colorScheme.onSurfaceVariant),
+        icon: Icon(
+          Icons.more_vert,
+          size: 20,
+          color: colorScheme.onSurfaceVariant,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         onSelected: (value) {
           if (value == "borrar") {
             UiUtils.showDeleteConfirmation(context, () {
-            Provider.of<DeudaProvider>(
-              context,
-              listen: false,
-            ).deleteDeuda(deuda.id);
-          });
+              Provider.of<DeudaProvider>(
+                context,
+                listen: false,
+              ).deleteDeuda(deuda.id);
+            });
           }
           if (value == "editar") {
             Navigator.of(context).push(
@@ -273,23 +307,26 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           }
         },
         itemBuilder: (context) => [
-           PopupMenuItem(
+          PopupMenuItem(
             value: "editar",
             child: Row(
               children: [
                 Icon(Icons.edit, size: 18, color: colorScheme.primary),
                 const SizedBox(width: 8),
-                Text(strings.editText, style: TextStyle(color: colorScheme.onSurface)),
+                Text(
+                  strings.editText,
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
               ],
             ),
           ),
-           PopupMenuItem(
+          PopupMenuItem(
             value: "borrar",
             child: Row(
               children: [
                 const Icon(Icons.delete, color: Colors.red, size: 18),
                 const SizedBox(width: 8),
-                 Text(strings.deleteText, style: TextStyle(color: Colors.red)),
+                Text(strings.deleteText, style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
@@ -302,7 +339,6 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     final strings = AppLocalizations.of(context)!;
 
     return Center(
-
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -310,7 +346,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
             Icons.handshake_outlined,
             size: 70,
             // Usamos un color que se vea bien en fondo oscuro y claro (outline o surfaceVariant)
-            color: colorScheme.surfaceContainerHighest, 
+            color: colorScheme.outline,
           ),
           const SizedBox(height: 16),
           Text(
@@ -324,10 +360,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           const SizedBox(height: 8),
           Text(
             strings.noOutstandingDeudas,
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant, 
-              fontSize: 14,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
           ),
         ],
       ),

@@ -234,4 +234,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get areYouSureTitle => 'You\'re sure?';
+
+  @override
+  String get deudasPorPagarText => 'Debts to pay';
+
+  @override
+  String get deudasPorCobrarText => 'Debts to collect';
+
+  @override
+  String get pagadaText => 'PAID';
+
+  @override
+  String get progressText => 'Progress';
+
+  @override
+  String get abonadoText => 'Paid';
+
+  @override
+  String get restanteText => 'Remaining';
+
+  @override
+  String get toText => 'to';
+
+  @override
+  String get fromText => 'from';
 }

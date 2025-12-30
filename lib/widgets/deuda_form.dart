@@ -5,7 +5,6 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
