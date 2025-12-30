@@ -82,5 +82,7 @@
     "abonadoText": "Paid",
     "restanteText": "Remaining",
     "toText": "to",
-    "fromText": "from"
+    "fromText": "from",
+    "pagar": "Paid",
+    "abonar": "Add Payment"
 }

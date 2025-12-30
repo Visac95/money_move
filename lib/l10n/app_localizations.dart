@@ -595,6 +595,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'from'**
   String get fromText;
+
+  /// No description provided for @pagar.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get pagar;
+
+  /// No description provided for @abonar.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Payment'**
+  String get abonar;
 }
 
 class _AppLocalizationsDelegate

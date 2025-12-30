@@ -258,4 +258,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get fromText => 'de';
+
+  @override
+  String get pagar => 'Pagado';
+
+  @override
+  String get abonar => 'Abonar una parte';
 }

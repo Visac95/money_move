@@ -44,7 +44,9 @@ class VerDeuda extends StatelessWidget {
     if (deuda == null) {
       return Scaffold(
         body: Center(
-          child: Text(AppLocalizations.of(context)!.transactionNotExist), // O un texto genérico de error
+          child: Text(
+            AppLocalizations.of(context)!.transactionNotExist,
+          ), // O un texto genérico de error
         ),
       );
     }
@@ -52,18 +54,23 @@ class VerDeuda extends StatelessWidget {
     // 2. Lógica de colores (Igual que en transacciones pero adaptado a Deuda)
     // Si YO DEBO (true) -> Rojo/Naranja. Si ME DEBEN (false) -> Verde.
     final Color mainColor = deuda.debo
-        ? AppColors.accent // Deuda negativa (tengo que pagar)
+        ? AppColors
+              .accent // Deuda negativa (tengo que pagar)
         : AppColors.income; // Deuda positiva (voy a recibir)
 
     // Cálculos para el progreso
     final double restante = deuda.monto - deuda.abono;
-    final double porcentajePagado = (deuda.monto > 0) ? (deuda.abono / deuda.monto) : 0.0;
+    final double porcentajePagado = (deuda.monto > 0)
+        ? (deuda.abono / deuda.monto)
+        : 0.0;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.transactionDetailsTitle, // O "Detalles de Deuda" si tienes esa key
+          AppLocalizations.of(
+            context,
+          )!.transactionDetailsTitle, // O "Detalles de Deuda" si tienes esa key
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -97,13 +104,15 @@ class VerDeuda extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Estado / Subtítulo
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    deuda.debo ? Icons.arrow_outward_rounded : Icons.arrow_downward_rounded,
+                    deuda.debo
+                        ? Icons.arrow_outward_rounded
+                        : Icons.arrow_downward_rounded,
                     size: 16,
                     color: colorScheme.outline,
                   ),
@@ -120,7 +129,7 @@ class VerDeuda extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Nombre del Involucrado (Grande y claro)
               Text(
                 deuda.involucrado,
@@ -141,7 +150,9 @@ class VerDeuda extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.onSurface.withOpacity(0.05), // Sombra muy sutil adaptativa
+                      color: colorScheme.onSurface.withOpacity(
+                        0.05,
+                      ), // Sombra muy sutil adaptativa
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -189,21 +200,25 @@ class VerDeuda extends StatelessWidget {
                         // Chip de estado (Pagada o Pendiente)
                         if (deuda.pagada)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.green.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(color: Colors.green),
                             ),
-                            child:  Text(
-                              strings.pagadaText, // Puedes usar localizations aquí
+                            child: Text(
+                              strings
+                                  .pagadaText, // Puedes usar localizations aquí
                               style: TextStyle(
-                                fontSize: 12, 
-                                fontWeight: FontWeight.bold, 
-                                color: Colors.green
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
                               ),
                             ),
-                          )
+                          ),
                       ],
                     ),
 
@@ -219,14 +234,17 @@ class VerDeuda extends StatelessWidget {
                           children: [
                             Text(
                               strings.progressText, // Usar localization
-                              style: TextStyle(fontSize: 12, color: colorScheme.outline),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colorScheme.outline,
+                              ),
                             ),
                             Text(
                               "${(porcentajePagado * 100).toStringAsFixed(0)}%",
                               style: TextStyle(
-                                fontSize: 12, 
-                                fontWeight: FontWeight.bold, 
-                                color: mainColor
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: mainColor,
                               ),
                             ),
                           ],
@@ -237,8 +255,11 @@ class VerDeuda extends StatelessWidget {
                           child: LinearProgressIndicator(
                             value: porcentajePagado,
                             minHeight: 10,
-                            backgroundColor: colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              mainColor,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -247,14 +268,21 @@ class VerDeuda extends StatelessWidget {
                           children: [
                             Text(
                               "${strings.abonadoText} \$${deuda.abono.toStringAsFixed(2)}",
-                              style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
                             Text(
                               "${strings.restanteText} \$${restante.toStringAsFixed(2)}",
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
 
@@ -269,14 +297,16 @@ class VerDeuda extends StatelessWidget {
                       deuda.title,
                     ),
                     const SizedBox(height: 15),
-                    
+
                     // Fecha Límite (Más importante que fecha inicio en deudas)
                     _buildDetailRow(
                       context,
-                      AppLocalizations.of(context)!.venceText, // Asegúrate de tener esta key o usa "Vence"
+                      AppLocalizations.of(
+                        context,
+                      )!.venceText, // Asegúrate de tener esta key o usa "Vence"
                       formatDate(deuda.fechaLimite),
                     ),
-                    
+
                     const SizedBox(height: 15),
 
                     // Descripción
@@ -309,9 +339,74 @@ class VerDeuda extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // --- 3. BOTONES DE ACCIÓN ---
+              //---Abonar y pagar
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 55,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            //Falta el codigo
+                          },
+                          icon: Icon(
+                            Icons.check_circle_outline,
+                            color: colorScheme.surface,
+                          ),
+                          label: Text(
+                            strings.pagar,
+                            style: TextStyle(
+                              color: colorScheme.surface,
+                              fontSize: 18,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.income,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 7),
+                    //------Pagar--------
+                    Expanded(
+                      child: SizedBox(
+                        height: 55,
+                        child: ElevatedButton.icon(
+                          onPressed: (){},
+                          icon: Icon(
+                            Icons.add_box,
+                            color: colorScheme.surface,
+                          ),
+                          label: Text(
+                            strings.abonar,
+                            style: TextStyle(
+                              color: colorScheme.surface,
+                              fontSize: 16,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.accent,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 width: double.infinity,
                 height: 55,
@@ -319,7 +414,7 @@ class VerDeuda extends StatelessWidget {
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       // Asegúrate de importar EditDeudaScreen
-                      builder: (context) => EditDeudaScreen(deuda: deuda), 
+                      builder: (context) => EditDeudaScreen(deuda: deuda),
                     ),
                   ),
                   icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
@@ -350,7 +445,7 @@ class VerDeuda extends StatelessWidget {
                         listen: false,
                       ).deleteDeuda(deuda.id);
                       // Cerrar la pantalla después de borrar
-                      Navigator.pop(context); 
+                      Navigator.pop(context);
                     });
                   },
                   icon: Icon(Icons.delete_outline, color: colorScheme.error),

@@ -82,5 +82,7 @@
     "abonadoText": "Abonado",
     "restanteText": "Restante",
     "toText": "a",
-    "fromText": "de"
+    "fromText": "de",
+    "pagar": "Pagado",
+    "abonar": "Abonar una parte"
 }
