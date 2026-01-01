@@ -84,5 +84,8 @@
     "toText": "a",
     "fromText": "de",
     "pagar": "Pagado",
-    "abonar": "Abonar una parte"
+    "abonar": "Abonar",
+    "insertAmountPaymentText": "Inserte la cantidad a abonar",
+    "abonoForText": "Abono a",
+    "pagoDeText": "Pago de"
 }

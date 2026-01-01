@@ -84,5 +84,8 @@
     "toText": "to",
     "fromText": "from",
     "pagar": "Paid",
-    "abonar": "Add Payment"
+    "abonar": "Add Payment",
+    "insertAmountPaymentText": "Enter the amount to pay",
+    "abonoForText": "Credit towards",
+    "pagoDeText": "Payment for"
 }

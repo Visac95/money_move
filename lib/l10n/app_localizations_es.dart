@@ -263,5 +263,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pagar => 'Pagado';
 
   @override
-  String get abonar => 'Abonar una parte';
+  String get abonar => 'Abonar';
+
+  @override
+  String get insertAmountPaymentText => 'Inserte la cantidad a abonar';
+
+  @override
+  String get abonoForText => 'Abono a';
+
+  @override
+  String get pagoDeText => 'Pago de';
 }

@@ -607,6 +607,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Payment'**
   String get abonar;
+
+  /// No description provided for @insertAmountPaymentText.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the amount to pay'**
+  String get insertAmountPaymentText;
+
+  /// No description provided for @abonoForText.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit towards'**
+  String get abonoForText;
+
+  /// No description provided for @pagoDeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment for'**
+  String get pagoDeText;
 }
 
 class _AppLocalizationsDelegate

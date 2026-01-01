@@ -264,4 +264,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get abonar => 'Add Payment';
+
+  @override
+  String get insertAmountPaymentText => 'Enter the amount to pay';
+
+  @override
+  String get abonoForText => 'Credit towards';
+
+  @override
+  String get pagoDeText => 'Payment for';
 }

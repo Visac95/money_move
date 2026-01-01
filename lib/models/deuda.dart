@@ -13,7 +13,7 @@ class Deuda {
   final DateTime fechaLimite;
   final String categoria;
   final bool debo; // true = Gasto, false = Ingreso
-  final bool pagada;
+  bool pagada;
 
   Deuda({
     String? id,

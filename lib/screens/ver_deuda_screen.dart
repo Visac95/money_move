@@ -3,9 +3,12 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart'; // Asumo que tienes o crearás esta pantalla
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/ui_utils.dart';
+import 'package:money_move/widgets/add_abono_window.dart';
 import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +33,14 @@ class VerDeuda extends StatelessWidget {
     required this.categoria,
     required this.debo,
   });
+
+  Future<double?> _mostrarDialogoAbono(BuildContext context) async {
+    final double? montoIngresado = await showDialog<double>(
+      context: context,
+      builder: (context) => const AddAbonoWindow(),
+    );
+    return montoIngresado;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +198,7 @@ class VerDeuda extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              deuda.categoria,
+                              getCategoryName(context, deuda.categoria),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -343,94 +354,133 @@ class VerDeuda extends StatelessWidget {
 
               // --- 3. BOTONES DE ACCIÓN ---
               //---Abonar y pagar
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 55,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            //Falta el codigo
-                          },
-                          icon: Icon(
-                            Icons.check_circle_outline,
-                            color: colorScheme.surface,
+              deuda.pagada
+                  ? SizedBox(height: 1)
+                  : Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                //------Pagar--------
+                                child: SizedBox(
+                                  height: 55,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Provider.of<DeudaProvider>(
+                                        context,
+                                        listen: false,
+                                      ).pagarDeuda(deuda);
+                                    },
+                                    icon: Icon(
+                                      Icons.check_circle_outline,
+                                      color: colorScheme.surface,
+                                    ),
+                                    label: Text(
+                                      strings.pagar,
+                                      style: TextStyle(
+                                        color: colorScheme.surface,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.income,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 7),
+                              //------Abonar--------
+                              Expanded(
+                                child: SizedBox(
+                                  height: 55,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () async {
+                                      final double? monto =
+                                          await _mostrarDialogoAbono(context);
+
+                                      // 2. Si ingresó algo válido, llamamos al provider
+                                      if (monto != null && context.mounted) {
+                                        Provider.of<DeudaProvider>(
+                                          context,
+                                          listen: false,
+                                        ).abonarDeuda(
+                                          deuda,
+                                          monto,
+                                          Provider.of<TransactionProvider>(
+                                            context,
+                                            listen: false,
+                                          ),
+                                          context,
+                                        ); // Pasamos el monto limpio
+                                      }
+                                    },
+                                    icon: Icon(
+                                      Icons.add_box,
+                                      color: colorScheme.surface,
+                                    ),
+                                    label: Text(
+                                      strings.abonar,
+                                      style: TextStyle(
+                                        color: colorScheme.surface,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.accent,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          label: Text(
-                            strings.pagar,
-                            style: TextStyle(
-                              color: colorScheme.surface,
-                              fontSize: 18,
+                        ),
+                        //------Edit Button---------
+                        SizedBox(
+                          width: double.infinity,
+                          height: 55,
+                          child: ElevatedButton.icon(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                // Asegúrate de importar EditDeudaScreen
+                                builder: (context) =>
+                                    EditDeudaScreen(deuda: deuda),
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.income,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                            icon: Icon(
+                              Icons.edit_rounded,
+                              color: colorScheme.surface,
+                            ),
+                            label: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.editText, // "Editar"
+                              style: TextStyle(
+                                color: colorScheme.surface,
+                                fontSize: 16,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorScheme.primary,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(width: 7),
-                    //------Pagar--------
-                    Expanded(
-                      child: SizedBox(
-                        height: 55,
-                        child: ElevatedButton.icon(
-                          onPressed: (){},
-                          icon: Icon(
-                            Icons.add_box,
-                            color: colorScheme.surface,
-                          ),
-                          label: Text(
-                            strings.abonar,
-                            style: TextStyle(
-                              color: colorScheme.surface,
-                              fontSize: 16,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      // Asegúrate de importar EditDeudaScreen
-                      builder: (context) => EditDeudaScreen(deuda: deuda),
-                    ),
-                  ),
-                  icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
-                  label: Text(
-                    AppLocalizations.of(context)!.editText, // "Editar"
-                    style: TextStyle(color: colorScheme.surface, fontSize: 16),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 15),
 
