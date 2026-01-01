@@ -87,5 +87,9 @@
     "abonar": "Add Payment",
     "insertAmountPaymentText": "Enter the amount to pay",
     "abonoForText": "Credit towards",
-    "pagoDeText": "Payment for"
+    "pagoDeText": "Payment for",
+    "confirmText": "Confirm",
+    "markAsPaidText": "Mark as Paid?",
+    "markAsPaidConfirmText": "This will pay off the remaining balance.",
+    "deudaPaidSucessText": "Debt paid successfully"
 }

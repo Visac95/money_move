@@ -36,21 +36,47 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   Future<void> updateDeuda(Deuda updatedDeuda) async {
-    await DatabaseHelper.instance.updateDeuda(updatedDeuda);
-
+    // 1. ACTUALIZACIÓN OPTIMISTA (Primero memoria y UI)
     int index = _deudas.indexWhere((t) => t.id == updatedDeuda.id);
     if (index != -1) {
       _deudas[index] = updatedDeuda;
-
+      // Ordenamos
       _deudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
-      notifyListeners();
+      // ¡Notificamos YA! La UI se actualiza instantáneamente aquí
+      notifyListeners(); 
+    }
+
+    // 2. PERSISTENCIA (Base de datos después, sin bloquear la UI visualmente)
+    try {
+      await DatabaseHelper.instance.updateDeuda(updatedDeuda);
+    } catch (e) {
+      // Opcional: Si falla la BD, podrías revertir el cambio local y notificar error
+      print("Error al actualizar en BD: $e");
     }
   }
 
-  Future<void> pagarDeuda(Deuda d) async {
+  Future<void> pagarDeuda(
+    Deuda d,
+    TransactionProvider provider,
+    BuildContext context,
+  ) async {
+    //Generamos la transaccion
+    provider.addTransaction(
+      Transaction(
+        title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
+        description: d.description,
+        monto: d.monto - d.abono,
+        fecha: DateTime.now(),
+        categoria: AppConstants.catDebt,
+        isExpense: d.debo,
+      ),
+    );
+
     d.pagada = true;
+    d.abono = d.monto;
 
     updateDeuda(d);
+    notifyListeners();
   }
 
   Future<AbonoStatus> abonarDeuda(

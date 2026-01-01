@@ -58,6 +58,8 @@ class VerTransaction extends StatelessWidget {
         ? AppColors.expense
         : AppColors.income;
 
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       // El color de fondo ahora lo decide el main.dart automáticamente
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -112,112 +114,15 @@ class VerTransaction extends StatelessWidget {
               const SizedBox(height: 40),
 
               // 2. LA TARJETA DE DETALLES
-              Container(
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  // Aquí la magia: surface es Blanco(Día) o Gris Oscuro(Noche)
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.onSurface, // Sombra sutil
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Icono y Categoría
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: mainColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(
-                            AppConstants.getIconForCategory(
-                              transaction.categoria,
-                            ),
-                            size: 30,
-                            color: mainColor,
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.category,
-                              style: TextStyle(
-                                color: colorScheme.outline, // Gris adaptable
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              transaction.categoria,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface, // Negro/Blanco
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                    const Divider(),
-                    const SizedBox(height: 20),
-
-                    // Título y Descripción
-                    _buildDetailRow(
-                      context, // Pasamos el contexto para leer colores
-                      AppLocalizations.of(context)!.titleText,
-                      transaction.title,
-                    ),
-                    const SizedBox(height: 15),
-                    _buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.dateText,
-                      _formatDate(transaction.fecha),
-                    ),
-                    const SizedBox(height: 15),
-
-                    // Descripción
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.descriptionText,
-                            style: TextStyle(
-                              color: colorScheme.outline,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            transaction.description.isEmpty
-                                ? AppLocalizations.of(context)!.noDescription
-                                : transaction.description,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: colorScheme.onSurface, // Negro/Blanco
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              _cardConteiner(
+                colorScheme,
+                isDark,
+                mainColor,
+                transaction,
+                context,
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 40), 
 
               // 3. BOTONES DE ACCIÓN
               SizedBox(
@@ -260,6 +165,7 @@ class VerTransaction extends StatelessWidget {
                         context,
                         listen: false,
                       ).deleteTransaction(transaction.id);
+                      Navigator.pop(context);
                     });
                   },
                   icon: Icon(Icons.delete_outline, color: colorScheme.error),
@@ -278,6 +184,116 @@ class VerTransaction extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container _cardConteiner(
+    ColorScheme colorScheme,
+    bool isDark,
+    Color mainColor,
+    Transaction transaction,
+    BuildContext context,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        // Aquí la magia: surface es Blanco(Día) o Gris Oscuro(Noche)
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: colorScheme.onSurface, // Sombra sutil
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+      ),
+      child: Column(
+        children: [
+          // Icono y Categoría
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: mainColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  AppConstants.getIconForCategory(transaction.categoria),
+                  size: 30,
+                  color: mainColor,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.category,
+                    style: TextStyle(
+                      color: colorScheme.outline, // Gris adaptable
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    transaction.categoria,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface, // Negro/Blanco
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // Título y Descripción
+          _buildDetailRow(
+            context, // Pasamos el contexto para leer colores
+            AppLocalizations.of(context)!.titleText,
+            transaction.title,
+          ),
+          const SizedBox(height: 15),
+          _buildDetailRow(
+            context,
+            AppLocalizations.of(context)!.dateText,
+            _formatDate(transaction.fecha),
+          ),
+          const SizedBox(height: 15),
+
+          // Descripción
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.descriptionText,
+                  style: TextStyle(color: colorScheme.outline, fontSize: 12),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  transaction.description.isEmpty
+                      ? AppLocalizations.of(context)!.noDescription
+                      : transaction.description,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: colorScheme.onSurface, // Negro/Blanco
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

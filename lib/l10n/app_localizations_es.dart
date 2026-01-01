@@ -273,4 +273,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pagoDeText => 'Pago de';
+
+  @override
+  String get confirmText => 'Confirmar';
+
+  @override
+  String get markAsPaidText => '¿Marcar como pagada?';
+
+  @override
+  String get markAsPaidConfirmText =>
+      'Esto saldará la deuda completa por el monto restante.';
+
+  @override
+  String get deudaPaidSucessText => 'Deuda pagada exitosamente';
 }

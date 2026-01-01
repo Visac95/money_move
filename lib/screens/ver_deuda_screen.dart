@@ -74,6 +74,7 @@ class VerDeuda extends StatelessWidget {
     final double porcentajePagado = (deuda.monto > 0)
         ? (deuda.abono / deuda.monto)
         : 0.0;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -154,200 +155,15 @@ class VerDeuda extends StatelessWidget {
               const SizedBox(height: 30),
 
               // --- 2. TARJETA DE PROGRESO Y DETALLES ---
-              Container(
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.onSurface.withOpacity(
-                        0.05,
-                      ), // Sombra muy sutil adaptativa
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Categoría
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: mainColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(
-                            AppConstants.getIconForCategory(deuda.categoria),
-                            size: 30,
-                            color: mainColor,
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.category,
-                              style: TextStyle(
-                                color: colorScheme.outline,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              getCategoryName(context, deuda.categoria),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        // Chip de estado (Pagada o Pendiente)
-                        if (deuda.pagada)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.green),
-                            ),
-                            child: Text(
-                              strings
-                                  .pagadaText, // Puedes usar localizations aquí
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    // BARRA DE PROGRESO (Exclusivo para Deudas)
-                    // Muestra visualmente cuánto se ha abonado
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              strings.progressText, // Usar localization
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.outline,
-                              ),
-                            ),
-                            Text(
-                              "${(porcentajePagado * 100).toStringAsFixed(0)}%",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: mainColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: porcentajePagado,
-                            minHeight: 10,
-                            backgroundColor:
-                                colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              mainColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${strings.abonadoText} \$${deuda.abono.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Text(
-                              "${strings.restanteText} \$${restante.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                    const Divider(),
-                    const SizedBox(height: 20),
-
-                    // Detalles de texto
-                    _buildDetailRow(
-                      context,
-                      AppLocalizations.of(context)!.titleText,
-                      deuda.title,
-                    ),
-                    const SizedBox(height: 15),
-
-                    // Fecha Límite (Más importante que fecha inicio en deudas)
-                    _buildDetailRow(
-                      context,
-                      AppLocalizations.of(
-                        context,
-                      )!.venceText, // Asegúrate de tener esta key o usa "Vence"
-                      formatDate(deuda.fechaLimite),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // Descripción
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.descriptionText,
-                            style: TextStyle(
-                              color: colorScheme.outline,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            deuda.description.isEmpty
-                                ? AppLocalizations.of(context)!.noDescription
-                                : deuda.description,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              _cardConteiner(
+                colorScheme,
+                isDark,
+                mainColor,
+                deuda,
+                context,
+                strings,
+                porcentajePagado,
+                restante,
               ),
 
               const SizedBox(height: 20),
@@ -369,10 +185,31 @@ class VerDeuda extends StatelessWidget {
                                   height: 55,
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      Provider.of<DeudaProvider>(
+                                      UiUtils.showConfirmationDialog(
+                                        // Asumo que tienes o puedes crear este método similar al de borrar
+                                        strings.markAsPaidText,
+                                        strings.markAsPaidConfirmText,
                                         context,
-                                        listen: false,
-                                      ).pagarDeuda(deuda);
+                                        () {
+                                          Provider.of<DeudaProvider>(
+                                            context,
+                                            listen: false,
+                                          ).pagarDeuda(
+                                            deuda,
+                                            Provider.of<TransactionProvider>(
+                                              context,
+                                              listen: false,
+                                            ),
+                                            context
+                                          );
+                                          UiUtils.showSnackBar(
+                                            context,
+                                            strings.deudaPaidSucessText,
+                                            Colors.green,
+                                          );
+                                        },
+                                        AppColors.income,
+                                      );
                                     },
                                     icon: Icon(
                                       Icons.check_circle_outline,
@@ -402,23 +239,60 @@ class VerDeuda extends StatelessWidget {
                                   height: 55,
                                   child: ElevatedButton.icon(
                                     onPressed: () async {
+                                      // 1. Pedir el monto (Diálogo)
                                       final double? monto =
                                           await _mostrarDialogoAbono(context);
 
-                                      // 2. Si ingresó algo válido, llamamos al provider
                                       if (monto != null && context.mounted) {
-                                        Provider.of<DeudaProvider>(
-                                          context,
-                                          listen: false,
-                                        ).abonarDeuda(
-                                          deuda,
-                                          monto,
-                                          Provider.of<TransactionProvider>(
-                                            context,
-                                            listen: false,
-                                          ),
-                                          context,
-                                        ); // Pasamos el monto limpio
+                                        // 2. Llamar al Provider y GUARDAR EL RESULTADO
+                                        final status =
+                                            Provider.of<DeudaProvider>(
+                                              context,
+                                              listen: false,
+                                            ).abonarDeuda(
+                                              deuda,
+                                              monto,
+                                              Provider.of<TransactionProvider>(
+                                                context,
+                                                listen: false,
+                                              ),
+                                              context,
+                                            );
+
+                                        // 3. Actuar según el resultado (Switch es ideal aquí)
+                                        switch (status) {
+                                          case AbonoStatus.exito:
+                                            // Opcional: Mostrar éxito
+                                            UiUtils.showSnackBar(
+                                              context,
+                                              "Abono realizado con éxito",
+                                              Colors.green,
+                                            );
+                                            break;
+
+                                          case AbonoStatus.montoInvalido:
+                                            UiUtils.showSnackBar(
+                                              context,
+                                              "Ingresa un monto mayor a 0",
+                                              Colors.red,
+                                            );
+                                            break;
+
+                                          case AbonoStatus.excedeDeuda:
+                                            UiUtils.showSnackBar(
+                                              context,
+                                              "El monto excede lo que falta por pagar",
+                                              Colors.orange,
+                                            );
+                                            break;
+                                          case AbonoStatus.error:
+                                            UiUtils.showSnackBar(
+                                              context,
+                                              "Ocurrió un error inesperado",
+                                              Colors.red,
+                                            );
+                                            break;
+                                        }
                                       }
                                     },
                                     icon: Icon(
@@ -514,6 +388,193 @@ class VerDeuda extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container _cardConteiner(
+    ColorScheme colorScheme,
+    bool isDark,
+    Color mainColor,
+    Deuda deuda,
+    BuildContext context,
+    AppLocalizations strings,
+    double porcentajePagado,
+    double restante,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: colorScheme.onSurface.withOpacity(
+                    0.05,
+                  ), // Sombra muy sutil adaptativa
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+      ),
+      child: Column(
+        children: [
+          // Categoría
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: mainColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  AppConstants.getIconForCategory(deuda.categoria),
+                  size: 30,
+                  color: mainColor,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.category,
+                    style: TextStyle(color: colorScheme.outline, fontSize: 12),
+                  ),
+                  Text(
+                    getCategoryName(context, deuda.categoria),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              // Chip de estado (Pagada o Pendiente)
+              if (deuda.pagada)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.green),
+                  ),
+                  child: Text(
+                    strings.pagadaText, // Puedes usar localizations aquí
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 25),
+
+          // BARRA DE PROGRESO (Exclusivo para Deudas)
+          // Muestra visualmente cuánto se ha abonado
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    strings.progressText, // Usar localization
+                    style: TextStyle(fontSize: 12, color: colorScheme.outline),
+                  ),
+                  Text(
+                    "${(porcentajePagado * 100).toStringAsFixed(0)}%",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: mainColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LinearProgressIndicator(
+                  value: porcentajePagado,
+                  minHeight: 10,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${strings.abonadoText} \$${deuda.abono.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(
+                    "${strings.restanteText} \$${restante.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // Detalles de texto
+          _buildDetailRow(context, strings.titleText, deuda.title),
+          const SizedBox(height: 15),
+
+          // Fecha Límite (Más importante que fecha inicio en deudas)
+          _buildDetailRow(
+            context,
+            strings.venceText, // Asegúrate de tener esta key o usa "Vence"
+            formatDate(deuda.fechaLimite),
+          ),
+
+          const SizedBox(height: 15),
+
+          // Descripción
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.descriptionText,
+                  style: TextStyle(color: colorScheme.outline, fontSize: 12),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  deuda.description.isEmpty
+                      ? AppLocalizations.of(context)!.noDescription
+                      : deuda.description,
+                  style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

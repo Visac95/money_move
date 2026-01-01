@@ -87,5 +87,9 @@
     "abonar": "Abonar",
     "insertAmountPaymentText": "Inserte la cantidad a abonar",
     "abonoForText": "Abono a",
-    "pagoDeText": "Pago de"
+    "pagoDeText": "Pago de",
+    "confirmText": "Confirmar",
+    "markAsPaidText": "¿Marcar como pagada?",
+    "markAsPaidConfirmText": "Esto saldará la deuda completa por el monto restante.",
+    "deudaPaidSucessText": "Deuda pagada exitosamente"
 }

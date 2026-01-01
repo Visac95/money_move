@@ -625,6 +625,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment for'**
   String get pagoDeText;
+
+  /// No description provided for @confirmText.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirmText;
+
+  /// No description provided for @markAsPaidText.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Paid?'**
+  String get markAsPaidText;
+
+  /// No description provided for @markAsPaidConfirmText.
+  ///
+  /// In en, this message translates to:
+  /// **'This will pay off the remaining balance.'**
+  String get markAsPaidConfirmText;
+
+  /// No description provided for @deudaPaidSucessText.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt paid successfully'**
+  String get deudaPaidSucessText;
 }
 
 class _AppLocalizationsDelegate

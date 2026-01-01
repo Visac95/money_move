@@ -3,12 +3,19 @@ import 'package:money_move/l10n/app_localizations.dart'; // Importa tus textos
 
 class UiUtils {
   // Método estático para usar en cualquier lado
-  static void showDeleteConfirmation(BuildContext context, VoidCallback onConfirm) {
+  static void showDeleteConfirmation(
+    BuildContext context,
+    VoidCallback onConfirm,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.areYouSureTitle), // "¿Estás seguro?"
-        content: Text(AppLocalizations.of(context)!.accitionNotUndone), // "Esto no se puede deshacer"
+        title: Text(
+          AppLocalizations.of(context)!.areYouSureTitle,
+        ), // "¿Estás seguro?"
+        content: Text(
+          AppLocalizations.of(context)!.accitionNotUndone,
+        ), // "Esto no se puede deshacer"
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(), // Cierra sin hacer nada
@@ -26,6 +33,47 @@ class UiUtils {
           ),
         ],
       ),
+    );
+  }
+
+  static void showSnackBar(
+    BuildContext context,
+    String label,
+    MaterialColor color,
+  ) {
+    showSnackBar(context, label, color);
+  }
+
+  static void showConfirmationDialog(
+    String title,
+    String content,
+    BuildContext context,
+    VoidCallback onConfirm,
+    Color color
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(content), // "Esto no se puede deshacer"
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).pop(), // Cierra sin hacer nada
+            child: Text(AppLocalizations.of(context)!.cancelText),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el popup
+              onConfirm(); // EJECUTA LA LÓGICA QUE LE PASASTE
+            },
+            child: Text(
+              AppLocalizations.of(context)!.confirmText,
+              style: TextStyle(color: color),
+            ),
+          ),
+        ],
+      ), 
     );
   }
 }
