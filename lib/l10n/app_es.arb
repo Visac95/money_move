@@ -99,5 +99,6 @@
     "abonoSucessText": "Abono realizado con éxito",
     "putAmountHigherZeroText": "Ingresa un monto mayor a 0",
     "putAmountLowerText": "El monto excede lo que falta por pagar",
-    "errorHasOccurredText": "Ocurrió un error inesperado"
+    "errorHasOccurredText": "Ocurrió un error inesperado",
+    "seeAsociatedDeuda": "Ver deuda asociada"
 }

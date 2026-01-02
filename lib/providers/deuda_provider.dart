@@ -116,6 +116,7 @@ class DeudaProvider extends ChangeNotifier {
           fecha: DateTime.now(),
           categoria: AppConstants.catDebt,
           isExpense: d.debo,
+          deudaAsociada: d.id
         ),
       );
 

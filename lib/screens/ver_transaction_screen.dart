@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
+import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
 
-class VerTransaction extends StatelessWidget {
+class VerTransactionScreen extends StatelessWidget {
   final String id;
   // Mantenemos los parámetros por compatibilidad, aunque lo ideal es usar solo el ID
   final String title;
@@ -19,7 +21,7 @@ class VerTransaction extends StatelessWidget {
   final String categoria;
   final bool isExpense;
 
-  const VerTransaction({
+  const VerTransactionScreen({
     super.key,
     required this.id,
     required this.title,
@@ -123,7 +125,7 @@ class VerTransaction extends StatelessWidget {
                 context,
               ),
 
-              const SizedBox(height: 40), 
+              const SizedBox(height: 40),
 
               // 3. BOTONES DE ACCIÓN
               SizedBox(
@@ -196,17 +198,26 @@ class VerTransaction extends StatelessWidget {
     Transaction transaction,
     BuildContext context,
   ) {
+    final strings = AppLocalizations.of(context)!;
+
+    // Verificamos si hay deuda asociada válida
+    final bool hasDebt =
+        transaction.categoria == "cat_debt" &&
+        transaction.deudaAsociada != null &&
+        transaction.deudaAsociada!.isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
-        // Aquí la magia: surface es Blanco(Día) o Gris Oscuro(Noche)
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(25),
         boxShadow: isDark
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface, // Sombra sutil
+                  color: colorScheme.onSurface.withOpacity(
+                    0.05,
+                  ), // Sombra más suave
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -214,7 +225,7 @@ class VerTransaction extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Icono y Categoría
+          // --- 1. CABECERA LIMPIA (Solo Icono y Nombre) ---
           Row(
             children: [
               Container(
@@ -230,26 +241,32 @@ class VerTransaction extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.category,
-                    style: TextStyle(
-                      color: colorScheme.outline, // Gris adaptable
-                      fontSize: 12,
+              Expanded(
+                // Expanded ayuda a que el texto ocupe el espacio restante
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.category,
+                      style: TextStyle(
+                        color: colorScheme.outline,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    getCategoryName(context, transaction.categoria),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface, // Negro/Blanco
+                    Text(
+                      getCategoryName(context, transaction.categoria),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                      overflow: TextOverflow
+                          .ellipsis, // Por si el nombre es muy largo
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              // ¡Aquí borramos el botón antiguo! Ya no estorba.
             ],
           ),
 
@@ -257,9 +274,9 @@ class VerTransaction extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 20),
 
-          // Título y Descripción
+          // --- 2. DETALLES ESTÁNDAR ---
           _buildDetailRow(
-            context, // Pasamos el contexto para leer colores
+            context,
             AppLocalizations.of(context)!.titleText,
             transaction.title,
           ),
@@ -269,9 +286,97 @@ class VerTransaction extends StatelessWidget {
             AppLocalizations.of(context)!.dateText,
             _formatDate(transaction.fecha),
           ),
-          const SizedBox(height: 15),
 
-          // Descripción
+          const SizedBox(height: 20),
+
+          // --- 3. NUEVO BOTÓN DE DEUDA (Estilo Tarjeta/Link) ---
+          if (hasDebt)
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 20,
+              ), // Espacio antes de la descripción
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(
+                  0.1,
+                ), // Fondo suave del color de la app
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () {
+                    // LÓGICA DE NAVEGACIÓN (La misma que tenías, pero limpia)
+                    final deuda = Provider.of<DeudaProvider>(
+                      context,
+                      listen: false,
+                    ).getDeudaById(transaction.deudaAsociada!);
+
+                    if (deuda != null) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => VerDeuda(
+                            id: deuda.id,
+                            title: deuda.title,
+                            description: deuda.description,
+                            monto: deuda.monto,
+                            abono: deuda.abono,
+                            involucrado: deuda.involucrado,
+                            fechaLimite: deuda.fechaLimite,
+                            categoria: deuda.categoria,
+                            debo: deuda.debo,
+                          ),
+                        ),
+                      );
+                    } else {
+                      UiUtils.showSnackBar(
+                        context,
+                        "La deuda asociada no existe.",
+                        Colors.red,
+                      );
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.link,
+                              size: 20,
+                              color: colorScheme.primary,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              strings.seeAsociatedDeuda,
+                              style: TextStyle(
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                          color: colorScheme.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          // --- 4. DESCRIPCIÓN ---
           Align(
             alignment: Alignment.centerLeft,
             child: Column(
@@ -286,10 +391,7 @@ class VerTransaction extends StatelessWidget {
                   transaction.description.isEmpty
                       ? AppLocalizations.of(context)!.noDescription
                       : transaction.description,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: colorScheme.onSurface, // Negro/Blanco
-                  ),
+                  style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
                 ),
               ],
             ),

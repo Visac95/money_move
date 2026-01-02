@@ -310,4 +310,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorHasOccurredText => 'An unexpected error has occurred';
+
+  @override
+  String get seeAsociatedDeuda => 'See associated debt';
 }

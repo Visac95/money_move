@@ -4,7 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
-import 'package:money_move/screens/ver_transaction.dart';
+import 'package:money_move/screens/ver_transaction_screen.dart';
 import 'package:money_move/utils/date_formater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
@@ -115,7 +115,7 @@ class _TransactionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => VerTransaction(
+              builder: (context) => VerTransactionScreen(
                 id: transaction.id,
                 title: transaction.title,
                 description: transaction.description,

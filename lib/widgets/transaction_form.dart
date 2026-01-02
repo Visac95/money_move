@@ -44,7 +44,7 @@ class TransactionForm extends StatelessWidget {
     // --- LÓGICA DE ESTADO DEL BOTÓN ---
     final bool hasManual = aiProvider.manualCategory != null;
     final bool hasSuggestion = aiProvider.suggestedCategory.isNotEmpty;
-    
+
     Color chipBgColor;
     Color chipBorderColor;
     Color chipTextColor;
@@ -64,16 +64,17 @@ class TransactionForm extends StatelessWidget {
       chipBorderColor = AppColors.brandPrimary.withOpacity(0.5);
       chipTextColor = isDark ? Colors.white : AppColors.brandPrimary;
       chipIcon = Icons.auto_awesome;
-      chipLabel = "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
+      chipLabel =
+          "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
     } else {
       // 3. ESTADO INICIAL (Ni manual, ni IA aún) -> GRIS / "CATEGORÍA"
       // Esto aparecerá apenas abras la pantalla
       chipBgColor = colorScheme.surfaceContainerHighest;
-      chipBorderColor = Colors.transparent; 
+      chipBorderColor = Colors.transparent;
       chipTextColor = colorScheme.onSurfaceVariant;
-      chipIcon = Icons.category_outlined; 
+      chipIcon = Icons.category_outlined;
       // Aquí forzamos que diga "Categoría" o "Seleccionar"
-      chipLabel = strings.category; 
+      chipLabel = strings.category;
     }
 
     // Estilos inputs
@@ -81,7 +82,9 @@ class TransactionForm extends StatelessWidget {
       filled: true,
       fillColor: colorScheme.surfaceContainerHighest,
       prefixIconColor: colorScheme.onSurfaceVariant,
-      hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
+      hintStyle: TextStyle(
+        color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+      ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
@@ -101,7 +104,10 @@ class TransactionForm extends StatelessWidget {
             // 1. TÍTULO
             Text(
               strings.inputTitleTransactionText,
-              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -117,7 +123,10 @@ class TransactionForm extends StatelessWidget {
             // 2. DESCRIPCIÓN
             Text(
               strings.descriptionTransactionText,
-              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -128,49 +137,20 @@ class TransactionForm extends StatelessWidget {
                 prefixIcon: const Icon(Icons.description_outlined),
               ),
             ),
-            const SizedBox(height: 30),
 
             // 3. TOGGLE TIPO
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                children: [
-                  _buildToggleOption(context, strings.expencesText, true, activeColor),
-                  _buildToggleOption(context, strings.incomeText, false, activeColor),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
+            aiProvider.manualCategory! != "cat_debt"
+                ? _toogleTipo(colorScheme, context, strings, activeColor)
+                : SizedBox(),
 
             // 4. MONTO
-            Text(
-              strings.amountText,
-              style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: activeColor),
-              decoration: InputDecoration(
-                hintText: "0.00",
-                hintStyle: TextStyle(color: colorScheme.outline.withOpacity(0.3)),
-                prefixText: "\$ ",
-                prefixStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: activeColor),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
+            aiProvider.manualCategory! != "cat_debt"
+                ? _montoConteiner(strings, colorScheme, activeColor)
+                : SizedBox(),
 
             // 5. BOTÓN DE CATEGORÍA (Con AnimatedSwitcher)
             const SizedBox(height: 16),
-            
+
             // La lógica es: Si está cargando -> Spinner.
             // Si NO está cargando (incluso al inicio) -> Botón configurado arriba (Estado 1, 2 o 3).
             AnimatedSwitcher(
@@ -182,29 +162,40 @@ class TransactionForm extends StatelessWidget {
                         SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: activeColor),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: activeColor,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           strings.analizingText,
-                          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
+                          style: TextStyle(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     )
                   : GestureDetector(
                       key: const ValueKey('button'),
                       onTap: () async {
-                        final String? selectedManualCategory = await showDialog<String>(
-                          context: context,
-                          builder: (context) => const SelectCategoryWindow(),
-                        );
-                        
+                        final String? selectedManualCategory =
+                            await showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  const SelectCategoryWindow(),
+                            );
+
                         if (selectedManualCategory != null) {
                           aiProvider.manualCategory = selectedManualCategory;
                         }
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: chipBgColor,
                           borderRadius: BorderRadius.circular(20),
@@ -223,7 +214,11 @@ class TransactionForm extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 4),
-                            Icon(Icons.keyboard_arrow_down, size: 18, color: chipTextColor),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 18,
+                              color: chipTextColor,
+                            ),
                           ],
                         ),
                       ),
@@ -239,14 +234,21 @@ class TransactionForm extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onSave,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.brandPrimary : AppColors.darkPrimary,
+                  backgroundColor: isDark
+                      ? AppColors.brandPrimary
+                      : AppColors.darkPrimary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   elevation: 2,
                 ),
                 child: Text(
                   strings.saveTransactionText,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -256,7 +258,80 @@ class TransactionForm extends StatelessWidget {
     );
   }
 
-  Widget _buildToggleOption(BuildContext context, String label, bool isExpenseButton, Color activeColor) {
+  Container _toogleTipo(
+    ColorScheme colorScheme,
+    BuildContext context,
+    AppLocalizations strings,
+    Color activeColor,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(height: 30),
+          _buildToggleOption(context, strings.expencesText, true, activeColor),
+          _buildToggleOption(context, strings.incomeText, false, activeColor),
+        ],
+      ),
+    );
+  }
+
+  Column _montoConteiner(
+    AppLocalizations strings,
+    ColorScheme colorScheme,
+    Color activeColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 30),
+        Text(
+          strings.amountText,
+          style: TextStyle(
+            color: colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: amountController,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+          ],
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+            color: activeColor,
+          ),
+          decoration: InputDecoration(
+            hintText: "0.00",
+            hintStyle: TextStyle(color: colorScheme.outline.withOpacity(0.3)),
+            prefixText: "\$ ",
+            prefixStyle: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              color: activeColor,
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.zero,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildToggleOption(
+    BuildContext context,
+    String label,
+    bool isExpenseButton,
+    Color activeColor,
+  ) {
     bool isActive = isExpense == isExpenseButton;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -268,10 +343,18 @@ class TransactionForm extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isActive ? (isDark ? theme.colorScheme.surface : Colors.white) : Colors.transparent,
+            color: isActive
+                ? (isDark ? theme.colorScheme.surface : Colors.white)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: isActive && !isDark
-                ? [const BoxShadow(color: Color.fromARGB(30, 0, 0, 0), blurRadius: 4, offset: Offset(0, 2))]
+                ? [
+                    const BoxShadow(
+                      color: Color.fromARGB(30, 0, 0, 0),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ]
                 : [],
           ),
           child: Text(
@@ -279,7 +362,9 @@ class TransactionForm extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isActive ? activeColor : theme.colorScheme.onSurfaceVariant,
+              color: isActive
+                  ? activeColor
+                  : theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ),

@@ -96,10 +96,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     }
 
     const uuid = Uuid();
-
-    // 4. GUARDAR
-    deudaProvider.addDeuda(
-      Deuda(
+    dynamic nuevaDeuda = Deuda(
         id: uuid.v4(),
         title: titleController.text,
         description: l10n.noDescription, // O usa un controller si lo agregas luego
@@ -111,8 +108,10 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
         categoria: finalCategory,
         debo: debo,
         pagada: false,
-      ),
-    );
+      );
+    // 4. GUARDAR
+    deudaProvider.addDeuda(nuevaDeuda);
+    
 
     if (mounted) {
       Navigator.of(context).pop();

@@ -697,6 +697,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An unexpected error has occurred'**
   String get errorHasOccurredText;
+
+  /// No description provided for @seeAsociatedDeuda.
+  ///
+  /// In en, this message translates to:
+  /// **'See associated debt'**
+  String get seeAsociatedDeuda;
 }
 
 class _AppLocalizationsDelegate
