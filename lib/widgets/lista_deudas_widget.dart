@@ -109,169 +109,180 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
       ),
       child: InkWell(
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                // 1. FRANJA LATERAL DE COLOR
-                Container(width: 6, color: mainColor),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(0),
+            bottomRight: Radius.circular(0),
+          ),
+          child: Column(
+            children: [
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    // 1. FRANJA LATERAL DE COLOR
+                    Container(width: 6, color: mainColor),
 
-                // 2. CONTENIDO PRINCIPAL
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 12, 16.0, 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Encabezado: Etiqueta y Menú
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // 2. CONTENIDO PRINCIPAL
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 12, 16.0, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Chip de estado
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    chipBgColor, // Color translúcido adaptable
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(iconStatus, size: 12, color: mainColor),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    label,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: mainColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Menú de opciones
-                            _buildPopupMenu(
-                              context,
-                              deuda,
-                              provider,
-                              colorScheme,
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        // Información Principal
-                        Row(
-                          children: [
-                            // AVATAR CON INICIAL
-                            CircleAvatar(
-                              radius: 22,
-                              // Fondo del avatar basado en el tema (Primary Container)
-                              backgroundColor: widget.pagada
-                                  ? AppColors.income
-                                  : colorScheme.primaryContainer,
-                              child: Text(
-                                deuda.involucrado.isNotEmpty
-                                    ? deuda.involucrado[0].toUpperCase()
-                                    : "?",
-                                style: TextStyle(
-                                  // Texto del avatar contrastante
-                                  color: colorScheme.onPrimaryContainer,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-
-                            // Textos centrales
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    deuda.title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: colorScheme
-                                          .onSurface, // Texto principal
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    "${strings.withInvolucradoText}: ${deuda.involucrado}",
-                                    style: TextStyle(
-                                      color: colorScheme
-                                          .onSurfaceVariant, // Texto secundario
-                                      fontSize: 13,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // MONTO
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            // Encabezado: Etiqueta y Menú
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "\$${deuda.monto.toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
+                                // Chip de estado
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
                                     color:
-                                        mainColor, // Mantenemos el color semántico (rojo/verde)
+                                        chipBgColor, // Color translúcido adaptable
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        iconStatus,
+                                        size: 12,
+                                        color: mainColor,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        label,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: mainColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.event_busy_rounded,
-                                      size: 12,
-                                      color: colorScheme
-                                          .outline, // Icono gris suave
+                                // Menú de opciones
+                                _buildPopupMenu(
+                                  context,
+                                  deuda,
+                                  provider,
+                                  colorScheme,
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Información Principal
+                            Row(
+                              children: [
+                                // AVATAR CON INICIAL
+                                CircleAvatar(
+                                  radius: 22,
+                                  // Fondo del avatar basado en el tema (Primary Container)
+                                  backgroundColor: widget.pagada
+                                      ? AppColors.income
+                                      : colorScheme.primaryContainer,
+                                  child: Text(
+                                    deuda.involucrado.isNotEmpty
+                                        ? deuda.involucrado[0].toUpperCase()
+                                        : "?",
+                                    style: TextStyle(
+                                      // Texto del avatar contrastante
+                                      color: colorScheme.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      "${strings.venceText}: ${formatDate(deuda.fechaLimite)}",
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+
+                                // Textos centrales
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        deuda.title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: colorScheme
+                                              .onSurface, // Texto principal
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                      Text(
+                                        "${strings.withInvolucradoText}: ${deuda.involucrado}",
+                                        style: TextStyle(
+                                          color: colorScheme
+                                              .onSurfaceVariant, // Texto secundario
+                                          fontSize: 13,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                // MONTO
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "\$${deuda.monto.toStringAsFixed(2)}",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900,
+                                        color:
+                                            mainColor, // Mantenemos el color semántico (rojo/verde)
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.event_busy_rounded,
+                                          size: 12,
+                                          color: colorScheme
+                                              .outline, // Icono gris suave
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "${strings.venceText}: ${formatDate(deuda.fechaLimite)}",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ],
                             ),
+                            SizedBox(height: 5),
                           ],
                         ),
-                        SizedBox(height: 5),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: porcentajePagado,
-                            minHeight: 5,
-                            backgroundColor:
-                                colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              mainColor,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LinearProgressIndicator(
+                  value: porcentajePagado,
+                  minHeight: 5,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                ),
+              ),
+            ],
           ),
         ),
         onTap: () => Navigator.of(context).push(
@@ -361,19 +372,31 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   Widget _buildEmptyState(ColorScheme colorScheme) {
     final strings = AppLocalizations.of(context)!;
 
+    // Lógica para decidir el texto y el icono según si estamos viendo pagadas o pendientes
+    String titulo;
+    String subtitulo;
+    IconData icono;
+
+    if (widget.pagada) {
+      // ESTADO VACÍO PARA HISTORIAL (PAGADAS)
+      titulo = "Sin historial";
+      subtitulo = "Aún no hay deudas liquidadas en esta sección.";
+      icono = Icons.history_edu_rounded; // Icono de historial
+    } else {
+      // ESTADO VACÍO PARA PENDIENTES (LO QUE TIENES AHORA)
+      titulo = strings.allAlrightDeudasText;
+      subtitulo = strings.noOutstandingDeudas;
+      icono = Icons.handshake_outlined;
+    }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.handshake_outlined,
-            size: 70,
-            // Usamos un color que se vea bien en fondo oscuro y claro (outline o surfaceVariant)
-            color: colorScheme.outline,
-          ),
+          Icon(icono, size: 70, color: colorScheme.outline),
           const SizedBox(height: 16),
           Text(
-            strings.allAlrightDeudasText,
+            titulo,
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 18,
@@ -382,8 +405,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
           ),
           const SizedBox(height: 8),
           Text(
-            strings.noOutstandingDeudas,
+            subtitulo,
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
