@@ -292,4 +292,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get totalPorCobrarText => 'Total por cobrar';
+
+  @override
+  String get paidDeudasText => 'Deudas pagadas';
+
+  @override
+  String get recivedDeudasText => 'Deudas cobradas';
 }

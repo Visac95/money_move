@@ -4,6 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
+import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
@@ -240,7 +241,7 @@ class VerTransaction extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    transaction.categoria,
+                    getCategoryName(context, transaction.categoria),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

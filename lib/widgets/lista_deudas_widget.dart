@@ -119,7 +119,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                 // 2. CONTENIDO PRINCIPAL
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.fromLTRB(16.0, 12, 16.0, 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -172,7 +172,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                             CircleAvatar(
                               radius: 22,
                               // Fondo del avatar basado en el tema (Primary Container)
-                              backgroundColor: colorScheme.primaryContainer,
+                              backgroundColor: widget.pagada
+                                  ? AppColors.income
+                                  : colorScheme.primaryContainer,
                               child: Text(
                                 deuda.involucrado.isNotEmpty
                                     ? deuda.involucrado[0].toUpperCase()
@@ -251,11 +253,12 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 5),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: LinearProgressIndicator(
                             value: porcentajePagado,
-                            minHeight: 10,
+                            minHeight: 5,
                             backgroundColor:
                                 colorScheme.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(

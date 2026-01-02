@@ -661,6 +661,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total to Collect'**
   String get totalPorCobrarText;
+
+  /// No description provided for @paidDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid debts'**
+  String get paidDeudasText;
+
+  /// No description provided for @recivedDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'Collected debts'**
+  String get recivedDeudasText;
 }
 
 class _AppLocalizationsDelegate
