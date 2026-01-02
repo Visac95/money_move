@@ -10,6 +10,7 @@ class Transaction {
   final DateTime fecha;
   final String categoria;
   final bool isExpense; // true = Gasto, false = Ingreso
+  final String? deudaAsociada;
 
   Transaction({
     String? id,
@@ -19,6 +20,7 @@ class Transaction {
     required this.fecha,
     required this.categoria,
     required this.isExpense,
+    this.deudaAsociada
   }) : id = id ?? uuid.v4();
 
   // 1. Convertir: De Objeto a Mapa (Para GUARDAR en la DB)
@@ -33,6 +35,7 @@ class Transaction {
       'categoria': categoria,
       // SQLite no tiene bool, guardamos 1 o 0
       'isExpense': isExpense ? 1 : 0,
+      'deudaAsociada': deudaAsociada,
     };
   }
 
@@ -46,6 +49,7 @@ class Transaction {
       fecha: DateTime.parse(map['fecha']),
       categoria: map['categoria'],
       isExpense: map['isExpense'] == 1, // Si es 1 es true, si es 0 es false
+      deudaAsociada: map['deudaAsociada'],
     );
   }
 
@@ -56,6 +60,7 @@ class Transaction {
     DateTime? fecha,
     String? categoria,
     bool? isExpense,
+    String? deudaAsociada
   }) {
     return Transaction(
       id: id,
@@ -65,6 +70,7 @@ class Transaction {
       fecha: fecha ?? this.fecha,
       categoria: categoria ?? this.categoria,
       isExpense: isExpense ?? this.isExpense,
+      deudaAsociada: deudaAsociada ?? this.deudaAsociada,
     );
   }
 }

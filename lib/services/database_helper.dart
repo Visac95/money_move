@@ -47,7 +47,8 @@ class DatabaseHelper {
         monto $doubleType,
         fecha $textType,
         categoria $textType,
-        isExpense $intType
+        isExpense $intType,
+        deudaAsociada $textType
       )
     ''');
 
