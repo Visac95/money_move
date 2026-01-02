@@ -95,5 +95,9 @@
     "totalPorPagarText": "Total to Pay",
     "totalPorCobrarText": "Total to Collect",
     "paidDeudasText": "Paid debts",
-    "recivedDeudasText": "Collected debts"
+    "recivedDeudasText": "Collected debts",
+    "abonoSucessText": "Payment made successfully",
+    "putAmountHigherZeroText": "Enter an amount greater than 0",
+    "putAmountLowerText": "The amount exceeds the remaining balance",
+    "errorHasOccurredText": "An unexpected error has occurred"
 }

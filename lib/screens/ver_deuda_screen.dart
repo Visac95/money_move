@@ -75,35 +75,36 @@ class VerDeuda extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     void caseNotiAbono(AbonoStatus status) {
+      final strings = AppLocalizations.of(context)!;
       switch (status) {
         case AbonoStatus.exito:
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Abono realizado con éxito"),
+            SnackBar(
+              content: Text(strings.abonoSucessText),
               backgroundColor: Colors.green,
             ),
           );
           break;
         case AbonoStatus.montoInvalido:
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Ingresa un monto mayor a 0"),
+            SnackBar(
+              content: Text(strings.putAmountHigherZeroText),
               backgroundColor: Colors.red,
             ),
           );
           break;
         case AbonoStatus.excedeDeuda:
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("El monto excede lo que falta por pagar"),
+            SnackBar(
+              content: Text(strings.putAmountLowerText),
               backgroundColor: Colors.orange,
             ),
           );
           break;
         case AbonoStatus.error:
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Ocurrió un error inesperado"),
+            SnackBar(
+              content: Text(strings.errorHasOccurredText),
               backgroundColor: Colors.red,
             ),
           );

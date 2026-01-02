@@ -673,6 +673,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Collected debts'**
   String get recivedDeudasText;
+
+  /// No description provided for @abonoSucessText.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment made successfully'**
+  String get abonoSucessText;
+
+  /// No description provided for @putAmountHigherZeroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than 0'**
+  String get putAmountHigherZeroText;
+
+  /// No description provided for @putAmountLowerText.
+  ///
+  /// In en, this message translates to:
+  /// **'The amount exceeds the remaining balance'**
+  String get putAmountLowerText;
+
+  /// No description provided for @errorHasOccurredText.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error has occurred'**
+  String get errorHasOccurredText;
 }
 
 class _AppLocalizationsDelegate

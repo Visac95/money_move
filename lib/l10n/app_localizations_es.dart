@@ -298,4 +298,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get recivedDeudasText => 'Deudas cobradas';
+
+  @override
+  String get abonoSucessText => 'Abono realizado con éxito';
+
+  @override
+  String get putAmountHigherZeroText => 'Ingresa un monto mayor a 0';
+
+  @override
+  String get putAmountLowerText => 'El monto excede lo que falta por pagar';
+
+  @override
+  String get errorHasOccurredText => 'Ocurrió un error inesperado';
 }

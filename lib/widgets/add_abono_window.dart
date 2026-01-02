@@ -20,7 +20,6 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
     final colorScheme = Theme.of(context).colorScheme;
     final montoController = TextEditingController();
     final strings = AppLocalizations.of(context)!;
-    final double restante = widget.monto - widget.abono;
 
     return AlertDialog(
       insetPadding: EdgeInsets.only(top: 20, bottom: 20, left: 20),

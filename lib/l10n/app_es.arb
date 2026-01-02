@@ -95,5 +95,9 @@
     "totalPorPagarText": "Total por pargar",
     "totalPorCobrarText": "Total por cobrar",
     "paidDeudasText": "Deudas pagadas",
-    "recivedDeudasText": "Deudas cobradas"
+    "recivedDeudasText": "Deudas cobradas",
+    "abonoSucessText": "Abono realizado con éxito",
+    "putAmountHigherZeroText": "Ingresa un monto mayor a 0",
+    "putAmountLowerText": "El monto excede lo que falta por pagar",
+    "errorHasOccurredText": "Ocurrió un error inesperado"
 }
