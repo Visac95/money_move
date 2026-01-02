@@ -16,6 +16,7 @@ class ListaDeTransacciones extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
     final lista = provider.transactions;
+    
     // Accedemos al tema
     final colorScheme = Theme.of(context).colorScheme;
 

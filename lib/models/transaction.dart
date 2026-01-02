@@ -49,7 +49,7 @@ class Transaction {
       fecha: DateTime.parse(map['fecha']),
       categoria: map['categoria'],
       isExpense: map['isExpense'] == 1, // Si es 1 es true, si es 0 es false
-      deudaAsociada: map['deudaAsociada'],
+      deudaAsociada: map['deudaAsociada'] as String?,
     );
   }
 
