@@ -91,5 +91,7 @@
     "confirmText": "Confirmar",
     "markAsPaidText": "¿Marcar como pagada?",
     "markAsPaidConfirmText": "Esto saldará la deuda completa por el monto restante.",
-    "deudaPaidSucessText": "Deuda pagada exitosamente"
+    "deudaPaidSucessText": "Deuda pagada exitosamente",
+    "totalPorPagarText": "Total por pargar",
+    "totalPorCobrarText": "Total por cobrar"
 }

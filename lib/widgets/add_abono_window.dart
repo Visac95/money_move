@@ -3,8 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 
+// ignore: must_be_immutable
 class AddAbonoWindow extends StatefulWidget {
-  const AddAbonoWindow({super.key});
+  double monto;
+  double abono;
+  final bool debo;
+  AddAbonoWindow({super.key, required this.monto, required this.abono, required this.debo});
 
   @override
   State<AddAbonoWindow> createState() => _AddAbonoWindowState();
@@ -16,6 +20,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
     final colorScheme = Theme.of(context).colorScheme;
     final montoController = TextEditingController();
     final strings = AppLocalizations.of(context)!;
+    final double restante = widget.monto - widget.abono;
 
     return AlertDialog(
       insetPadding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
@@ -39,7 +44,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
-              color: AppColors.accent,
+              color: colorScheme.primary,
             ),
             decoration: InputDecoration(
               hintText: "0.00",
@@ -48,11 +53,15 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
               prefixStyle: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: AppColors.accent,
+                color: colorScheme.primary,
               ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
             ),
+          ),
+          Text(
+            "${(widget.debo ? strings.totalPorPagarText : strings.totalPorCobrarText)}: ${widget.monto - widget.abono}",
+            style: TextStyle(color: colorScheme.outline),
           ),
           SizedBox(height: 15),
           Row(
@@ -79,7 +88,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
 
               SizedBox(width: 10),
 
-              //----------Cancelar------------
+              //----------Abonar------------
               Expanded(
                 child: SizedBox(
                   height: 55,
@@ -97,7 +106,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
+                      backgroundColor: colorScheme.primary,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),

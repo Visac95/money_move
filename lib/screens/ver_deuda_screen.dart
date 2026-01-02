@@ -4,7 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
-import 'package:money_move/screens/edit_deuda_screen.dart'; // Asumo que tienes o crearás esta pantalla
+import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/ui_utils.dart';
@@ -17,6 +17,7 @@ class VerDeuda extends StatelessWidget {
   final String title;
   final String description;
   final double monto;
+  final double abono;
   final String involucrado;
   final DateTime fechaLimite;
   final String categoria;
@@ -28,16 +29,25 @@ class VerDeuda extends StatelessWidget {
     required this.title,
     required this.description,
     required this.monto,
+    required this.abono,
     required this.involucrado,
     required this.fechaLimite,
     required this.categoria,
     required this.debo,
   });
 
-  Future<double?> _mostrarDialogoAbono(BuildContext context) async {
+  // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
+  Future<double?> _mostrarDialogoAbono(
+    BuildContext context,
+    Deuda deudaActual,
+  ) async {
     final double? montoIngresado = await showDialog<double>(
       context: context,
-      builder: (context) => const AddAbonoWindow(),
+      builder: (context) => AddAbonoWindow(
+        debo: deudaActual.debo, // Usamos datos frescos
+        monto: deudaActual.monto, // Usamos datos frescos
+        abono: deudaActual.abono, // Usamos datos frescos
+      ),
     );
     return montoIngresado;
   }
@@ -53,36 +63,59 @@ class VerDeuda extends StatelessWidget {
     final strings = AppLocalizations.of(context)!;
 
     if (deuda == null) {
-      return Scaffold(
-        body: Center(
-          child: Text(
-            AppLocalizations.of(context)!.transactionNotExist,
-          ), // O un texto genérico de error
-        ),
-      );
+      return Scaffold(body: Center(child: Text(strings.transactionNotExist)));
     }
 
-    // 2. Lógica de colores (Igual que en transacciones pero adaptado a Deuda)
-    // Si YO DEBO (true) -> Rojo/Naranja. Si ME DEBEN (false) -> Verde.
-    final Color mainColor = deuda.debo
-        ? AppColors
-              .accent // Deuda negativa (tengo que pagar)
-        : AppColors.income; // Deuda positiva (voy a recibir)
+    final Color mainColor = deuda.debo ? AppColors.accent : AppColors.income;
 
-    // Cálculos para el progreso
     final double restante = deuda.monto - deuda.abono;
     final double porcentajePagado = (deuda.monto > 0)
         ? (deuda.abono / deuda.monto)
         : 0.0;
     final isDark = theme.brightness == Brightness.dark;
 
+    void caseNotiAbono(AbonoStatus status) {
+      switch (status) {
+        case AbonoStatus.exito:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Abono realizado con éxito"),
+              backgroundColor: Colors.green,
+            ),
+          );
+          break;
+        case AbonoStatus.montoInvalido:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Ingresa un monto mayor a 0"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          break;
+        case AbonoStatus.excedeDeuda:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("El monto excede lo que falta por pagar"),
+              backgroundColor: Colors.orange,
+            ),
+          );
+          break;
+        case AbonoStatus.error:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Ocurrió un error inesperado"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          break;
+      }
+    }
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(
-            context,
-          )!.transactionDetailsTitle, // O "Detalles de Deuda" si tienes esa key
+          AppLocalizations.of(context)!.transactionDetailsTitle,
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -101,9 +134,7 @@ class VerDeuda extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
 
-              // --- 1. EL HÉROE (Monto Restante o Total) ---
-              // En deudas, suele ser más útil ver cuánto falta, pero para consistencia
-              // con el Home, mostramos el total y abajo el desglose.
+              // --- 1. EL HÉROE ---
               Hero(
                 tag: deuda.id,
                 child: Text(
@@ -131,8 +162,8 @@ class VerDeuda extends StatelessWidget {
                   const SizedBox(width: 5),
                   Text(
                     deuda.debo
-                        ? "${strings.payableText} ${strings.toText}" // "Pagar a"
-                        : "${strings.receivableText} ${strings.fromText}", // "Cobrar de"
+                        ? "${strings.payableText} ${strings.toText}"
+                        : "${strings.receivableText} ${strings.fromText}",
                     style: TextStyle(
                       color: colorScheme.outline,
                       fontSize: 16,
@@ -142,7 +173,7 @@ class VerDeuda extends StatelessWidget {
                 ],
               ),
 
-              // Nombre del Involucrado (Grande y claro)
+              // Nombre del Involucrado
               Text(
                 deuda.involucrado,
                 style: TextStyle(
@@ -154,7 +185,7 @@ class VerDeuda extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // --- 2. TARJETA DE PROGRESO Y DETALLES ---
+              // --- 2. TARJETA DE PROGRESO ---
               _cardConteiner(
                 colorScheme,
                 isDark,
@@ -169,191 +200,14 @@ class VerDeuda extends StatelessWidget {
               const SizedBox(height: 20),
 
               // --- 3. BOTONES DE ACCIÓN ---
-              //---Abonar y pagar
               deuda.pagada
-                  ? SizedBox(height: 1)
-                  : Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                //------Pagar--------
-                                child: SizedBox(
-                                  height: 55,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      UiUtils.showConfirmationDialog(
-                                        // Asumo que tienes o puedes crear este método similar al de borrar
-                                        strings.markAsPaidText,
-                                        strings.markAsPaidConfirmText,
-                                        context,
-                                        () {
-                                          Provider.of<DeudaProvider>(
-                                            context,
-                                            listen: false,
-                                          ).pagarDeuda(
-                                            deuda,
-                                            Provider.of<TransactionProvider>(
-                                              context,
-                                              listen: false,
-                                            ),
-                                            context
-                                          );
-                                          UiUtils.showSnackBar(
-                                            context,
-                                            strings.deudaPaidSucessText,
-                                            Colors.green,
-                                          );
-                                        },
-                                        AppColors.income,
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.check_circle_outline,
-                                      color: colorScheme.surface,
-                                    ),
-                                    label: Text(
-                                      strings.pagar,
-                                      style: TextStyle(
-                                        color: colorScheme.surface,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.income,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 7),
-                              //------Abonar--------
-                              Expanded(
-                                child: SizedBox(
-                                  height: 55,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () async {
-                                      // 1. Pedir el monto (Diálogo)
-                                      final double? monto =
-                                          await _mostrarDialogoAbono(context);
-
-                                      if (monto != null && context.mounted) {
-                                        // 2. Llamar al Provider y GUARDAR EL RESULTADO
-                                        final status =
-                                            Provider.of<DeudaProvider>(
-                                              context,
-                                              listen: false,
-                                            ).abonarDeuda(
-                                              deuda,
-                                              monto,
-                                              Provider.of<TransactionProvider>(
-                                                context,
-                                                listen: false,
-                                              ),
-                                              context,
-                                            );
-
-                                        // 3. Actuar según el resultado (Switch es ideal aquí)
-                                        switch (status) {
-                                          case AbonoStatus.exito:
-                                            // Opcional: Mostrar éxito
-                                            UiUtils.showSnackBar(
-                                              context,
-                                              "Abono realizado con éxito",
-                                              Colors.green,
-                                            );
-                                            break;
-
-                                          case AbonoStatus.montoInvalido:
-                                            UiUtils.showSnackBar(
-                                              context,
-                                              "Ingresa un monto mayor a 0",
-                                              Colors.red,
-                                            );
-                                            break;
-
-                                          case AbonoStatus.excedeDeuda:
-                                            UiUtils.showSnackBar(
-                                              context,
-                                              "El monto excede lo que falta por pagar",
-                                              Colors.orange,
-                                            );
-                                            break;
-                                          case AbonoStatus.error:
-                                            UiUtils.showSnackBar(
-                                              context,
-                                              "Ocurrió un error inesperado",
-                                              Colors.red,
-                                            );
-                                            break;
-                                        }
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.add_box,
-                                      color: colorScheme.surface,
-                                    ),
-                                    label: Text(
-                                      strings.abonar,
-                                      style: TextStyle(
-                                        color: colorScheme.surface,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.accent,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //------Edit Button---------
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: ElevatedButton.icon(
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                // Asegúrate de importar EditDeudaScreen
-                                builder: (context) =>
-                                    EditDeudaScreen(deuda: deuda),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.edit_rounded,
-                              color: colorScheme.surface,
-                            ),
-                            label: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.editText, // "Editar"
-                              style: TextStyle(
-                                color: colorScheme.surface,
-                                fontSize: 16,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: colorScheme.primary,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                  ? const SizedBox(height: 1)
+                  : _actionButtons(
+                      strings,
+                      context,
+                      deuda,
+                      colorScheme,
+                      caseNotiAbono,
                     ),
 
               const SizedBox(height: 15),
@@ -368,13 +222,12 @@ class VerDeuda extends StatelessWidget {
                         context,
                         listen: false,
                       ).deleteDeuda(deuda.id);
-                      // Cerrar la pantalla después de borrar
                       Navigator.pop(context);
                     });
                   },
                   icon: Icon(Icons.delete_outline, color: colorScheme.error),
                   label: Text(
-                    strings.deleteText, // "Eliminar"
+                    strings.deleteText,
                     style: TextStyle(color: colorScheme.error, fontSize: 16),
                   ),
                   style: TextButton.styleFrom(
@@ -389,6 +242,153 @@ class VerDeuda extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Column _actionButtons(
+    AppLocalizations strings,
+    BuildContext context,
+    Deuda deuda, // <--- Esta es la deuda actualizada que viene del build
+    ColorScheme colorScheme,
+    void Function(AbonoStatus status) caseNotiAbono,
+  ) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                //------Pagar--------
+                child: SizedBox(
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      UiUtils.showConfirmationDialog(
+                        strings.markAsPaidText,
+                        strings.markAsPaidConfirmText,
+                        context,
+                        () {
+                          Provider.of<DeudaProvider>(
+                            context,
+                            listen: false,
+                          ).pagarDeuda(
+                            deuda,
+                            Provider.of<TransactionProvider>(
+                              context,
+                              listen: false,
+                            ),
+                            context,
+                          );
+                          UiUtils.showSnackBar(
+                            context,
+                            strings.deudaPaidSucessText,
+                            Colors.green,
+                          );
+                        },
+                        AppColors.income,
+                      );
+                    },
+                    icon: Icon(
+                      Icons.check_circle_outline,
+                      color: colorScheme.surface,
+                    ),
+                    label: Text(
+                      strings.pagar,
+                      style: TextStyle(
+                        color: colorScheme.surface,
+                        fontSize: 18,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.income,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 7),
+              //------Abonar--------
+              Expanded(
+                child: SizedBox(
+                  height: 55,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      // --- CORRECCIÓN 2: Pasamos la 'deuda' actualizada a la función ---
+                      final double? monto = await _mostrarDialogoAbono(
+                        context,
+                        deuda,
+                      );
+
+                      if (monto != null && context.mounted) {
+                        final status =
+                            await Provider.of<DeudaProvider>(
+                              context,
+                              listen: false,
+                            ).abonarDeuda(
+                              deuda,
+                              monto,
+                              Provider.of<TransactionProvider>(
+                                context,
+                                listen: false,
+                              ),
+                              context,
+                            );
+
+                        if (!context.mounted) return;
+                        caseNotiAbono(status);
+                      }
+                    },
+                    icon: Icon(Icons.add_box, color: colorScheme.surface),
+                    label: Text(
+                      strings.abonar,
+                      style: TextStyle(
+                        color: colorScheme.surface,
+                        fontSize: 18,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        //------Edit Button---------
+        SizedBox(
+          width: double.infinity,
+          height: 55,
+          child: ElevatedButton.icon(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditDeudaScreen(deuda: deuda),
+              ),
+            ),
+            icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
+            label: Text(
+              strings.editText,
+              style: TextStyle(color: colorScheme.surface, fontSize: 16),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -411,9 +411,7 @@ class VerDeuda extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withOpacity(
-                    0.05,
-                  ), // Sombra muy sutil adaptativa
+                  color: colorScheme.onSurface.withOpacity(0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -468,8 +466,8 @@ class VerDeuda extends StatelessWidget {
                     border: Border.all(color: Colors.green),
                   ),
                   child: Text(
-                    strings.pagadaText, // Puedes usar localizations aquí
-                    style: TextStyle(
+                    strings.pagadaText,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
@@ -481,8 +479,7 @@ class VerDeuda extends StatelessWidget {
 
           const SizedBox(height: 25),
 
-          // BARRA DE PROGRESO (Exclusivo para Deudas)
-          // Muestra visualmente cuánto se ha abonado
+          // BARRA DE PROGRESO
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -490,7 +487,7 @@ class VerDeuda extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    strings.progressText, // Usar localization
+                    strings.progressText,
                     style: TextStyle(fontSize: 12, color: colorScheme.outline),
                   ),
                   Text(
@@ -545,10 +542,10 @@ class VerDeuda extends StatelessWidget {
           _buildDetailRow(context, strings.titleText, deuda.title),
           const SizedBox(height: 15),
 
-          // Fecha Límite (Más importante que fecha inicio en deudas)
+          // Fecha Límite
           _buildDetailRow(
             context,
-            strings.venceText, // Asegúrate de tener esta key o usa "Vence"
+            strings.venceText,
             formatDate(deuda.fechaLimite),
           ),
 

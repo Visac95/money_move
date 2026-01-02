@@ -27,9 +27,13 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
         child: Column(
           children: [
             _deudaTitle(strings.deudasPorPagarText),
-            ListaDeudasWidget(deboList: true),
+            ListaDeudasWidget(deboList: true, pagada: false,),
             _deudaTitle(strings.deudasPorCobrarText),
-            ListaDeudasWidget(deboList: false),
+            ListaDeudasWidget(deboList: false, pagada: false,),
+            _deudaTitle("Deudas pagadas"),
+            ListaDeudasWidget(deboList: true, pagada: true,),
+            _deudaTitle("Deudas pagadas"),
+            ListaDeudasWidget(deboList: false, pagada: true,),
           ],
         ),
       ),

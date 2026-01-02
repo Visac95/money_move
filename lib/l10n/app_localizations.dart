@@ -649,6 +649,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Debt paid successfully'**
   String get deudaPaidSucessText;
+
+  /// No description provided for @totalPorPagarText.
+  ///
+  /// In en, this message translates to:
+  /// **'Total to Pay'**
+  String get totalPorPagarText;
+
+  /// No description provided for @totalPorCobrarText.
+  ///
+  /// In en, this message translates to:
+  /// **'Total to Collect'**
+  String get totalPorCobrarText;
 }
 
 class _AppLocalizationsDelegate

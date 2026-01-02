@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class ListaDeudasWidget extends StatefulWidget {
   bool deboList;
-  ListaDeudasWidget({super.key, this.deboList = true});
+  bool pagada;
+  ListaDeudasWidget({super.key, this.deboList = true, required this.pagada});
 
   @override
   State<ListaDeudasWidget> createState() => _ListaDeudasWidget();
@@ -29,6 +30,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     final provider = Provider.of<DeudaProvider>(context);
     final lista = provider.deudas
         .where((deuda) => deuda.debo == widget.deboList)
+        .where((deuda) => deuda.pagada == widget.pagada)
         .toList();
 
     // Accedemos al esquema de colores actual
@@ -80,9 +82,14 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     final String label = soyDeudor
         ? strings.payableText
         : strings.receivableText;
+
     final IconData iconStatus = soyDeudor
         ? Icons.arrow_outward_rounded
         : Icons.arrow_downward_rounded;
+
+    final double porcentajePagado = (deuda.monto > 0)
+        ? (deuda.abono / deuda.monto)
+        : 0.0;
 
     return Container(
       decoration: BoxDecoration(
@@ -244,6 +251,18 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                             ),
                           ],
                         ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: porcentajePagado,
+                            minHeight: 10,
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              mainColor,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -259,6 +278,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
               title: deuda.title,
               description: deuda.description,
               monto: deuda.monto,
+              abono: deuda.abono,
               involucrado: deuda.involucrado,
               fechaLimite: deuda.fechaLimite,
               categoria: deuda.categoria,

@@ -6,7 +6,6 @@ import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/services/database_helper.dart';
-import 'package:path/path.dart';
 
 class DeudaProvider extends ChangeNotifier {
   List<Deuda> _deudas = [];
@@ -56,28 +55,38 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   Future<void> pagarDeuda(
-    Deuda d,
-    TransactionProvider provider,
-    BuildContext context,
-  ) async {
-    //Generamos la transaccion
-    provider.addTransaction(
-      Transaction(
-        title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
-        description: d.description,
-        monto: d.monto - d.abono,
-        fecha: DateTime.now(),
-        categoria: AppConstants.catDebt,
-        isExpense: d.debo,
-      ),
-    );
+  Deuda d,
+  TransactionProvider transProvider,
+  BuildContext context,
+) async {
+  // 1. Calculamos valores antes de modificar nada
+  final montoRestante = d.monto - d.abono;
+  
+  // 2. Preparamos el objeto transacción
+  final nuevaTransaccion = Transaction(
+    title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
+    description: d.description,
+    monto: montoRestante,
+    fecha: DateTime.now(),
+    categoria: AppConstants.catDebt,
+    isExpense: d.debo,
+  );
 
-    d.pagada = true;
-    d.abono = d.monto;
+  // 3. Actualizamos el objeto local en memoria (esto es instantáneo)
+  d.pagada = true;
+  d.abono = d.monto;
 
-    updateDeuda(d);
-    notifyListeners();
-  }
+  // 4. TRUCO DE VELOCIDAD: Ejecutamos ambas escrituras en PARALELO
+  // En lugar de esperar a una y luego a la otra, lanzamos las dos a la vez.
+  await Future.wait([
+    // Asumo que addTransaction devuelve un Future, si no, quítale la coma
+    transProvider.addTransaction(nuevaTransaccion), 
+    updateDeuda(d),
+  ]);
+
+  // 5. Notificamos a la UI una sola vez al final
+  notifyListeners();
+}
 
   Future<AbonoStatus> abonarDeuda(
     Deuda d,
@@ -117,6 +126,7 @@ class DeudaProvider extends ChangeNotifier {
     } catch (e) {
       return AbonoStatus.error;
     }
+    
   }
 
   Future<List<Deuda>> getDeudasDebo() async {

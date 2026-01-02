@@ -286,4 +286,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deudaPaidSucessText => 'Debt paid successfully';
+
+  @override
+  String get totalPorPagarText => 'Total to Pay';
+
+  @override
+  String get totalPorCobrarText => 'Total to Collect';
 }
