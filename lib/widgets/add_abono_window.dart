@@ -47,7 +47,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
             ),
             decoration: InputDecoration(
               hintText: "0.00",
-              hintStyle: TextStyle(color: colorScheme.outline.withOpacity(0.3)),
+              hintStyle: TextStyle(color: colorScheme.outline.withValues(alpha:0.3)),
               prefixText: "\$ ",
               prefixStyle: TextStyle(
                 fontSize: 40,

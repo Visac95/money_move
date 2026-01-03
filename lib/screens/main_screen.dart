@@ -58,7 +58,7 @@ class _MainScreenState extends State<MainScreen> {
         
         // Los íconos no seleccionados serán gris oscuro (día) o blanco hueso (noche)
         // Le damos un poco de transparencia para que se vean "desactivados"
-        unselectedItemColor: colorScheme.onSurface.withOpacity(0.6),
+        unselectedItemColor: colorScheme.onSurface.withValues(alpha:  0.6),
 
         // Opcional: Tipo fijo para evitar animaciones raras de fondo si agregas un 4to botón
         type: BottomNavigationBarType.fixed,

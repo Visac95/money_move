@@ -75,7 +75,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
 
     // TRUCO PRO: En lugar de shade50 (que es blanco), usamos opacidad.
     // Esto funciona perfecto en Dark Mode porque se mezcla con el gris oscuro.
-    final Color chipBgColor = mainColor.withOpacity(isDark ? 0.15 : 0.1);
+    final Color chipBgColor = mainColor.withValues(alpha:isDark ? 0.15 : 0.1);
 
     final strings = AppLocalizations.of(context)!;
 
@@ -101,7 +101,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha:0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

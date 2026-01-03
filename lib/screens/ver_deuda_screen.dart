@@ -412,7 +412,7 @@ class VerDeuda extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withOpacity(0.05),
+                  color: colorScheme.onSurface.withValues(alpha:0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -426,7 +426,7 @@ class VerDeuda extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: mainColor.withOpacity(0.1),
+                  color: mainColor.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
@@ -462,7 +462,7 @@ class VerDeuda extends StatelessWidget {
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.green),
                   ),

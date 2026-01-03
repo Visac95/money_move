@@ -230,7 +230,7 @@ class VerTransactionScreen extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withOpacity(0.05),
+                  color: colorScheme.onSurface.withValues(alpha:0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -244,7 +244,7 @@ class VerTransactionScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: mainColor.withOpacity(0.1),
+                  color: mainColor.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
@@ -306,9 +306,9 @@ class VerTransactionScreen extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 20),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha:0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+                border: Border.all(color: colorScheme.primary.withValues(alpha:0.2)),
               ),
               child: Material(
                 color: Colors.transparent,

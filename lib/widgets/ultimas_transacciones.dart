@@ -44,7 +44,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha:0.1),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -210,7 +210,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
               ).selectedIndex = 1,
               style: TextButton.styleFrom(
                 // Fondo tonal (se ve bien en ambos modos)
-                backgroundColor: colorScheme.secondaryContainer.withOpacity(
+                backgroundColor: colorScheme.secondaryContainer.withValues(alpha:
                   0.4,
                 ),
                 // Texto color primario

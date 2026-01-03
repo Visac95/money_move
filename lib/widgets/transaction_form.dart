@@ -53,15 +53,15 @@ class TransactionForm extends StatelessWidget {
 
     if (hasManual) {
       // 1. MANUAL (Usuario eligió) -> VERDE
-      chipBgColor = Colors.green.withOpacity(isDark ? 0.2 : 0.1);
-      chipBorderColor = Colors.green.withOpacity(0.5);
+      chipBgColor = Colors.green.withValues(alpha:isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withValues(alpha:0.5);
       chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
       chipIcon = Icons.check_circle;
       chipLabel = getCategoryName(context, aiProvider.manualCategory!);
     } else if (hasSuggestion) {
       // 2. SUGERENCIA IA -> COLOR PRIMARY
-      chipBgColor = AppColors.brandPrimary.withOpacity(isDark ? 0.2 : 0.1);
-      chipBorderColor = AppColors.brandPrimary.withOpacity(0.5);
+      chipBgColor = AppColors.brandPrimary.withValues(alpha:isDark ? 0.2 : 0.1);
+      chipBorderColor = AppColors.brandPrimary.withValues(alpha:0.5);
       chipTextColor = isDark ? Colors.white : AppColors.brandPrimary;
       chipIcon = Icons.auto_awesome;
       chipLabel =
@@ -83,7 +83,7 @@ class TransactionForm extends StatelessWidget {
       fillColor: colorScheme.surfaceContainerHighest,
       prefixIconColor: colorScheme.onSurfaceVariant,
       hintStyle: TextStyle(
-        color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+        color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -310,7 +310,7 @@ class TransactionForm extends StatelessWidget {
           ),
           decoration: InputDecoration(
             hintText: "0.00",
-            hintStyle: TextStyle(color: colorScheme.outline.withOpacity(0.3)),
+            hintStyle: TextStyle(color: colorScheme.outline.withValues(alpha:0.3)),
             prefixText: "\$ ",
             prefixStyle: TextStyle(
               fontSize: 40,

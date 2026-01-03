@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -49,8 +49,7 @@ class DeudaProvider extends ChangeNotifier {
     try {
       await DatabaseHelper.instance.updateDeuda(updatedDeuda);
     } catch (e) {
-      // Opcional: Si falla la BD, podrías revertir el cambio local y notificar error
-      print("Error al actualizar en BD: $e");
+      return;
     }
   }
 

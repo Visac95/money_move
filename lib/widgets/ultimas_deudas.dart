@@ -42,7 +42,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha:0.1),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -221,7 +221,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
               onPressed: () => Provider.of<UiProvider>(context, listen: false)
                   .selectedIndex = 2, // Cambiado a 2 asumiendo que "Deudas" es la 3ra pestaña
               style: TextButton.styleFrom(
-                backgroundColor: colorScheme.secondaryContainer.withOpacity(0.4),
+                backgroundColor: colorScheme.secondaryContainer.withValues(alpha:0.4),
                 foregroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(

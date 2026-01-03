@@ -62,15 +62,15 @@ class DeudaForm extends StatelessWidget {
 
     if (hasManual) {
       // 1. MANUAL (Usuario eligió o estamos editando una existente) -> VERDE
-      chipBgColor = Colors.green.withOpacity(isDark ? 0.2 : 0.1);
-      chipBorderColor = Colors.green.withOpacity(0.5);
+      chipBgColor = Colors.green.withValues(alpha:isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withValues(alpha:0.5);
       chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
       chipIcon = Icons.check_circle;
       chipLabel = getCategoryName(context, aiProvider.manualCategory!);
     } else if (hasSuggestion) {
       // 2. SUGERENCIA IA -> COLOR PRIMARY
-      chipBgColor = colorScheme.primary.withOpacity(isDark ? 0.2 : 0.1);
-      chipBorderColor = colorScheme.primary.withOpacity(0.5);
+      chipBgColor = colorScheme.primary.withValues(alpha:isDark ? 0.2 : 0.1);
+      chipBorderColor = colorScheme.primary.withValues(alpha:0.5);
       chipTextColor = isDark ? Colors.white : colorScheme.primary;
       chipIcon = Icons.auto_awesome;
       chipLabel =
@@ -105,7 +105,7 @@ class DeudaForm extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: strings.deudaEjTitleText,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -140,7 +140,7 @@ class DeudaForm extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: strings.optionalHintText,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -192,7 +192,7 @@ class DeudaForm extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: strings.involucradoNameHint,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -253,7 +253,7 @@ class DeudaForm extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: "0.00",
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.3),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.3),
                 ),
                 prefixText: "\$ ",
                 prefixStyle: TextStyle(
@@ -404,7 +404,7 @@ class DeudaForm extends StatelessWidget {
             boxShadow: (isActive && !isDark)
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha:0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),

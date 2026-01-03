@@ -28,13 +28,13 @@ class BalanceCard extends StatelessWidget {
         // En modo oscuro, las sombras ensucian la interfaz.
         boxShadow: isDark ? [] : [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1), // Bajé un poco la opacidad para que sea más elegante
+            color: Colors.black.withValues(alpha:0.1), // Bajé un poco la opacidad para que sea más elegante
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
         // Opcional: Un borde muy fino en modo oscuro para definir la tarjeta
-        border: isDark ? Border.all(color: Colors.white.withOpacity(0.1)) : null,
+        border: isDark ? Border.all(color: Colors.white.withValues(alpha:0.1)) : null,
       ),
       child: Column(
         children: [
@@ -47,7 +47,7 @@ class BalanceCard extends StatelessWidget {
                   strings.totalBalanceText,
                   style: TextStyle(
                     // Color secundario (grisáceo adaptable)
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    color: colorScheme.onSurface.withValues(alpha:0.6),
                     fontSize: 14,
                     letterSpacing: 0.5,
                   ),
@@ -81,7 +81,7 @@ class BalanceCard extends StatelessWidget {
               ),
               border: Border(
                 // Borde superior sutil adaptable
-                top: BorderSide(color: colorScheme.outlineVariant.withOpacity(0.4)), 
+                top: BorderSide(color: colorScheme.outlineVariant.withValues(alpha:0.4)), 
               ),
             ),
             child: Row(
@@ -94,7 +94,7 @@ class BalanceCard extends StatelessWidget {
                   amount: provider.totalIngresos,
                   icon: Icons.arrow_upward_rounded,
                   color: AppColors.income, // Mantenemos el verde semántico
-                  bgColor: AppColors.income.withOpacity(0.15),
+                  bgColor: AppColors.income.withValues(alpha:0.15),
                 ),
 
                 // LÍNEA DIVISORIA VERTICAL
@@ -111,7 +111,7 @@ class BalanceCard extends StatelessWidget {
                   amount: provider.totalEgresos,
                   icon: Icons.arrow_downward_rounded,
                   color: AppColors.expense, // Mantenemos el rojo semántico
-                  bgColor: AppColors.expense.withOpacity(0.15),
+                  bgColor: AppColors.expense.withValues(alpha:0.15),
                 ),
               ],
             ),
