@@ -709,6 +709,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See associated debt'**
   String get seeAsociatedDeuda;
+
+  /// No description provided for @debtdescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Description'**
+  String get debtdescriptionText;
+
+  /// No description provided for @limitDateText.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Date'**
+  String get limitDateText;
 }
 
 class _AppLocalizationsDelegate

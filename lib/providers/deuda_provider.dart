@@ -22,7 +22,7 @@ class DeudaProvider extends ChangeNotifier {
 
     _deudas.add(d);
 
-    _deudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
+    _deudas.sort((a, b) => a.fechaLimite.compareTo(b.fechaLimite));
 
     notifyListeners();
   }
@@ -131,11 +131,15 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   Future<List<Deuda>> getDeudasDebo() async {
-    return _deudas.where((deuda) => deuda.debo).toList();
+    final l = _deudas.where((deuda) => deuda.debo).toList();
+    l.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
+    return l;
   }
 
   Future<List<Deuda>> getDeudasMeDeben() async {
-    return _deudas.where((deuda) => !deuda.debo).toList();
+    final l = _deudas.where((deuda) => !deuda.debo).toList();
+    l.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
+    return l;
   }
 
   Deuda? getDeudaById(String id) {

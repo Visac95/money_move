@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class DeudaForm extends StatelessWidget {
   final TextEditingController titleController;
+  final TextEditingController descriptionController;
   final TextEditingController amountController;
   final TextEditingController involucradoController;
   bool debo;
@@ -18,11 +19,13 @@ class DeudaForm extends StatelessWidget {
   final VoidCallback onSave;
   final Deuda? deuda;
   final bool? isEditMode;
-  // Eliminado: final String? category; (Ya no se necesita, usamos Provider)
+  final TextEditingController dateController;
+  final VoidCallback onDateTap;
 
   DeudaForm({
     super.key,
     required this.titleController,
+    required this.descriptionController,
     required this.amountController,
     required this.involucradoController,
     required this.debo,
@@ -30,6 +33,8 @@ class DeudaForm extends StatelessWidget {
     required this.onSave,
     this.deuda,
     this.isEditMode,
+    required this.dateController,
+    required this.onDateTap,
   });
 
   @override
@@ -68,7 +73,8 @@ class DeudaForm extends StatelessWidget {
       chipBorderColor = colorScheme.primary.withOpacity(0.5);
       chipTextColor = isDark ? Colors.white : colorScheme.primary;
       chipIcon = Icons.auto_awesome;
-      chipLabel = "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
+      chipLabel =
+          "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
     } else {
       // 3. ESTADO INICIAL -> GRIS / "CATEGORÍA"
       chipBgColor = colorScheme.surfaceContainerHighest;
@@ -84,6 +90,7 @@ class DeudaForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //-----Titulo---------
             Text(
               strings.deudaTitleText,
               style: TextStyle(
@@ -97,6 +104,41 @@ class DeudaForm extends StatelessWidget {
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.deudaEjTitleText,
+                hintStyle: TextStyle(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                ),
+                filled: true,
+                fillColor: colorScheme.surfaceContainer,
+                prefixIcon: Icon(
+                  Icons.edit_note_rounded,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: activeColor, width: 2),
+                ),
+              ),
+            ),
+            SizedBox(height: 5),
+            // 2. DESCRIPCIÓN
+            Text(
+              strings.debtdescriptionText,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            TextField(
+              controller: descriptionController,
+              style: TextStyle(color: colorScheme.onSurface),
+              decoration: InputDecoration(
+                hintText: strings.optionalHintText,
                 hintStyle: TextStyle(
                   color: colorScheme.onSurfaceVariant.withOpacity(0.5),
                 ),
@@ -165,6 +207,22 @@ class DeudaForm extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(color: activeColor, width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            //----DateLimit--------
+            // Ejemplo de TextField para la fecha
+            TextField(
+              controller: dateController, // El controlador que le pasamos
+              readOnly: true, // Importante: para que no escriban, solo toquen
+              onTap: onDateTap, // Al tocar, se abre el calendario
+              decoration: InputDecoration(
+                labelText: strings.limitDateText, // O usa AppLocalizations
+                prefixIcon: const Icon(Icons.calendar_today),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
@@ -240,11 +298,11 @@ class DeudaForm extends StatelessWidget {
                       onTap: () async {
                         final String? selectedManualCategory =
                             await showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const SelectCategoryWindow();
-                          },
-                        );
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const SelectCategoryWindow();
+                              },
+                            );
                         // Si selecciona algo, actualizamos el Provider (esto pone el botón verde)
                         if (selectedManualCategory != null) {
                           aiProvider.manualCategory = selectedManualCategory;

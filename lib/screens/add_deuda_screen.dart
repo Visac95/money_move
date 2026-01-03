@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:money_move/l10n/app_localizations.dart'; 
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
@@ -19,39 +18,74 @@ class AddDeudaScreen extends StatefulWidget {
 
 class _AddDeudaScreenState extends State<AddDeudaScreen> {
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
   final amountController = TextEditingController();
   final involucradoController = TextEditingController();
+  
+  // 1. Controlador para el texto de la fecha y variable para la fecha real
+  final dateLimitController = TextEditingController();
+  DateTime _selectedDate = DateTime.now(); // Por defecto hoy
+
   bool debo = true;
   Timer? debounce;
-  // Eliminado: String? manualCategory; (Ya no lo necesitamos localmente)
 
   @override
   void initState() {
     super.initState();
     titleController.addListener(_classifyTitle);
+    // Inicializamos el campo de texto con la fecha de hoy
+    dateLimitController.text = _formatDate(_selectedDate);
   }
 
   @override
   void dispose() {
     debounce?.cancel();
     titleController.dispose();
+    descriptionController.dispose();
     amountController.dispose();
     involucradoController.dispose();
+    dateLimitController.dispose(); // No olvidar liberar este controller
     super.dispose();
   }
 
-  // --- LÓGICA IA OPTIMIZADA ---
+  // Helper simple para formatear fecha (dd/MM/yyyy)
+  String _formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+  }
+
+  // 2. Función para abrir el calendario
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000), // Permitir fechas pasadas si es un registro antiguo
+      lastDate: DateTime(2100),
+      // Opcional: Personalizar colores del calendario si quieres
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme, // Usa los colores de tu app
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        dateLimitController.text = _formatDate(picked); // Actualiza el texto visual
+      });
+    }
+  }
+
   void _classifyTitle() {
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-
-    // 1. REGLA DE ORO: Si ya hay manual, cancelamos IA.
     if (aiProvider.manualCategory != null) return;
 
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 1000), () {
-      // Doble chequeo por seguridad
       if (aiProvider.manualCategory != null) return;
-      
       if (titleController.text.trim().isNotEmpty) {
         aiProvider.requestClassification(titleController.text);
       }
@@ -59,7 +93,6 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
   }
 
   Future<void> _saveDeuda() async {
-    // 1. Validaciones básicas
     if (titleController.text.isEmpty || amountController.text.isEmpty) return;
 
     double enteredAmount;
@@ -71,59 +104,49 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
 
     final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-    final l10n = AppLocalizations.of(context)!;
-
-    // 2. DECISIÓN DE CATEGORÍA
-    // Prioridad: Manual > IA
+    
     String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
 
-    // 3. SI NO HAY CATEGORÍA (Ni manual, ni IA)
     if (finalCategory.isEmpty || finalCategory == 'manual_category') {
       if (!mounted) return;
-      
       final String? selectedManualCategory = await showDialog<String>(
         context: context,
-        builder: (BuildContext context) {
-          return const SelectCategoryWindow();
-        },
+        builder: (BuildContext context) => const SelectCategoryWindow(),
       );
 
       if (selectedManualCategory != null) {
         finalCategory = selectedManualCategory;
       } else {
-        return; // Usuario canceló
+        return;
       }
     }
 
     const uuid = Uuid();
-    dynamic nuevaDeuda = Deuda(
-        id: uuid.v4(),
-        title: titleController.text,
-        description: l10n.noDescription, // O usa un controller si lo agregas luego
-        monto: enteredAmount,
-        involucrado: involucradoController.text,
-        abono: 0.0,
-        fechaInicio: DateTime.now(),
-        fechaLimite: DateTime(2026, 1, 1), // Ojo: Esto es hardcodeado, quizás quieras un DatePicker luego
-        categoria: finalCategory,
-        debo: debo,
-        pagada: false,
-      );
-    // 4. GUARDAR
+    final nuevaDeuda = Deuda(
+      id: uuid.v4(),
+      title: titleController.text,
+      description: descriptionController.text,
+      monto: enteredAmount,
+      involucrado: involucradoController.text,
+      abono: 0.0,
+      fechaInicio: DateTime.now(),
+      fechaLimite: _selectedDate, // <--- 3. AQUÍ USAMOS LA FECHA SELECCIONADA
+      categoria: finalCategory,
+      debo: debo,
+      pagada: false,
+    );
+
     deudaProvider.addDeuda(nuevaDeuda);
-    
 
     if (mounted) {
       Navigator.of(context).pop();
     }
-
-    // Limpieza
     aiProvider.resetCategory();
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; 
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -131,21 +154,25 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       appBar: AppBar(
         title: Text(
           l10n.addDeuda,
-          style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            color: colorScheme.onSurface 
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.onSurface),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
+      // Pasamos los nuevos argumentos al DeudaForm
       body: DeudaForm(
         titleController: titleController,
+        descriptionController: descriptionController,
         amountController: amountController,
         involucradoController: involucradoController,
+        
+        // Estos son los nuevos parámetros que debes recibir en DeudaForm:
+        dateController: dateLimitController, 
+        onDateTap: () => _selectDate(context), 
+
         debo: debo,
-        onTypeChanged: (bool value){
+        onTypeChanged: (bool value) {
           setState(() {
             debo = value;
           });

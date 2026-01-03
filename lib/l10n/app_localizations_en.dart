@@ -316,4 +316,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeAsociatedDeuda => 'See associated debt';
+
+  @override
+  String get debtdescriptionText => 'Debt Description';
+
+  @override
+  String get limitDateText => 'Due Date';
 }

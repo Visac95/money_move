@@ -101,5 +101,7 @@
     "putAmountHigherZeroText": "Enter an amount greater than 0",
     "putAmountLowerText": "The amount exceeds the remaining balance",
     "errorHasOccurredText": "An unexpected error has occurred",
-    "seeAsociatedDeuda": "See associated debt"
+    "seeAsociatedDeuda": "See associated debt",
+    "debtdescriptionText": "Debt Description",
+    "limitDateText": "Due Date"
 }

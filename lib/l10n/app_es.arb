@@ -101,6 +101,7 @@
     "putAmountHigherZeroText": "Ingresa un monto mayor a 0",
     "putAmountLowerText": "El monto excede lo que falta por pagar",
     "errorHasOccurredText": "Ocurrió un error inesperado",
-    "seeAsociatedDeuda": "Ver deuda asociada"
-
+    "seeAsociatedDeuda": "Ver deuda asociada",
+    "debtdescriptionText": "Descripción de la Deuda",
+    "limitDateText": "Fecha Límite"
 }
