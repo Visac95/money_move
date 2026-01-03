@@ -721,6 +721,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Due Date'**
   String get limitDateText;
+
+  /// No description provided for @noHistorialText.
+  ///
+  /// In en, this message translates to:
+  /// **'No history'**
+  String get noHistorialText;
+
+  /// No description provided for @noPaidDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'No paid debts in this section yet.'**
+  String get noPaidDeudasText;
 }
 
 class _AppLocalizationsDelegate

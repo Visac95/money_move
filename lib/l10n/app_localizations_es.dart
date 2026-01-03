@@ -322,4 +322,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get limitDateText => 'Fecha Límite';
+
+  @override
+  String get noHistorialText => 'Sin historial';
+
+  @override
+  String get noPaidDeudasText =>
+      'Aún no hay deudas liquidadas en esta sección.';
 }

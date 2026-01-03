@@ -379,8 +379,8 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
 
     if (widget.pagada) {
       // ESTADO VACÍO PARA HISTORIAL (PAGADAS)
-      titulo = "Sin historial";
-      subtitulo = "Aún no hay deudas liquidadas en esta sección.";
+      titulo = strings.noHistorialText;
+      subtitulo = strings.noPaidDeudasText;
       icono = Icons.history_edu_rounded; // Icono de historial
     } else {
       // ESTADO VACÍO PARA PENDIENTES (LO QUE TIENES AHORA)

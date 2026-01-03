@@ -103,5 +103,7 @@
     "errorHasOccurredText": "Ocurrió un error inesperado",
     "seeAsociatedDeuda": "Ver deuda asociada",
     "debtdescriptionText": "Descripción de la Deuda",
-    "limitDateText": "Fecha Límite"
+    "limitDateText": "Fecha Límite",
+    "noHistorialText": "Sin historial",
+    "noPaidDeudasText": "Aún no hay deudas liquidadas en esta sección."
 }

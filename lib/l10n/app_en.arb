@@ -103,5 +103,7 @@
     "errorHasOccurredText": "An unexpected error has occurred",
     "seeAsociatedDeuda": "See associated debt",
     "debtdescriptionText": "Debt Description",
-    "limitDateText": "Due Date"
+    "limitDateText": "Due Date",
+    "noHistorialText": "No history",
+    "noPaidDeudasText": "No paid debts in this section yet."
 }
