@@ -288,7 +288,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will pay off the remaining balance.';
 
   @override
-  String get deudaPaidSucessText => 'Debt paid successfully';
+  String get deudaPaidSucessText => 'Debt paid successfully! 🎉';
 
   @override
   String get totalPorPagarText => 'Total to Pay';

@@ -53,15 +53,17 @@ class TransactionForm extends StatelessWidget {
 
     if (hasManual) {
       // 1. MANUAL (Usuario eligió) -> VERDE
-      chipBgColor = Colors.green.withValues(alpha:isDark ? 0.2 : 0.1);
-      chipBorderColor = Colors.green.withValues(alpha:0.5);
+      chipBgColor = Colors.green.withValues(alpha: isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
       chipIcon = Icons.check_circle;
       chipLabel = getCategoryName(context, aiProvider.manualCategory!);
     } else if (hasSuggestion) {
       // 2. SUGERENCIA IA -> COLOR PRIMARY
-      chipBgColor = AppColors.brandPrimary.withValues(alpha:isDark ? 0.2 : 0.1);
-      chipBorderColor = AppColors.brandPrimary.withValues(alpha:0.5);
+      chipBgColor = AppColors.brandPrimary.withValues(
+        alpha: isDark ? 0.2 : 0.1,
+      );
+      chipBorderColor = AppColors.brandPrimary.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.white : AppColors.brandPrimary;
       chipIcon = Icons.auto_awesome;
       chipLabel =
@@ -83,7 +85,7 @@ class TransactionForm extends StatelessWidget {
       fillColor: colorScheme.surfaceContainerHighest,
       prefixIconColor: colorScheme.onSurfaceVariant,
       hintStyle: TextStyle(
-        color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
+        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -118,7 +120,7 @@ class TransactionForm extends StatelessWidget {
                 prefixIcon: const Icon(Icons.edit_note_rounded),
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
 
             // 2. DESCRIPCIÓN
             Text(
@@ -137,7 +139,7 @@ class TransactionForm extends StatelessWidget {
                 prefixIcon: const Icon(Icons.description_outlined),
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 15),
 
             // 3. TOGGLE TIPO
             aiProvider.manualCategory != "cat_debt"
@@ -152,79 +154,20 @@ class TransactionForm extends StatelessWidget {
             // 5. BOTÓN DE CATEGORÍA (Con AnimatedSwitcher)
             const SizedBox(height: 16),
 
-            // La lógica es: Si está cargando -> Spinner.
-            // Si NO está cargando (incluso al inicio) -> Botón configurado arriba (Estado 1, 2 o 3).
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: aiProvider.isLoading
-                  ? Row(
-                      key: const ValueKey('loading'),
-                      children: [
-                        SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: activeColor,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          strings.analizingText,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    )
-                  : GestureDetector(
-                      key: const ValueKey('button'),
-                      onTap: () async {
-                        final String? selectedManualCategory =
-                            await showDialog<String>(
-                              context: context,
-                              builder: (context) =>
-                                  const SelectCategoryWindow(),
-                            );
-
-                        if (selectedManualCategory != null) {
-                          aiProvider.manualCategory = selectedManualCategory;
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: chipBgColor,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: chipBorderColor),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(chipIcon, size: 18, color: chipTextColor),
-                            const SizedBox(width: 8),
-                            Text(
-                              chipLabel,
-                              style: TextStyle(
-                                color: chipTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 18,
-                              color: chipTextColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-            ),
+            aiProvider.manualCategory != "cat_debt"
+                ? _category(
+                    aiProvider,
+                    activeColor,
+                    strings,
+                    colorScheme,
+                    context,
+                    chipBgColor,
+                    chipBorderColor,
+                    chipIcon,
+                    chipTextColor,
+                    chipLabel,
+                  )
+                : SizedBox(),
 
             const SizedBox(height: 40),
 
@@ -256,6 +199,89 @@ class TransactionForm extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  AnimatedSwitcher _category(
+    AiCategoryProvider aiProvider,
+    Color activeColor,
+    AppLocalizations strings,
+    ColorScheme colorScheme,
+    BuildContext context,
+    Color chipBgColor,
+    Color chipBorderColor,
+    IconData chipIcon,
+    Color chipTextColor,
+    String chipLabel,
+  ) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: aiProvider.isLoading
+          ? Row(
+              key: const ValueKey('loading'),
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: activeColor,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  strings.analizingText,
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            )
+          : GestureDetector(
+              key: const ValueKey('button'),
+              onTap: () async {
+                final String? selectedManualCategory = await showDialog<String>(
+                  context: context,
+                  builder: (context) => const SelectCategoryWindow(),
+                );
+
+                if (selectedManualCategory != null) {
+                  aiProvider.manualCategory = selectedManualCategory;
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: chipBgColor,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: chipBorderColor),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(chipIcon, size: 18, color: chipTextColor),
+                    const SizedBox(width: 8),
+                    Text(
+                      chipLabel,
+                      style: TextStyle(
+                        color: chipTextColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 18,
+                      color: chipTextColor,
+                    ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
@@ -311,7 +337,9 @@ class TransactionForm extends StatelessWidget {
           ),
           decoration: InputDecoration(
             hintText: "0.00",
-            hintStyle: TextStyle(color: colorScheme.outline.withValues(alpha:0.3)),
+            hintStyle: TextStyle(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+            ),
             prefixText: "\$ ",
             prefixStyle: TextStyle(
               fontSize: 40,

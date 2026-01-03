@@ -266,30 +266,7 @@ class VerDeuda extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      UiUtils.showConfirmationDialog(
-                        strings.markAsPaidText,
-                        strings.markAsPaidConfirmText,
-                        context,
-                        () {
-                          Provider.of<DeudaProvider>(
-                            context,
-                            listen: false,
-                          ).pagarDeuda(
-                            deuda,
-                            Provider.of<TransactionProvider>(
-                              context,
-                              listen: false,
-                            ),
-                            context,
-                          );
-                          UiUtils.showSnackBar(
-                            context,
-                            strings.deudaPaidSucessText,
-                            Colors.green,
-                          );
-                        },
-                        AppColors.income,
-                      );
+                      _pagarDeudaTotalmente(context, deuda);
                     },
                     icon: Icon(
                       Icons.check_circle_outline,
@@ -412,7 +389,7 @@ class VerDeuda extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withValues(alpha:0.05),
+                  color: colorScheme.onSurface.withValues(alpha: 0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -426,7 +403,7 @@ class VerDeuda extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: mainColor.withValues(alpha:0.1),
+                  color: mainColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
@@ -462,7 +439,7 @@ class VerDeuda extends StatelessWidget {
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha:0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.green),
                   ),
@@ -595,6 +572,57 @@ class VerDeuda extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _pagarDeudaTotalmente(BuildContext context, Deuda deuda) {
+    final strings = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(strings.paidDeudasText),
+        content: Text(strings.markAsPaidConfirmText),
+        actions: [
+          // Botón Cancelar
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(), // Cierra solo el diálogo
+            child: Text(strings.cancelText),
+          ),
+
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.expense),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+
+              try {
+                await Provider.of<DeudaProvider>(
+                  context,
+                  listen: false,
+                ).pagarDeuda(
+                  deuda,
+                  Provider.of<TransactionProvider>(context, listen: false),
+                  context,
+                );
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(strings.deudaPaidSucessText),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              } catch (e) {
+                return;
+              }
+            },
+            child: Text(strings.markAsPaidText),
+          ),
+        ],
+      ),
     );
   }
 }

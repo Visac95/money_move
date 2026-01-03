@@ -653,7 +653,7 @@ abstract class AppLocalizations {
   /// No description provided for @deudaPaidSucessText.
   ///
   /// In en, this message translates to:
-  /// **'Debt paid successfully'**
+  /// **'Debt paid successfully! 🎉'**
   String get deudaPaidSucessText;
 
   /// No description provided for @totalPorPagarText.

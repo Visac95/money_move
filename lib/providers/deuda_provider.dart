@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -42,7 +41,7 @@ class DeudaProvider extends ChangeNotifier {
       // Ordenamos
       _deudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
       // ¡Notificamos YA! La UI se actualiza instantáneamente aquí
-      notifyListeners(); 
+      notifyListeners();
     }
 
     // 2. PERSISTENCIA (Base de datos después, sin bloquear la UI visualmente)
@@ -54,38 +53,37 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   Future<void> pagarDeuda(
-  Deuda d,
-  TransactionProvider transProvider,
-  BuildContext context,
-) async {
-  // 1. Calculamos valores antes de modificar nada
-  final montoRestante = d.monto - d.abono;
-  
-  // 2. Preparamos el objeto transacción
-  final nuevaTransaccion = Transaction(
-    title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
-    description: d.description,
-    monto: montoRestante,
-    fecha: DateTime.now(),
-    categoria: AppConstants.catDebt,
-    isExpense: d.debo,
-  );
+    Deuda d,
+    TransactionProvider transProvider,
+    BuildContext context,
+  ) async {
+    try {
+      // 1. Calculamos valores antes de modificar nada
+      final montoRestante = d.monto - d.abono;
 
-  // 3. Actualizamos el objeto local en memoria (esto es instantáneo)
-  d.pagada = true;
-  d.abono = d.monto;
+      // 2. Preparamos el objeto transacción
+      transProvider.addTransaction(
+        Transaction(
+          title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
+          description: d.description,
+          monto: montoRestante,
+          fecha: DateTime.now(),
+          categoria: AppConstants.catDebt,
+          isExpense: d.debo,
+        ),
+      );
 
-  // 4. TRUCO DE VELOCIDAD: Ejecutamos ambas escrituras en PARALELO
-  // En lugar de esperar a una y luego a la otra, lanzamos las dos a la vez.
-  await Future.wait([
-    // Asumo que addTransaction devuelve un Future, si no, quítale la coma
-    transProvider.addTransaction(nuevaTransaccion), 
-    updateDeuda(d),
-  ]);
+      // 3. Actualizamos el objeto local en memoria (esto es instantáneo)
+      d.pagada = true;
+      d.abono = d.monto;
 
-  // 5. Notificamos a la UI una sola vez al final
-  notifyListeners();
-}
+      updateDeuda(d);
+
+      notifyListeners();
+    } catch (e) {
+      return;
+    }
+  }
 
   Future<AbonoStatus> abonarDeuda(
     Deuda d,
@@ -115,7 +113,7 @@ class DeudaProvider extends ChangeNotifier {
           fecha: DateTime.now(),
           categoria: AppConstants.catDebt,
           isExpense: d.debo,
-          deudaAsociada: d.id
+          deudaAsociada: d.id,
         ),
       );
 
@@ -126,7 +124,6 @@ class DeudaProvider extends ChangeNotifier {
     } catch (e) {
       return AbonoStatus.error;
     }
-    
   }
 
   Future<List<Deuda>> getDeudasDebo() async {
