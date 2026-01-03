@@ -18,8 +18,11 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(strings.titleDeudasScreen), // <--- CAMBIO AQUÍ
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          strings.titleDeudasScreen,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(

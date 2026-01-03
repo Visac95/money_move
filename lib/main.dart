@@ -11,6 +11,43 @@ import 'providers/transaction_provider.dart';
 import './providers/deuda_provider.dart';
 
 void main() {
+  // --- INICIO DEL CÓDIGO CHIVATO ---
+  // Esto hace que si hay un error visual, en vez de pantalla blanca,
+  // salga una pantalla roja con el texto del error.
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Material(
+      color: Colors.red.shade900,
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "¡ERROR DETECTADO!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                details.exception.toString(), // El error corto
+                style: const TextStyle(color: Colors.yellow, fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                details.stack.toString(), // Dónde ocurrió
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  };
+  // --- FIN DEL CÓDIGO CHIVATO ---
   runApp(
     MultiProvider(
       providers: [
@@ -74,7 +111,6 @@ class MyApp extends StatelessWidget {
             ),
             // Iconos por defecto
             iconTheme: const IconThemeData(color: AppColors.lightIcon),
-            
           ),
 
           // TEMA OSCURO (Noche)

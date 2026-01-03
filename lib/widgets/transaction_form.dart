@@ -137,14 +137,15 @@ class TransactionForm extends StatelessWidget {
                 prefixIcon: const Icon(Icons.description_outlined),
               ),
             ),
+            SizedBox(height: 15,),
 
             // 3. TOGGLE TIPO
-            aiProvider.manualCategory! != "cat_debt"
+            aiProvider.manualCategory != "cat_debt"
                 ? _toogleTipo(colorScheme, context, strings, activeColor)
                 : SizedBox(),
 
             // 4. MONTO
-            aiProvider.manualCategory! != "cat_debt"
+            aiProvider.manualCategory != "cat_debt"
                 ? _montoConteiner(strings, colorScheme, activeColor)
                 : SizedBox(),
 

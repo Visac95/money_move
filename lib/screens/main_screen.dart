@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ui_provider.dart';
-import 'package:money_move/screens/all_transactions.dart';
+import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   // Lista de pantallas
   final List<Widget> screens = const [
     HomeScreen(),
-    AllTransactions(),
+    AllTransactionsScreen(),
     AllDeudasScreen()
   ];
 
