@@ -200,11 +200,26 @@ class VerTransactionScreen extends StatelessWidget {
   ) {
     final strings = AppLocalizations.of(context)!;
 
-    // Verificamos si hay deuda asociada válida
-    final bool hasDebt =
-        transaction.categoria == "cat_debt" &&
+    // 1. OBTENER EL PROVIDER DE DEUDAS
+    // Usamos 'listen: true' (por defecto) para que si borras la deuda en otra pantalla,
+    // este botón desaparezca automáticamente al volver aquí.
+    final deudaProvider = Provider.of<DeudaProvider>(context);
+
+    // 2. VERIFICACIÓN ESTRICTA
+    // ¿Es categoría deuda? Y ¿Tiene ID? Y ¿Ese ID devuelve una deuda real?
+    bool shouldShowButton = false;
+
+    if (transaction.categoria == "cat_debt" &&
         transaction.deudaAsociada != null &&
-        transaction.deudaAsociada!.isNotEmpty;
+        transaction.deudaAsociada!.isNotEmpty) {
+      // Intentamos buscar la deuda real
+      final deudaReal = deudaProvider.getDeudaById(transaction.deudaAsociada!);
+
+      // Solo mostramos el botón si la deudaReal NO es nula
+      if (deudaReal != null) {
+        shouldShowButton = true;
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.all(25),
@@ -215,9 +230,7 @@ class VerTransactionScreen extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withOpacity(
-                    0.05,
-                  ), // Sombra más suave
+                  color: colorScheme.onSurface.withOpacity(0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -225,7 +238,7 @@ class VerTransactionScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // --- 1. CABECERA LIMPIA (Solo Icono y Nombre) ---
+          // --- CABECERA (Icono y Categoría) ---
           Row(
             children: [
               Container(
@@ -242,7 +255,6 @@ class VerTransactionScreen extends StatelessWidget {
               ),
               const SizedBox(width: 15),
               Expanded(
-                // Expanded ayuda a que el texto ocupe el espacio restante
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -260,13 +272,11 @@ class VerTransactionScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: colorScheme.onSurface,
                       ),
-                      overflow: TextOverflow
-                          .ellipsis, // Por si el nombre es muy largo
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              // ¡Aquí borramos el botón antiguo! Ya no estorba.
             ],
           ),
 
@@ -274,7 +284,7 @@ class VerTransactionScreen extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 20),
 
-          // --- 2. DETALLES ESTÁNDAR ---
+          // --- DETALLES ---
           _buildDetailRow(
             context,
             AppLocalizations.of(context)!.titleText,
@@ -289,17 +299,14 @@ class VerTransactionScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // --- 3. NUEVO BOTÓN DE DEUDA (Estilo Tarjeta/Link) ---
-          if (hasDebt)
+          // --- BOTÓN INTELIGENTE DE DEUDA ---
+          // Solo se renderiza si shouldShowButton es TRUE
+          if (shouldShowButton)
             Container(
-              margin: const EdgeInsets.only(
-                bottom: 20,
-              ), // Espacio antes de la descripción
+              margin: const EdgeInsets.only(bottom: 20),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(
-                  0.1,
-                ), // Fondo suave del color de la app
+                color: colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
               ),
@@ -308,12 +315,12 @@ class VerTransactionScreen extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
-                    // LÓGICA DE NAVEGACIÓN (La misma que tenías, pero limpia)
-                    final deuda = Provider.of<DeudaProvider>(
-                      context,
-                      listen: false,
-                    ).getDeudaById(transaction.deudaAsociada!);
+                    // Aquí ya es seguro buscar directamente porque verificamos antes
+                    final deuda = deudaProvider.getDeudaById(
+                      transaction.deudaAsociada!,
+                    );
 
+                    // Navegamos (como ya validamos arriba que 'deuda' no es null, es seguro)
                     if (deuda != null) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -329,12 +336,6 @@ class VerTransactionScreen extends StatelessWidget {
                             debo: deuda.debo,
                           ),
                         ),
-                      );
-                    } else {
-                      UiUtils.showSnackBar(
-                        context,
-                        "La deuda asociada no existe.",
-                        Colors.red,
                       );
                     }
                   },
@@ -376,7 +377,7 @@ class VerTransactionScreen extends StatelessWidget {
               ),
             ),
 
-          // --- 4. DESCRIPCIÓN ---
+          // --- DESCRIPCIÓN ---
           Align(
             alignment: Alignment.centerLeft,
             child: Column(

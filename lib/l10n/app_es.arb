@@ -83,8 +83,9 @@
     "restanteText": "Restante",
     "toText": "a",
     "fromText": "de",
-    "pagar": "Pagado",
-    "abonar": "Abonar",
+    "cobradoText": "Cobrado",
+    "pagadoText": "Pagado",
+    "abonarText": "Abonar",
     "insertAmountPaymentText": "Inserte la cantidad a abonar",
     "abonoForText": "Abono a",
     "pagoDeText": "Pago de",
@@ -101,4 +102,5 @@
     "putAmountLowerText": "El monto excede lo que falta por pagar",
     "errorHasOccurredText": "Ocurrió un error inesperado",
     "seeAsociatedDeuda": "Ver deuda asociada"
+
 }

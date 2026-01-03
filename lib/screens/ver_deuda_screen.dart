@@ -296,7 +296,7 @@ class VerDeuda extends StatelessWidget {
                       color: colorScheme.surface,
                     ),
                     label: Text(
-                      strings.pagar,
+                      strings.pagadoText,
                       style: TextStyle(
                         color: colorScheme.surface,
                         fontSize: 18,
@@ -346,7 +346,7 @@ class VerDeuda extends StatelessWidget {
                     },
                     icon: Icon(Icons.add_box, color: colorScheme.surface),
                     label: Text(
-                      strings.abonar,
+                      strings.abonarText,
                       style: TextStyle(
                         color: colorScheme.surface,
                         fontSize: 18,

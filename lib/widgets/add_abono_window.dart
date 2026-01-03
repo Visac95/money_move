@@ -98,7 +98,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
                     ),
                     icon: Icon(Icons.add_box, color: colorScheme.surface),
                     label: Text(
-                      strings.abonar,
+                      strings.abonarText,
                       style: TextStyle(
                         color: colorScheme.surface,
                         fontSize: 18,

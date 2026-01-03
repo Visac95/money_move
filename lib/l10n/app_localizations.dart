@@ -596,17 +596,23 @@ abstract class AppLocalizations {
   /// **'from'**
   String get fromText;
 
-  /// No description provided for @pagar.
+  /// No description provided for @cobradoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Collected'**
+  String get cobradoText;
+
+  /// No description provided for @pagadoText.
   ///
   /// In en, this message translates to:
   /// **'Paid'**
-  String get pagar;
+  String get pagadoText;
 
-  /// No description provided for @abonar.
+  /// No description provided for @abonarText.
   ///
   /// In en, this message translates to:
   /// **'Add Payment'**
-  String get abonar;
+  String get abonarText;
 
   /// No description provided for @insertAmountPaymentText.
   ///

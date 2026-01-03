@@ -80,8 +80,8 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
     final strings = AppLocalizations.of(context)!;
 
     final String label = soyDeudor
-        ? strings.payableText
-        : strings.receivableText;
+        ? (!widget.pagada ? strings.payableText : strings.pagadoText)
+        : (!widget.pagada ? strings.receivableText : strings.cobradoText);
 
     final IconData iconStatus = soyDeudor
         ? Icons.arrow_outward_rounded
@@ -142,7 +142,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                   ),
                                   decoration: BoxDecoration(
                                     color:
-                                        chipBgColor, // Color translúcido adaptable
+                                        !widget.pagada ? chipBgColor : AppColors.income.withValues(alpha: 0.15), // Color translúcido adaptable
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Row(
@@ -150,7 +150,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                       Icon(
                                         iconStatus,
                                         size: 12,
-                                        color: mainColor,
+                                        color: !widget.pagada ? mainColor : AppColors.income,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
@@ -158,7 +158,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: mainColor,
+                                          color: !widget.pagada ? mainColor : AppColors.income,
                                         ),
                                       ),
                                     ],
