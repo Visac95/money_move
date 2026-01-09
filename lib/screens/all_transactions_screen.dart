@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/add_transaction_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/lista_de_transacciones.dart';
+import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart'; // Descomenta si usas Provider para el saldo
 
 class AllTransactionsScreen extends StatefulWidget {
@@ -16,7 +18,8 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context)!;
-
+    final colorScheme = Theme.of(context).colorScheme;
+    final provider = Provider.of<TransactionProvider>(context);
     // Usamos NestedScrollView: El rey de los efectos de scroll
     return Scaffold(
       body: NestedScrollView(
@@ -25,21 +28,82 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
           return <Widget>[
             SliverAppBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              // 1. PINNED: TRUE -> LA CLAVE DEL ÉXITO
-              // Esto hace que la barra y el balance NUNCA desaparezcan del todo.
               pinned: true,
-
-              // 2. FLOATING: TRUE -> Opcional
-              // Si lo pones true, la barra intenta aparecer apenas subes el dedo.
               floating: true,
-
-              // Configuración visual básica
               elevation: 0,
               forceElevated: innerBoxIsScrolled, // Sombra suave al scrollear
               centerTitle: true,
-              title: Text(
-                strings.titleTransactionsScreen,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+              title: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    strings.titleTransactionsScreen,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: PopupMenuButton<String>(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          colorScheme.primary,
+                        ),
+                        foregroundColor: WidgetStateProperty.all(
+                          colorScheme.secondary,
+                        ),
+                      ),
+                      // 'child': Es lo que se ve en la pantalla antes de presionar (Texto + Flecha)
+                      child: Row(
+                        mainAxisSize: MainAxisSize
+                            .min, // Para que ocupe solo lo necesario
+                        children: [
+                          Text(
+                            Provider.of<TransactionProvider>(
+                              context,
+                            ).getActualFilter(context),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 4), // Espacio chiquito
+                          const Icon(
+                            Icons.keyboard_arrow_down,
+                          ), // La flechita hacia abajo
+                        ],
+                      ),
+
+                      // 'onSelected': Qué pasa cuando eliges una opción
+                      onSelected: (String valorElegido) {
+                        provider.cambiarFiltro(valorElegido);
+                      },
+
+                      // 'itemBuilder': La lista de opciones que aparecen al presionar
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<String>>[
+                            PopupMenuItem<String>(
+                              value: "today",
+                              child: Text(strings.hoyText),
+                            ),
+                            PopupMenuItem<String>(
+                              value: "week",
+                              child: Text(strings.thisWeekText),
+                            ),
+                            PopupMenuItem<String>(
+                              value: "month",
+                              child: Text(strings.thisMonthText),
+                            ),
+                            PopupMenuItem<String>(
+                              value: "year",
+                              child: Text(strings.thisYearText),
+                            ),
+                            PopupMenuItem<String>(
+                              value: "all",
+                              child: Text(strings.todoText),
+                            ),
+                          ],
+                    ),
+                  ),
+                ],
               ),
 
               // 3. AQUÍ VA EL BALANCE (Propiedad 'bottom')
@@ -55,7 +119,11 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                     left: 20,
                     right: 20,
                   ),
-                  child: BalanceCard(),
+                  child: BalanceCard(
+                    totalAmount: 45,
+                    expenseAmount: 45,
+                    incomeAmount: 45,
+                  ),
                 ),
               ),
             ),

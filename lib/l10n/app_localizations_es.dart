@@ -329,4 +329,22 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get noPaidDeudasText =>
       'Aún no hay deudas liquidadas en esta sección.';
+
+  @override
+  String get filtrarText => 'Filtrar';
+
+  @override
+  String get hoyText => 'Hoy';
+
+  @override
+  String get thisWeekText => 'Esta semana';
+
+  @override
+  String get thisMonthText => 'Este mes';
+
+  @override
+  String get thisYearText => 'Este año';
+
+  @override
+  String get todoText => 'Todo';
 }

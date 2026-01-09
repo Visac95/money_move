@@ -15,7 +15,7 @@ class ListaDeTransacciones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
-    final lista = provider.transactions;
+    final lista = provider.transacionesParaMostrar;
     final colorScheme = Theme.of(context).colorScheme;
 
     if (lista.isEmpty) {
@@ -63,8 +63,7 @@ class ListaDeTransacciones extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            AppLocalizations.of(context)?.noTransactionsYet ??
-                "No transactions",
+            AppLocalizations.of(context)!.noTransactionsYet,
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 18,
@@ -73,8 +72,7 @@ class ListaDeTransacciones extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            AppLocalizations.of(context)?.transactionsWillAppearHereText ??
-                "...",
+            AppLocalizations.of(context)!.transactionsWillAppearHereText,
             style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
           ),
         ],

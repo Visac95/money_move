@@ -58,9 +58,9 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
-          children: const [
+          children:  [
             // Agregué const para optimizar rendimiento
-            BalanceCard(),
+            BalanceCard(totalAmount: 45, expenseAmount: 45, incomeAmount: 45,),
             UltimasTransacciones(),
             UltimasDeudas(),
           ],

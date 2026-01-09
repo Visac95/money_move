@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/models/filtros.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import '../models/transaction.dart';
 import '../services/database_helper.dart'; // <--- IMPORTANTE: Importar el mayordomo
 
@@ -91,16 +91,16 @@ class TransactionProvider extends ChangeNotifier {
 
   //_______FILTRO________
   // ignore: prefer_final_fields
-  Filtros _filtroActual = Filtros.ever;
+  String _filtroActual = "all";
 
-  void CambiarFiltro(Filtros nuevoFiltro) {
+  void cambiarFiltro(String nuevoFiltro) {
     _filtroActual = nuevoFiltro;
     notifyListeners();
   }
 
   List<Transaction> get transacionesParaMostrar {
     DateTime now = DateTime.now();
-    if (_filtroActual == Filtros.today) {
+    if (_filtroActual == "today") {
       return _transactions
           .where(
             (tx) =>
@@ -110,15 +110,46 @@ class TransactionProvider extends ChangeNotifier {
           )
           .toList();
     }
-    if (_filtroActual == Filtros.month) {
+    if (_filtroActual == "month") {
       return _transactions
           .where(
             (tx) => tx.fecha.year == now.year && tx.fecha.month == now.month,
           )
           .toList();
     }
-    if (_filtroActual == Filtros.year) {
+    if (_filtroActual == "year") {
       return _transactions.where((tx) => tx.fecha.year == now.year).toList();
     }
+    if (_filtroActual == "week") {
+      return _transactions.where((tx) {
+        DateTime startWeek = now.subtract(Duration(days: now.weekday - 1));
+        DateTime startWeekClean = DateTime(
+          startWeek.year,
+          startWeek.month,
+          startWeek.day,
+        );
+        return tx.fecha.isAfter(startWeekClean) ||
+            tx.fecha.isAtSameMomentAs(startWeekClean);
+      }).toList();
+    }
+
+    return _transactions.toList();
+  }
+
+  String getActualFilter(BuildContext ctx) {
+    final st = AppLocalizations.of(ctx)!;
+    if (_filtroActual == "today") {
+      return st.hoyText;
+    }
+    if (_filtroActual == "week") {
+      return st.thisWeekText;
+    }
+    if (_filtroActual == "month") {
+      return st.thisMonthText;
+    }
+    if (_filtroActual == "year") {
+      return st.thisYearText;
+    }
+    return st.todoText;
   }
 }

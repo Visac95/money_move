@@ -105,5 +105,11 @@
     "debtdescriptionText": "Debt Description",
     "limitDateText": "Due Date",
     "noHistorialText": "No history",
-    "noPaidDeudasText": "No paid debts in this section yet."
+    "noPaidDeudasText": "No paid debts in this section yet.",
+    "filtrarText": "Filter",
+    "hoyText": "Today",
+    "thisWeekText": "This week",
+    "thisMonthText": "This month",
+    "thisYearText": "This year",
+    "todoText": "All"
 }

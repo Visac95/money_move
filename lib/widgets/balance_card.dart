@@ -4,12 +4,14 @@ import 'package:money_move/l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class BalanceCard extends StatelessWidget {
-  dynamic totalAmount;
-  dynamic incomeAmount;
-  dynamic expenseAmount;
+  double totalAmount;
+  double incomeAmount;
+  double expenseAmount;
 
   BalanceCard({super.key,
-  required totalAmount,
+  required this.totalAmount,
+  required this.incomeAmount,
+  required this.expenseAmount,
   });
 
   @override

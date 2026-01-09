@@ -733,6 +733,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No paid debts in this section yet.'**
   String get noPaidDeudasText;
+
+  /// No description provided for @filtrarText.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filtrarText;
+
+  /// No description provided for @hoyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get hoyText;
+
+  /// No description provided for @thisWeekText.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get thisWeekText;
+
+  /// No description provided for @thisMonthText.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get thisMonthText;
+
+  /// No description provided for @thisYearText.
+  ///
+  /// In en, this message translates to:
+  /// **'This year'**
+  String get thisYearText;
+
+  /// No description provided for @todoText.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get todoText;
 }
 
 class _AppLocalizationsDelegate

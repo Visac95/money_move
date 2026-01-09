@@ -105,5 +105,11 @@
     "debtdescriptionText": "Descripción de la Deuda",
     "limitDateText": "Fecha Límite",
     "noHistorialText": "Sin historial",
-    "noPaidDeudasText": "Aún no hay deudas liquidadas en esta sección."
+    "noPaidDeudasText": "Aún no hay deudas liquidadas en esta sección.",
+    "filtrarText": "Filtrar",
+    "hoyText": "Hoy",
+    "thisWeekText": "Esta semana",
+    "thisMonthText": "Este mes",
+    "thisYearText": "Este año",
+    "todoText": "Todo"
 }
