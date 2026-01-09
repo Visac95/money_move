@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/models/filtros.dart';
 import '../models/transaction.dart';
 import '../services/database_helper.dart'; // <--- IMPORTANTE: Importar el mayordomo
 
@@ -85,6 +86,39 @@ class TransactionProvider extends ChangeNotifier {
       return _transactions.firstWhere((t) => t.id == id);
     } catch (e) {
       return null; // Si no se encuentra, retornamos null
+    }
+  }
+
+  //_______FILTRO________
+  // ignore: prefer_final_fields
+  Filtros _filtroActual = Filtros.ever;
+
+  void CambiarFiltro(Filtros nuevoFiltro) {
+    _filtroActual = nuevoFiltro;
+    notifyListeners();
+  }
+
+  List<Transaction> get transacionesParaMostrar {
+    DateTime now = DateTime.now();
+    if (_filtroActual == Filtros.today) {
+      return _transactions
+          .where(
+            (tx) =>
+                tx.fecha.year == now.year &&
+                tx.fecha.month == now.month &&
+                tx.fecha.day == now.day,
+          )
+          .toList();
+    }
+    if (_filtroActual == Filtros.month) {
+      return _transactions
+          .where(
+            (tx) => tx.fecha.year == now.year && tx.fecha.month == now.month,
+          )
+          .toList();
+    }
+    if (_filtroActual == Filtros.year) {
+      return _transactions.where((tx) => tx.fecha.year == now.year).toList();
     }
   }
 }

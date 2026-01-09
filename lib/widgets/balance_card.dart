@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/transaction_provider.dart';
-import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class BalanceCard extends StatelessWidget {
-  const BalanceCard({super.key});
+  dynamic totalAmount;
+  dynamic incomeAmount;
+  dynamic expenseAmount;
+
+  BalanceCard({super.key,
+  required totalAmount,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TransactionProvider>(context);
     
     // Acceso al tema
     final theme = Theme.of(context);
@@ -54,7 +58,7 @@ class BalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "\$${provider.saldoActual.toStringAsFixed(2)}",
+                  "\$${totalAmount.toStringAsFixed(2)}",
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.w800,
@@ -91,7 +95,7 @@ class BalanceCard extends StatelessWidget {
                 _buildSummaryColumn(
                   context, // Pasamos el contexto para los estilos
                   label: strings.incomesText,
-                  amount: provider.totalIngresos,
+                  amount: incomeAmount,
                   icon: Icons.arrow_upward_rounded,
                   color: AppColors.income, // Mantenemos el verde semántico
                   bgColor: AppColors.income.withValues(alpha:0.15),
@@ -108,7 +112,7 @@ class BalanceCard extends StatelessWidget {
                 _buildSummaryColumn(
                   context,
                   label: strings.expencesText,
-                  amount: provider.totalEgresos,
+                  amount: expenseAmount,
                   icon: Icons.arrow_downward_rounded,
                   color: AppColors.expense, // Mantenemos el rojo semántico
                   bgColor: AppColors.expense.withValues(alpha:0.15),

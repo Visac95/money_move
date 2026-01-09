@@ -19,8 +19,6 @@ class ListaDeTransacciones extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     if (lista.isEmpty) {
-      // Si está vacía, envolvemos en un contenedor con altura o Expanded según necesites.
-      // Aquí usamos un truco seguro: Un Center que ocupe espacio razonable.
       return SizedBox(
         height: 300, // Altura mínima para que se vea el mensaje
         child: _buildEmptyState(context, colorScheme),
