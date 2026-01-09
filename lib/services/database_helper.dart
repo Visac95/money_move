@@ -45,6 +45,7 @@ class DatabaseHelper {
         title $textType,
         description $textType,
         monto $doubleType,
+        saldo $doubleType,
         fecha $textType,
         categoria $textType,
         isExpense $intType,

@@ -185,6 +185,7 @@ class _TransactionCard extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          
                         ],
                       ),
                     ],
@@ -193,23 +194,32 @@ class _TransactionCard extends StatelessWidget {
 
                 // 3. MONTO
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       (isExpense ? '- ' : '+ ') + amount.toStringAsFixed(2),
                       style: TextStyle(
                         color: amountColor,
                         fontWeight: FontWeight.w800,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: _buildPopupMenu(context, colorScheme),
-                    ),
+                    SizedBox(height: 2),
+                          Text(
+                            "\$${(transaction.saldo ?? 0.0).toStringAsFixed(2)}",
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ],
+                ),
+
+                SizedBox(width: 10),
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: _buildPopupMenu(context, colorScheme),
                 ),
               ],
             ),
