@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // <-- Ya no lo necesitas aquí
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/locale_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 
 import 'package:money_move/widgets/add_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final tProvider = Provider.of<TransactionProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,13 +39,13 @@ class HomeScreen extends StatelessWidget {
 
               // Lógica de cambio de idioma intacta
               if (currentLocale.languageCode == 'en') {
-                provider.setLocale(const Locale('es'));
+                provider.changeLocale(const Locale('es'));
                 _showSnackBar(
                   context,
                   AppLocalizations.of(context)!.changeLanguage,
                 );
               } else {
-                provider.setLocale(const Locale('en'));
+                provider.changeLocale(const Locale('en'));
                 _showSnackBar(
                   context,
                   AppLocalizations.of(context)!.changeLanguage,
@@ -58,9 +60,12 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
-          children:  [
-            // Agregué const para optimizar rendimiento
-            BalanceCard(totalAmount: 45, expenseAmount: 45, incomeAmount: 45,),
+          children: [
+            BalanceCard(
+              totalAmount: tProvider.saldoActual,
+              expenseAmount: tProvider.totalEgresos,
+              incomeAmount: tProvider.totalIngresos,
+            ),
             UltimasTransacciones(),
             UltimasDeudas(),
           ],

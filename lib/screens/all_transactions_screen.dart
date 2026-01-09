@@ -59,7 +59,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                           Text(
                             Provider.of<TransactionProvider>(
                               context,
-                            ).getActualFilter(context),
+                            ).getActualFilterString(context),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -116,13 +116,13 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.only(
                     bottom: 10,
-                    left: 20,
-                    right: 20,
+                    left: 10,
+                    right: 10,
                   ),
                   child: BalanceCard(
-                    totalAmount: 45,
-                    expenseAmount: 45,
-                    incomeAmount: 45,
+                    expenseAmount: provider.filteredEgresos,
+                    incomeAmount: provider.filteredIngresos,
+                    totalAmount: provider.filteredsaldoActual,
                   ),
                 ),
               ),

@@ -10,44 +10,13 @@ import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
 import './providers/deuda_provider.dart';
 
-void main() {
-  // --- INICIO DEL CÓDIGO CHIVATO ---
-  // Esto hace que si hay un error visual, en vez de pantalla blanca,
-  // salga una pantalla roja con el texto del error.
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Material(
-      color: Colors.red.shade900,
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "¡ERROR DETECTADO!",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                details.exception.toString(), // El error corto
-                style: const TextStyle(color: Colors.yellow, fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                details.stack.toString(), // Dónde ocurrió
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  };
-  // --- FIN DEL CÓDIGO CHIVATO ---
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 1. PREPARAMOS EL PROVIDER (Cargamos el idioma del disco)
+  final localeProvider = LocaleProvider();
+  await localeProvider.fetchLocale();
+
   runApp(
     MultiProvider(
       providers: [
@@ -57,7 +26,11 @@ void main() {
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        
+        // --- CORRECCIÓN AQUÍ ---
+        // En lugar de 'create', usamos '.value' para pasar la instancia
+        // que ya tiene el idioma cargado (localeProvider).
+        ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: const MyApp(),
     ),
@@ -69,59 +42,56 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Usamos Consumer para reconstruir TODA la app cuando cambie el idioma
     return Consumer<LocaleProvider>(
-      builder: (context, localeProvider, child) {
+      builder: (context, provider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          locale: localeProvider.locale,
+          
+          // AQUÍ CONECTAMOS EL IDIOMA
+          locale: provider.locale, 
+          
           onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-          //title: AppLocalizations.of(context)!.appTitle,
+          
           localizationsDelegates: const [
-            AppLocalizations.delegate, // Tu delegado generado
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales:
-              AppLocalizations.supportedLocales, // Idiomas soportados
-          // Esto permite que cambie solo según la configuración del celular
+          supportedLocales: AppLocalizations.supportedLocales,
+          
           themeMode: ThemeMode.system,
 
-          // TEMA CLARO (Día)
+          // TEMA CLARO
           theme: ThemeData(
             brightness: Brightness.light,
             scaffoldBackgroundColor: AppColors.lightBackground,
-            // Definimos el esquema de colores semántico
             colorScheme: const ColorScheme.light(
               primary: AppColors.lightPrimary,
-              secondary: AppColors
-                  .income, // Usamos verde como secundario o el que prefieras
-              surface: AppColors.lightSurface, // Color de las Tarjetas
-              onSurface: AppColors
-                  .lightTextPrimary, // Color de Texto sobre las tarjetas
-              outline: AppColors
-                  .lightTextSecondary, // Color para textos secundarios/iconos grises
+              secondary: AppColors.income,
+              surface: AppColors.lightSurface,
+              onSurface: AppColors.lightTextPrimary,
+              outline: AppColors.lightTextSecondary,
               error: AppColors.expense,
               outlineVariant: AppColors.lightOutlineVariant,
             ),
-            // Configuramos las tarjetas por defecto
             cardTheme: CardThemeData(
               color: AppColors.lightSurface,
               elevation: 0,
             ),
-            // Iconos por defecto
             iconTheme: const IconThemeData(color: AppColors.lightIcon),
           ),
 
-          // TEMA OSCURO (Noche)
+          // TEMA OSCURO
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             scaffoldBackgroundColor: AppColors.darkBackground,
             colorScheme: const ColorScheme.dark(
               primary: AppColors.darkPrimary,
               secondary: AppColors.income,
-              surface: AppColors.darkSurface, // Las tarjetas serán gris oscuro
-              onSurface: AppColors.darkTextPrimary, // El texto será blanco
+              surface: AppColors.darkSurface,
+              onSurface: AppColors.darkTextPrimary,
               outline: AppColors.darkTextSecondary,
               error: AppColors.expense,
               outlineVariant: AppColors.darkOutlineVariant,

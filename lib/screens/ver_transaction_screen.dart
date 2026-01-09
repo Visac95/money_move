@@ -230,7 +230,7 @@ class VerTransactionScreen extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withValues(alpha:0.05),
+                  color: colorScheme.onSurface.withValues(alpha: 0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -244,7 +244,7 @@ class VerTransactionScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: mainColor.withValues(alpha:0.1),
+                  color: mainColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
@@ -306,9 +306,11 @@ class VerTransactionScreen extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 20),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.primary.withValues(alpha:0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colorScheme.primary.withValues(alpha:0.2)),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                ),
               ),
               child: Material(
                 color: Colors.transparent,
@@ -405,19 +407,32 @@ class VerTransactionScreen extends StatelessWidget {
   // Widget auxiliar actualizado
   Widget _buildDetailRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // 1. IMPORTANTE: Esto hace que si el texto es largo, el label se quede arriba
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // El Label (Ej: "Título")
         Text(
           label,
           style: TextStyle(color: theme.colorScheme.outline, fontSize: 14),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
+
+        const SizedBox(
+          width: 16,
+        ), // Un espacio de seguridad entre label y valor
+        // 2. LA SOLUCIÓN: Expanded
+        Expanded(
+          child: Text(
+            value,
+            // 3. Alineamos a la derecha para mantener el estilo
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
         ),
       ],

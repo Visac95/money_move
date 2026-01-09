@@ -136,7 +136,7 @@ class TransactionProvider extends ChangeNotifier {
     return _transactions.toList();
   }
 
-  String getActualFilter(BuildContext ctx) {
+  String getActualFilterString(BuildContext ctx) {
     final st = AppLocalizations.of(ctx)!;
     if (_filtroActual == "today") {
       return st.hoyText;
@@ -152,4 +152,28 @@ class TransactionProvider extends ChangeNotifier {
     }
     return st.todoText;
   }
+  //____GETTERS FILTROS________
+  // Getter de ingresos
+  double get filteredIngresos {
+    Iterable<Transaction> listaFiltradaIngresos = transacionesParaMostrar.where(
+      (t) => t.isExpense == false,
+    );
+    return listaFiltradaIngresos.fold(
+      0.0,
+      (sumaAcumulada, item) => sumaAcumulada + item.monto,
+    );
+  }
+
+  // Getter de egresos
+  double get filteredEgresos {
+    Iterable<Transaction> listaFiltradaEgresos = transacionesParaMostrar.where(
+      (t) => t.isExpense == true,
+    );
+    return listaFiltradaEgresos.fold(
+      0.0,
+      (sumaAcumulada, item) => sumaAcumulada + item.monto,
+    );
+  }
+
+  double get filteredsaldoActual => filteredIngresos - filteredEgresos;
 }
