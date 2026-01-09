@@ -48,11 +48,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
     // Debounce para no llamar a la API por cada letra
     if (debounce?.isActive ?? false) debounce!.cancel();
-    
+
     debounce = Timer(const Duration(milliseconds: 1000), () {
       // Doble chequeo por si el usuario eligió una categoría mientras corría el timer
       if (aiProvider.manualCategory != null) return;
-      
+
       // Si el título no está vacío, pedimos ayuda a la IA
       if (titleController.text.trim().isNotEmpty) {
         aiProvider.requestClassification(titleController.text);
@@ -67,18 +67,25 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     final double? enteredAmount = double.tryParse(amountController.text);
     if (enteredAmount == null) return;
 
+    // 2. CAPTURA DE PROVIDERS (Hacemos esto AL PRINCIPIO, antes de cualquier await)
+    // Esto soluciona el problema del "Async Gap" y el contexto.
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-    final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+    final transactionProvider = Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    );
 
-    // 2. DECISIÓN DE CATEGORÍA (Lógica simplificada)
-    // Prioridad: 1. Manual -> 2. Sugerencia IA -> 3. Vacío
-    String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
+    // Obtenemos el saldo actual en este momento exacto
+    final double saldoActualDelProvider = transactionProvider.saldoActual;
 
-    // 3. SI NO HAY CATEGORÍA (La IA falló/no respondió y el usuario no eligió)
-    // Forzamos a elegir manualmente ahora.
+    // 3. DECISIÓN DE CATEGORÍA
+    String finalCategory =
+        aiProvider.manualCategory ?? aiProvider.suggestedCategory;
+
+    // 4. DIÁLOGO ASINCRÓNICO (Si aplica)
     if (finalCategory.isEmpty || finalCategory == 'manual_category') {
-      if (!mounted) return;
-      
+      if (!mounted) return; // Verificación de seguridad
+
       final String? selectedManual = await showDialog<String>(
         context: context,
         builder: (context) => const SelectCategoryWindow(),
@@ -87,16 +94,27 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       if (selectedManual != null) {
         finalCategory = selectedManual;
       } else {
-        return; // Usuario canceló el diálogo, no guardamos.
+        return;
       }
     }
 
-    // 4. GUARDAR
+    // 5. CÁLCULO DEL NUEVO SALDO
+    // Calculamos cómo quedará la cuenta después de esta transacción
+    double nuevoSaldoCalculado;
+    if (isExpense) {
+      nuevoSaldoCalculado = saldoActualDelProvider - enteredAmount;
+    } else {
+      nuevoSaldoCalculado = saldoActualDelProvider + enteredAmount;
+    }
+
+    // 6. GUARDAR
+    // Usamos las variables locales que ya capturamos, sin volver a llamar al context
     transactionProvider.addTransaction(
       Transaction(
         title: titleController.text,
         description: descriptionController.text,
         monto: enteredAmount,
+        saldo: nuevoSaldoCalculado, // AQUÍ ASIGNAMOS EL VALOR CALCULADO
         fecha: DateTime.now(),
         categoria: finalCategory,
         isExpense: isExpense,
@@ -104,8 +122,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
 
     if (mounted) Navigator.of(context).pop();
-    
-    // Limpieza final
+
     aiProvider.resetCategory();
   }
 
