@@ -72,7 +72,6 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                         ],
                       ),
 
-                      // 'onSelected': Qué pasa cuando eliges una opción
                       onSelected: (String valorElegido) {
                         provider.cambiarFiltro(valorElegido);
                       },
@@ -123,6 +122,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                     expenseAmount: provider.filteredEgresos,
                     incomeAmount: provider.filteredIngresos,
                     totalAmount: provider.filteredsaldoActual,
+                    withFilterButton: true,
                   ),
                 ),
               ),

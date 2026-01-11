@@ -112,7 +112,7 @@ class TransactionProvider extends ChangeNotifier {
   List<Transaction> get transacionesParaMostrar {
     DateTime now = DateTime.now();
     if (_filtroActual == "today") {
-      return _transactions
+      return catFiltered(_transactions)
           .where(
             (tx) =>
                 tx.fecha.year == now.year &&
@@ -122,17 +122,17 @@ class TransactionProvider extends ChangeNotifier {
           .toList();
     }
     if (_filtroActual == "month") {
-      return _transactions
+      return catFiltered(_transactions)
           .where(
             (tx) => tx.fecha.year == now.year && tx.fecha.month == now.month,
           )
           .toList();
     }
     if (_filtroActual == "year") {
-      return _transactions.where((tx) => tx.fecha.year == now.year).toList();
+      return catFiltered(_transactions).where((tx) => tx.fecha.year == now.year).toList();
     }
     if (_filtroActual == "week") {
-      return _transactions.where((tx) {
+      return catFiltered(_transactions).where((tx) {
         DateTime startWeek = now.subtract(Duration(days: now.weekday - 1));
         DateTime startWeekClean = DateTime(
           startWeek.year,
@@ -144,7 +144,7 @@ class TransactionProvider extends ChangeNotifier {
       }).toList();
     }
 
-    return _transactions.toList();
+    return catFiltered(_transactions).toList();
   }
 
   String getActualFilterString(BuildContext ctx) {
@@ -187,4 +187,22 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   double get filteredsaldoActual => filteredIngresos - filteredEgresos;
+
+  // ignore: prefer_final_fields
+  String _catFiltroActual = "all";
+
+  String get catFiltroActual => _catFiltroActual;
+
+  void cambiarCatFiltro(String nuevoFiltro) {
+    _catFiltroActual = nuevoFiltro;
+    notifyListeners();
+  }
+
+  //---------Filtro de categorias-----------
+  List<Transaction> catFiltered (List<Transaction> list) {
+    if (_catFiltroActual != "all") {
+      return _transactions.where((t)=> t.categoria == _catFiltroActual ).toList();
+    }
+    return _transactions;
+  }
 }

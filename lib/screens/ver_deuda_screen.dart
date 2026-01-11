@@ -310,8 +310,11 @@ class VerDeuda extends StatelessWidget {
                             ).abonarDeuda(
                               deuda,
                               monto,
-                              Provider.of<TransactionProvider>(context, listen: false),
-                              context, 
+                              Provider.of<TransactionProvider>(
+                                context,
+                                listen: false,
+                              ),
+                              context,
                             );
 
                         if (!context.mounted) return;
@@ -560,12 +563,16 @@ class VerDeuda extends StatelessWidget {
           label,
           style: TextStyle(color: theme.colorScheme.outline, fontSize: 14),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
         ),
       ],

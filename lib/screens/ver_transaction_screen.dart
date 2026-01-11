@@ -199,14 +199,10 @@ class VerTransactionScreen extends StatelessWidget {
     BuildContext context,
   ) {
     final strings = AppLocalizations.of(context)!;
-
-    // 1. OBTENER EL PROVIDER DE DEUDAS
     // Usamos 'listen: true' (por defecto) para que si borras la deuda en otra pantalla,
     // este botón desaparezca automáticamente al volver aquí.
     final deudaProvider = Provider.of<DeudaProvider>(context);
 
-    // 2. VERIFICACIÓN ESTRICTA
-    // ¿Es categoría deuda? Y ¿Tiene ID? Y ¿Ese ID devuelve una deuda real?
     bool shouldShowButton = false;
 
     if (transaction.deudaAsociada != null &&

@@ -65,6 +65,7 @@ class HomeScreen extends StatelessWidget {
               totalAmount: tProvider.saldoActual,
               expenseAmount: tProvider.totalEgresos,
               incomeAmount: tProvider.totalIngresos,
+              withFilterButton: false,
             ),
             UltimasTransacciones(),
             UltimasDeudas(),

@@ -19,6 +19,7 @@ class AppColors {
   static const Color lightTextSecondary = Color(0xFF6B7280); // Tu gris subtítulos
   static const Color lightIcon = Color(0xFF1F2937);
   static const Color lightOutlineVariant = Color.fromARGB(176, 175, 175, 175); // Gris claro para bordes
+  static const Color lightSurfaceContainer = Color(0xFFF3F4F6);
 
   // --- MODO OSCURO (Dark Mode) ---
   // Aquí corregimos: El fondo pasa a ser oscuro y el texto claro.
@@ -29,4 +30,5 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFF9CA3AF); // Gris claro
   static const Color darkIcon = Color(0xFFF3F4F6);
   static const Color darkOutlineVariant = Color.fromARGB(174, 92, 92, 92);
+  static const Color darkSurfaceContainer = Color(0xFF2C2C2C);
 }

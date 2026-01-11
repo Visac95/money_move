@@ -25,7 +25,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DeudaProvider>(context);
     // Tomamos solo las últimas 2 o 3 deudas para la vista previa
-    final lista = provider.deudas; 
+    final lista = provider.deudas.where((d)=>d.pagada==false).toList(); 
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

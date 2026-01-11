@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
               outline: AppColors.lightTextSecondary,
               error: AppColors.expense,
               outlineVariant: AppColors.lightOutlineVariant,
+              surfaceContainer: AppColors.lightSurfaceContainer,
             ),
             cardTheme: CardThemeData(
               color: AppColors.lightSurface,
@@ -95,6 +96,7 @@ class MyApp extends StatelessWidget {
               outline: AppColors.darkTextSecondary,
               error: AppColors.expense,
               outlineVariant: AppColors.darkOutlineVariant,
+              surfaceContainer: AppColors.darkSurfaceContainer,
             ),
             cardTheme: CardThemeData(
               color: AppColors.darkSurface,

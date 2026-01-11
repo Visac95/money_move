@@ -31,6 +31,8 @@ String getCategoryName(BuildContext context, String categoryKey) {
       return l10n.cat_debt;
     case AppConstants.catOthers:
       return l10n.cat_others;
+    case "all":
+      return l10n.todoText;
     default:
       return 'Desconocido';
   }
