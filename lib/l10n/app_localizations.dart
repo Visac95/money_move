@@ -769,6 +769,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get todoText;
+
+  /// No description provided for @seeSettledDeudasText.
+  ///
+  /// In en, this message translates to:
+  /// **'See settled debts'**
+  String get seeSettledDeudasText;
+
+  /// No description provided for @generateAutoTransactionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate transaction automatically'**
+  String get generateAutoTransactionText;
+
+  /// No description provided for @lentFromText.
+  ///
+  /// In en, this message translates to:
+  /// **'Money lent from'**
+  String get lentFromText;
+
+  /// No description provided for @lentToText.
+  ///
+  /// In en, this message translates to:
+  /// **'Money lent to'**
+  String get lentToText;
 }
 
 class _AppLocalizationsDelegate

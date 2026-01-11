@@ -9,7 +9,7 @@ import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class DeudaForm extends StatelessWidget {
+class DeudaForm extends StatefulWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController amountController;
@@ -21,6 +21,8 @@ class DeudaForm extends StatelessWidget {
   final bool? isEditMode;
   final TextEditingController dateController;
   final VoidCallback onDateTap;
+  bool? autoTransaction;
+  Function(bool)? autoTranxCheck;
 
   DeudaForm({
     super.key,
@@ -35,8 +37,15 @@ class DeudaForm extends StatelessWidget {
     this.isEditMode,
     required this.dateController,
     required this.onDateTap,
+    this.autoTransaction,
+    this.autoTranxCheck,
   });
 
+  @override
+  State<DeudaForm> createState() => _DeudaFormState();
+}
+
+class _DeudaFormState extends State<DeudaForm> {
   @override
   Widget build(BuildContext context) {
     // Usamos watch para reconstruir si cambia el estado del provider (IA o Manual)
@@ -47,7 +56,7 @@ class DeudaForm extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final strings = AppLocalizations.of(context)!;
 
-    final activeColor = debo ? AppColors.accent : AppColors.income;
+    final activeColor = widget.debo ? AppColors.accent : AppColors.income;
 
     // --- LÓGICA DE ESTADO DEL BOTÓN DE CATEGORÍA ---
     // La lógica ahora es universal: EditDeudaScreen ya cargó la categoría en 'manualCategory'
@@ -62,15 +71,15 @@ class DeudaForm extends StatelessWidget {
 
     if (hasManual) {
       // 1. MANUAL (Usuario eligió o estamos editando una existente) -> VERDE
-      chipBgColor = Colors.green.withValues(alpha:isDark ? 0.2 : 0.1);
-      chipBorderColor = Colors.green.withValues(alpha:0.5);
+      chipBgColor = Colors.green.withValues(alpha: isDark ? 0.2 : 0.1);
+      chipBorderColor = Colors.green.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
       chipIcon = Icons.check_circle;
       chipLabel = getCategoryName(context, aiProvider.manualCategory!);
     } else if (hasSuggestion) {
       // 2. SUGERENCIA IA -> COLOR PRIMARY
-      chipBgColor = colorScheme.primary.withValues(alpha:isDark ? 0.2 : 0.1);
-      chipBorderColor = colorScheme.primary.withValues(alpha:0.5);
+      chipBgColor = colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1);
+      chipBorderColor = colorScheme.primary.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.white : colorScheme.primary;
       chipIcon = Icons.auto_awesome;
       chipLabel =
@@ -100,12 +109,12 @@ class DeudaForm extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: titleController,
+              controller: widget.titleController,
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.deudaEjTitleText,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -135,12 +144,12 @@ class DeudaForm extends StatelessWidget {
             const SizedBox(height: 8),
 
             TextField(
-              controller: descriptionController,
+              controller: widget.descriptionController,
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.optionalHintText,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -187,12 +196,12 @@ class DeudaForm extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: involucradoController,
+              controller: widget.involucradoController,
               style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: strings.involucradoNameHint,
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainer,
@@ -215,9 +224,10 @@ class DeudaForm extends StatelessWidget {
             //----DateLimit--------
             // Ejemplo de TextField para la fecha
             TextField(
-              controller: dateController, // El controlador que le pasamos
+              controller:
+                  widget.dateController, // El controlador que le pasamos
               readOnly: true, // Importante: para que no escriban, solo toquen
-              onTap: onDateTap, // Al tocar, se abre el calendario
+              onTap: widget.onDateTap, // Al tocar, se abre el calendario
               decoration: InputDecoration(
                 labelText: strings.limitDateText, // O usa AppLocalizations
                 prefixIcon: const Icon(Icons.calendar_today),
@@ -238,7 +248,7 @@ class DeudaForm extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: amountController,
+              controller: widget.amountController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
@@ -253,7 +263,7 @@ class DeudaForm extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: "0.00",
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha:0.3),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
                 ),
                 prefixText: "\$ ",
                 prefixStyle: TextStyle(
@@ -265,8 +275,30 @@ class DeudaForm extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
               ),
             ),
+            widget.isEditMode!
+                ? SizedBox()
+                : CheckboxListTile(
+                    title: Text(
+                      strings.generateAutoTransactionText,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.autoTransaction ?? true
+                            ? AppColors.income
+                            : colorScheme.outline,
+                      ),
+                    ), // Opcional
+                    value: widget.autoTransaction,
+                    onChanged: (bool? newValue) {
+                      // Aquí ya tienes el valor:
+                      widget.autoTranxCheck!(newValue!);
+                    },
 
-            const SizedBox(height: 16),
+                    // Opcional: Color cuando está activo
+                    activeColor: AppColors.income,
+                    // Opcional: Dónde va el cuadradito (leading = izquierda, trailing = derecha)
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+            const SizedBox(height: 8),
 
             // --- SECCIÓN AI / CATEGORÍA (OPTIMIZADA) ---
             AnimatedSwitcher(
@@ -342,14 +374,13 @@ class DeudaForm extends StatelessWidget {
                     ),
             ),
 
-            const SizedBox(height: 40),
-
+            SizedBox(height: 40),
             // Botón Guardar
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: onSave,
+                onPressed: widget.onSave,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.primary,
                   foregroundColor: colorScheme.onPrimary,
@@ -374,7 +405,7 @@ class DeudaForm extends StatelessWidget {
   }
 
   String _involucradoText(BuildContext context) {
-    if (debo) {
+    if (widget.debo) {
       return AppLocalizations.of(context)!.quienMeDebeText;
     } else {
       return AppLocalizations.of(context)!.quienLeDeboText;
@@ -390,11 +421,11 @@ class DeudaForm extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
-    bool isActive = debo == deboButton;
+    bool isActive = widget.debo == deboButton;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => onTypeChanged(deboButton),
+        onTap: () => widget.onTypeChanged(deboButton),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -404,7 +435,7 @@ class DeudaForm extends StatelessWidget {
             boxShadow: (isActive && !isDark)
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha:0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),

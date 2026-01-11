@@ -209,8 +209,7 @@ class VerTransactionScreen extends StatelessWidget {
     // ¿Es categoría deuda? Y ¿Tiene ID? Y ¿Ese ID devuelve una deuda real?
     bool shouldShowButton = false;
 
-    if (transaction.categoria == "cat_debt" &&
-        transaction.deudaAsociada != null &&
+    if (transaction.deudaAsociada != null &&
         transaction.deudaAsociada!.isNotEmpty) {
       // Intentamos buscar la deuda real
       final deudaReal = deudaProvider.getDeudaById(transaction.deudaAsociada!);

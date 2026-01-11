@@ -4,6 +4,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
   DateTime _selectedDate = DateTime.now(); // Por defecto hoy
 
   bool debo = true;
+  bool generateAutoTransaction = true;
   Timer? debounce;
 
   @override
@@ -103,6 +105,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     }
 
     final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
+    final transProvider = Provider.of<TransactionProvider>(context, listen: false);
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
     
     String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
@@ -130,13 +133,13 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       involucrado: involucradoController.text,
       abono: 0.0,
       fechaInicio: DateTime.now(),
-      fechaLimite: _selectedDate, // <--- 3. AQUÍ USAMOS LA FECHA SELECCIONADA
+      fechaLimite: _selectedDate, 
       categoria: finalCategory,
       debo: debo,
       pagada: false,
     );
 
-    deudaProvider.addDeuda(nuevaDeuda);
+    deudaProvider.addDeuda(nuevaDeuda, transProvider, context, AppLocalizations.of(context)!, generateAutoTransaction);
 
     if (mounted) {
       Navigator.of(context).pop();
@@ -178,6 +181,13 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
           });
         },
         onSave: _saveDeuda,
+        isEditMode: false,
+        autoTransaction: generateAutoTransaction,
+        autoTranxCheck: (bool value) {
+          setState(() {
+            generateAutoTransaction = value;
+          });
+        },
       ),
     );
   }

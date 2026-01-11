@@ -16,12 +16,37 @@ class DeudaProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addDeuda(Deuda d) async {
+  Future<void> addDeuda(
+    Deuda d,
+    TransactionProvider tProvdr,
+    BuildContext ctx,
+    dynamic stgs,
+    bool generateAutoTransaction,
+  ) async {
     await DatabaseHelper.instance.insertDeuda(d);
 
     _deudas.add(d);
 
     _deudas.sort((a, b) => a.fechaLimite.compareTo(b.fechaLimite));
+
+    if(generateAutoTransaction) {
+      String descriptionString =
+        "${(d.debo ? stgs.lentFromText : stgs.lentToText)} ${d.involucrado} \n${stgs.descriptionText}: ${d.description}";
+
+    tProvdr.addTransaction(
+      Transaction(
+        title: d.title,
+        description: descriptionString,
+        monto: d.monto,
+        saldo: tProvdr.saldoActual,
+        fecha: d.fechaInicio,
+        categoria: d.categoria,
+        isExpense: !d.debo,
+        deudaAsociada: d.id
+      ),
+    );
+    }
+    
 
     notifyListeners();
   }

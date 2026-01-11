@@ -347,4 +347,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get todoText => 'Todo';
+
+  @override
+  String get seeSettledDeudasText => 'Ver deudas liquidadas';
+
+  @override
+  String get generateAutoTransactionText =>
+      'Generar movimiento automaticamente';
+
+  @override
+  String get lentFromText => 'Dinero prestado de';
+
+  @override
+  String get lentToText => 'Dinero prestado a';
 }

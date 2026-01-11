@@ -310,11 +310,8 @@ class VerDeuda extends StatelessWidget {
                             ).abonarDeuda(
                               deuda,
                               monto,
-                              Provider.of<TransactionProvider>(
-                                context,
-                                listen: false,
-                              ),
-                              context,
+                              Provider.of<TransactionProvider>(context, listen: false),
+                              context, 
                             );
 
                         if (!context.mounted) return;

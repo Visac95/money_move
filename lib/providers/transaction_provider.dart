@@ -67,6 +67,17 @@ class TransactionProvider extends ChangeNotifier {
 
   double get saldoActual => totalIngresos - totalEgresos;
 
+  double getSaldoTransaction(Transaction t){
+    if (t.isExpense) {
+      return t.saldo - t.monto;
+    }
+    if (!t.isExpense) {
+      return t.saldo + t.monto;
+    }
+
+    return 0.0;
+  }
+
   Future<void> updateTransaction(Transaction updatedTransaction) async {
     // 1. Actualizar en la base de datos
     await DatabaseHelper.instance.updateTransaction(updatedTransaction);

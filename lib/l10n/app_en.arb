@@ -111,5 +111,9 @@
     "thisWeekText": "This week",
     "thisMonthText": "This month",
     "thisYearText": "This year",
-    "todoText": "All"
+    "todoText": "All",
+    "seeSettledDeudasText": "See settled debts",
+    "generateAutoTransactionText": "Generate transaction automatically",
+    "lentFromText": "Money lent from",
+    "lentToText": "Money lent to"
 }

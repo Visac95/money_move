@@ -102,9 +102,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     // Calculamos cómo quedará la cuenta después de esta transacción
     double nuevoSaldoCalculado;
     if (isExpense) {
-      nuevoSaldoCalculado = saldoActualDelProvider - enteredAmount;
+      nuevoSaldoCalculado = saldoActualDelProvider;
     } else {
-      nuevoSaldoCalculado = saldoActualDelProvider + enteredAmount;
+      nuevoSaldoCalculado = saldoActualDelProvider;
     }
 
     // 6. GUARDAR

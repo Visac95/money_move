@@ -111,5 +111,9 @@
     "thisWeekText": "Esta semana",
     "thisMonthText": "Este mes",
     "thisYearText": "Este año",
-    "todoText": "Todo"
+    "todoText": "Todo",
+    "seeSettledDeudasText": "Ver deudas liquidadas",
+    "generateAutoTransactionText": "Generar movimiento automaticamente",
+    "lentFromText": "Dinero prestado de",
+    "lentToText": "Dinero prestado a"
 }

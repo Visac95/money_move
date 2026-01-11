@@ -33,11 +33,15 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
             ListaDeudasWidget(deboList: true, pagada: false),
             _deudaTitle(strings.deudasPorCobrarText, false),
             ListaDeudasWidget(deboList: false, pagada: false),
-
-            _deudaTitle(strings.paidDeudasText, true),
-            ListaDeudasWidget(deboList: true, pagada: true),
-            _deudaTitle(strings.recivedDeudasText, true),
-            ListaDeudasWidget(deboList: false, pagada: true),
+            ExpansionTile(
+              title:  Text(strings.seeSettledDeudasText), // Texto que siempre se ve
+              children: [
+                _deudaTitle(strings.paidDeudasText, true),
+                ListaDeudasWidget(deboList: true, pagada: true),
+                _deudaTitle(strings.recivedDeudasText, true),
+                ListaDeudasWidget(deboList: false, pagada: true),
+              ],
+            ),
           ],
         ),
       ),

@@ -91,6 +91,7 @@ class _TransactionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final provider = Provider.of<TransactionProvider>(context);
 
     // --- PROTECCIÓN CONTRA NULOS ---
     // Si por error algo viene nulo, usamos valores por defecto para que NO explote la app
@@ -205,9 +206,9 @@ class _TransactionCard extends StatelessWidget {
                     ),
                     SizedBox(height: 2),
                           Text(
-                            "\$${(transaction.saldo ?? 0.0).toStringAsFixed(2)}",
+                            "\$${((provider.getSaldoTransaction(transaction))).toStringAsFixed(2)}",
                             style: TextStyle(
-                              color: colorScheme.onSurfaceVariant,
+                              color: colorScheme.outline,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
