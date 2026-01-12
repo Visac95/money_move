@@ -793,6 +793,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Money lent to'**
   String get lentToText;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @darkModeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkModeText;
+
+  /// No description provided for @languageText.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageText;
+
+  /// No description provided for @pantallaText.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen'**
+  String get pantallaText;
+
+  /// No description provided for @generalText.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get generalText;
 }
 
 class _AppLocalizationsDelegate

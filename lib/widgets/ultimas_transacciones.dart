@@ -44,7 +44,7 @@ class _UltimasTransaccionesState extends State<UltimasTransacciones> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
+                  color: const Color.fromARGB(255, 94, 94, 94).withValues(alpha: 0.3),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),

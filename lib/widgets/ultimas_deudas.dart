@@ -42,7 +42,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha:0.1),
+                  color: Colors.grey.withValues(alpha:0.5),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),

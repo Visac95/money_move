@@ -115,5 +115,10 @@
     "seeSettledDeudasText": "See settled debts",
     "generateAutoTransactionText": "Generate transaction automatically",
     "lentFromText": "Money lent from",
-    "lentToText": "Money lent to"
+    "lentToText": "Money lent to",
+    "settingsTitle": "Settings",
+    "darkModeText": "Dark Mode",
+    "languageText": "Language",
+    "pantallaText": "Screen",
+    "generalText": "General"
 }

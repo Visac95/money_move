@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // <-- Ya no lo necesitas aquí
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/locale_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 
 import 'package:money_move/widgets/add_button.dart';
@@ -31,31 +30,6 @@ class HomeScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final provider = context.read<LocaleProvider>();
-              final currentLocale = Localizations.localeOf(context);
-
-              // Lógica de cambio de idioma intacta
-              if (currentLocale.languageCode == 'en') {
-                provider.changeLocale(const Locale('es'));
-                _showSnackBar(
-                  context,
-                  AppLocalizations.of(context)!.changeLanguage,
-                );
-              } else {
-                provider.changeLocale(const Locale('en'));
-                _showSnackBar(
-                  context,
-                  AppLocalizations.of(context)!.changeLanguage,
-                );
-              }
-            },
-            // El icono cambia de color según el tema
-            icon: Icon(Icons.language, color: colorScheme.onSurface),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -73,13 +47,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: const AddButton(),
-    );
-  }
-
-  // Helper pequeño para no repetir código del SnackBar
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 }

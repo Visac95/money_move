@@ -115,5 +115,10 @@
     "seeSettledDeudasText": "Ver deudas liquidadas",
     "generateAutoTransactionText": "Generar movimiento automaticamente",
     "lentFromText": "Dinero prestado de",
-    "lentToText": "Dinero prestado a"
+    "lentToText": "Dinero prestado a",
+    "settingsTitle": "Ajustes",
+    "darkModeText": "Modo oscuro",
+    "languageText": "Idioma",
+    "pantallaText": "Pantalla",
+    "generalText": "General"
 }

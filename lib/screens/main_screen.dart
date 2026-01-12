@@ -36,10 +36,6 @@ class _MainScreenState extends State<MainScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      // 1. ELIMINADO: backgroundColor: AppColors.backgroundColor
-      // El Scaffold tomará automáticamente el color definido en main.dart 
-      // (Blanco humo en Light, Negro casi puro en Dark)
-
       body: IndexedStack(
         index: currentIndex, 
         children: screens
@@ -70,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.settings), 
-            label: l10n.navigationTextDeudas
+            label: l10n.settingsTitle
           ),
         ],
       ),

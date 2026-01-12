@@ -360,4 +360,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lentToText => 'Dinero prestado a';
+
+  @override
+  String get settingsTitle => 'Ajustes';
+
+  @override
+  String get darkModeText => 'Modo oscuro';
+
+  @override
+  String get languageText => 'Idioma';
+
+  @override
+  String get pantallaText => 'Pantalla';
+
+  @override
+  String get generalText => 'General';
 }
