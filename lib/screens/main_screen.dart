@@ -5,6 +5,7 @@ import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
+import 'package:money_move/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,7 +20,8 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screens = const [
     HomeScreen(),
     AllTransactionsScreen(),
-    AllDeudasScreen()
+    AllDeudasScreen(),
+    SettingsScreen()
   ];
 
   @override
@@ -48,21 +50,10 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) {
           uiProvider.selectedIndex = index;
         },
-        
-        // 2. COLORES ADAPTATIVOS
-        // El fondo de la barra será blanco (día) o gris oscuro (noche)
         backgroundColor: colorScheme.surface,
-        
-        // El ícono seleccionado será de tu color principal (Índigo)
         selectedItemColor: colorScheme.primary,
-        
-        // Los íconos no seleccionados serán gris oscuro (día) o blanco hueso (noche)
-        // Le damos un poco de transparencia para que se vean "desactivados"
         unselectedItemColor: colorScheme.onSurface.withValues(alpha:  0.6),
-
-        // Opcional: Tipo fijo para evitar animaciones raras de fondo si agregas un 4to botón
         type: BottomNavigationBarType.fixed,
-        elevation: 8, // Una pequeña sombra para separar del contenido
 
         items: [
           BottomNavigationBarItem(
@@ -75,6 +66,10 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.receipt_long), 
+            label: l10n.navigationTextDeudas
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings), 
             label: l10n.navigationTextDeudas
           ),
         ],

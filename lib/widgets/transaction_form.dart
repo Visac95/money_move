@@ -154,20 +154,18 @@ class TransactionForm extends StatelessWidget {
             // 5. BOTÓN DE CATEGORÍA (Con AnimatedSwitcher)
             const SizedBox(height: 16),
 
-            aiProvider.manualCategory != "cat_debt"
-                ? _category(
-                    aiProvider,
-                    activeColor,
-                    strings,
-                    colorScheme,
-                    context,
-                    chipBgColor,
-                    chipBorderColor,
-                    chipIcon,
-                    chipTextColor,
-                    chipLabel,
-                  )
-                : SizedBox(),
+            _category(
+              aiProvider,
+              activeColor,
+              strings,
+              colorScheme,
+              context,
+              chipBgColor,
+              chipBorderColor,
+              chipIcon,
+              chipTextColor,
+              chipLabel,
+            ),
 
             const SizedBox(height: 40),
 

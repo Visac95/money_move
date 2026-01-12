@@ -405,7 +405,7 @@ class _DeudaFormState extends State<DeudaForm> {
   }
 
   String _involucradoText(BuildContext context) {
-    if (widget.debo) {
+    if (!widget.debo) {
       return AppLocalizations.of(context)!.quienMeDebeText;
     } else {
       return AppLocalizations.of(context)!.quienLeDeboText;

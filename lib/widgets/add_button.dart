@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-// import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
 
@@ -9,15 +8,12 @@ class AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Acceso a los colores del tema
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       height: 56, 
       width: 56,
       decoration: BoxDecoration(
-        // Antes: AppColors.primaryLight
-        // Ahora: colorScheme.primary (El color principal de tu app)
         color: colorScheme.primary, 
         shape: BoxShape.circle,
         boxShadow: [
@@ -39,7 +35,7 @@ class AddButton extends StatelessWidget {
         color: colorScheme.surface,
         surfaceTintColor: colorScheme.surfaceTint, // Pequeño tinte en Material 3
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(),
         
         onSelected: (value) {
           _handleMenuSelection(context, value);

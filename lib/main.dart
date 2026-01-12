@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+
+// --- TUS IMPORTS ---
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/locale_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/settings_provider.dart'; // <--- 1. IMPORTA TU NUEVO ARCHIVO
 import 'package:money_move/screens/main_screen.dart';
-import 'package:provider/provider.dart';
-import 'providers/transaction_provider.dart';
-import './providers/deuda_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 1. PREPARAMOS EL PROVIDER (Cargamos el idioma del disco)
   final localeProvider = LocaleProvider();
   await localeProvider.fetchLocale();
 
@@ -26,10 +28,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
-        
-        // --- CORRECCIÓN AQUÍ ---
-        // En lugar de 'create', usamos '.value' para pasar la instancia
-        // que ya tiene el idioma cargado (localeProvider).
+
+        // 2. AGREGA TU SETTINGS PROVIDER AQUÍ
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+
         ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: const MyApp(),
@@ -42,17 +44,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos Consumer para reconstruir TODA la app cuando cambie el idioma
-    return Consumer<LocaleProvider>(
-      builder: (context, provider, child) {
+    // 3. USAMOS 'Consumer2' PARA ESCUCHAR IDIOMA (Locale) Y TEMA (Settings) A LA VEZ
+    return Consumer2<LocaleProvider, SettingsProvider>(
+      builder: (context, localeProv, settingsProv, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          
-          // AQUÍ CONECTAMOS EL IDIOMA
-          locale: provider.locale, 
-          
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-          
+          title: 'Money Move',
+
+          // CONECTAMOS EL IDIOMA
+          locale: localeProv.locale,
+
+          onGenerateTitle: (context) =>
+              AppLocalizations.of(context)?.appTitle ?? 'Money Move',
+
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -60,11 +64,14 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          
-          themeMode: ThemeMode.system,
+
+          // 4. AQUÍ CONECTAMOS EL CAMBIO DE TEMA
+          // Si settingsProv.isDarkMode es true, fuerza el tema oscuro.
+          themeMode: settingsProv.isDarkMode ? ThemeMode.dark : ThemeMode.light,
 
           // TEMA CLARO
           theme: ThemeData(
+            useMaterial3: true,
             brightness: Brightness.light,
             scaffoldBackgroundColor: AppColors.lightBackground,
             colorScheme: const ColorScheme.light(
@@ -77,7 +84,7 @@ class MyApp extends StatelessWidget {
               outlineVariant: AppColors.lightOutlineVariant,
               surfaceContainer: AppColors.lightSurfaceContainer,
             ),
-            cardTheme: CardThemeData(
+            cardTheme: const CardThemeData(
               color: AppColors.lightSurface,
               elevation: 0,
             ),
@@ -86,6 +93,7 @@ class MyApp extends StatelessWidget {
 
           // TEMA OSCURO
           darkTheme: ThemeData(
+            useMaterial3: true,
             brightness: Brightness.dark,
             scaffoldBackgroundColor: AppColors.darkBackground,
             colorScheme: const ColorScheme.dark(
@@ -98,13 +106,14 @@ class MyApp extends StatelessWidget {
               outlineVariant: AppColors.darkOutlineVariant,
               surfaceContainer: AppColors.darkSurfaceContainer,
             ),
-            cardTheme: CardThemeData(
+            cardTheme: const CardThemeData(
               color: AppColors.darkSurface,
               elevation: 0,
             ),
             iconTheme: const IconThemeData(color: AppColors.darkIcon),
           ),
-          home: MainScreen(),
+
+          home: const MainScreen(),
         );
       },
     );

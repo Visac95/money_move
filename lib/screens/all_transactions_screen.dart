@@ -61,7 +61,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                               context,
                             ).getActualFilterString(context),
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -80,6 +80,10 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                       itemBuilder: (BuildContext context) =>
                           <PopupMenuEntry<String>>[
                             PopupMenuItem<String>(
+                              value: "all",
+                              child: Text(strings.todoText),
+                            ),
+                            PopupMenuItem<String>(
                               value: "today",
                               child: Text(strings.hoyText),
                             ),
@@ -94,10 +98,6 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                             PopupMenuItem<String>(
                               value: "year",
                               child: Text(strings.thisYearText),
-                            ),
-                            PopupMenuItem<String>(
-                              value: "all",
-                              child: Text(strings.todoText),
                             ),
                           ],
                     ),

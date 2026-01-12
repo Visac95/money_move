@@ -9,7 +9,7 @@ class AiCategoryProvider extends ChangeNotifier {
   String? get manualCategory => _manualCategory;
   set manualCategory(String? value) {
     _manualCategory = value;
-    notifyListeners(); // Notificamos el cambio
+    notifyListeners(); 
   }
   // Estado de carga (para mostrar un Spinner)
   bool _isLoading = true;
@@ -21,7 +21,7 @@ class AiCategoryProvider extends ChangeNotifier {
 
   // --- FUNCIÓN PRINCIPAL ---
   Future<void> requestClassification(String title) async {
-    if (_manualCategory != null) return;
+    //if (_manualCategory != null) return;
     if (title.trim().isEmpty) {
       _suggestedCategory = 'manual_category';
       return;
