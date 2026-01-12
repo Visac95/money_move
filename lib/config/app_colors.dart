@@ -30,5 +30,5 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFF9CA3AF); // Gris claro
   static const Color darkIcon = Color(0xFFF3F4F6);
   static const Color darkOutlineVariant = Color.fromARGB(174, 92, 92, 92);
-  static const Color darkSurfaceContainer = Color.fromARGB(255, 38, 38, 38);
+  static const Color darkSurfaceContainer = Color.fromARGB(255, 32, 32, 32);
 }

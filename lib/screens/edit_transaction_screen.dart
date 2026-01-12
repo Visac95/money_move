@@ -35,16 +35,11 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     amountController.text = widget.transaction.monto.toStringAsFixed(2);
     descriptionController.text = widget.transaction.description;
 
-    // 2. Listener para IA (Por si el usuario borra la categoría manual y escribe algo nuevo)
     titleController.addListener(_classifyTitle);
 
-    // 3. PRE-CARGA DE CATEGORÍA EXISTENTE
-    // Usamos addPostFrameCallback para interactuar con el Provider después del primer build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-        // Marcamos la categoría existente como MANUAL.
-        // Esto hace que el botón aparezca VERDE y la IA no la toque.
         aiProvider.manualCategory = widget.transaction.categoria;
       }
     });
@@ -52,13 +47,8 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   @override
   void dispose() {
-    // IMPORTANTE: Limpiar el provider al salir para que no afecte a otras pantallas
-    // Lo hacemos en un microtask para asegurar que no choque con el unmount
     Future.microtask(() {
-       // Verificamos mounted o contexto si es necesario, pero aquí solo limpiamos recursos estáticos
     });
-    // Nota: Es mejor limpiar el provider en el onSave o al salir explícitamente. 
-    // Aquí solo limpiamos controllers.
     debounce?.cancel();
     titleController.dispose();
     amountController.dispose();

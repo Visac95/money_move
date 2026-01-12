@@ -6,6 +6,7 @@ import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
 import 'package:money_move/screens/settings_screen.dart';
+import 'package:money_move/screens/stadistic_screen.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screens = const [
     HomeScreen(),
     AllTransactionsScreen(),
+    StadisticScreen(),
     AllDeudasScreen(),
     SettingsScreen()
   ];
@@ -31,7 +33,6 @@ class _MainScreenState extends State<MainScreen> {
     
     final l10n = AppLocalizations.of(context)!;
     
-    // Acceso al tema actual para los colores de la barra
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -61,6 +62,10 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navigationTextTransactions
           ),
           BottomNavigationBarItem(
+            icon: const Icon(Icons.bar_chart), 
+            label: l10n.stadisticText
+          ),
+          BottomNavigationBarItem(
             icon: const Icon(Icons.receipt_long), 
             label: l10n.navigationTextDeudas
           ),
@@ -68,6 +73,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: const Icon(Icons.settings), 
             label: l10n.settingsTitle
           ),
+          
         ],
       ),
     );

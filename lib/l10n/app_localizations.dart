@@ -823,6 +823,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'General'**
   String get generalText;
+
+  /// No description provided for @stadisticText.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get stadisticText;
 }
 
 class _AppLocalizationsDelegate

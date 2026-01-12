@@ -19,14 +19,13 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // Opcional: Si quieres la AppBar transparente como en la otra pantalla
         backgroundColor: Colors.transparent,
         elevation: 0,
 
         title: Text(
           AppLocalizations.of(context)!.appTitle,
           style: TextStyle(
-            color: colorScheme.onSurface, // Texto Negro (Día) / Blanco (Noche)
+            color: colorScheme.onSurface, 
             fontWeight: FontWeight.bold,
           ),
         ),

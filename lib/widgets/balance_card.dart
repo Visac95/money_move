@@ -91,8 +91,8 @@ class BalanceCard extends StatelessWidget {
                 // B. EL BOTÓN (En la esquina)
                 withFilterButton
                     ? Positioned(
-                        top: 5,
-                        right: 5,
+                        top: 10,
+                        right: 10,
                         child: PopupMenuButton(
                           // Le quitamos el padding por defecto para que no ocupe espacio extra invisible
                           padding: EdgeInsets.zero,

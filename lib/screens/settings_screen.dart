@@ -64,11 +64,10 @@ class SettingsScreen extends StatelessWidget {
             _SectionHeader(title: strings.pantallaText, icon: Icons.palette_outlined),
 
             Card(
-              // Una tarjeta suave para agrupar opciones se ve más moderno
               elevation: 0,
               color: Theme.of(
                 context,
-              ).colorScheme.surfaceContainer, // Color suave de fondo
+              ).colorScheme.surfaceContainer,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

@@ -374,4 +374,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get generalText => 'General';
+
+  @override
+  String get stadisticText => 'Statistics';
 }
