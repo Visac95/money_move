@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
 import 'package:money_move/providers/locale_provider.dart';
@@ -61,13 +62,14 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // --- SECCIÓN PANTALLA ---
-            _SectionHeader(title: strings.pantallaText, icon: Icons.palette_outlined),
+            _SectionHeader(
+              title: strings.pantallaText,
+              icon: Icons.palette_outlined,
+            ),
 
             Card(
               elevation: 0,
-              color: Theme.of(
-                context,
-              ).colorScheme.surfaceContainer,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -87,6 +89,32 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                 ],
+              ),
+            ),
+
+            // En SettingsScreen, dentro del Column, al final
+            const SizedBox(height: 30), // Un poco de espacio
+            Center(
+              child: TextButton.icon(
+                onPressed: () {
+                  // Llamamos a la función sembradora
+                  Provider.of<TransactionProvider>(
+                    context,
+                    listen: false,
+                  ).generateMockData();
+
+                  // Feedback visual (opcional)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('¡Datos de prueba inyectados! 💉'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.bug_report, color: Colors.grey),
+                label: const Text(
+                  "Generar Datos de Prueba",
+                  style: TextStyle(color: Colors.grey),
+                ),
               ),
             ),
           ],

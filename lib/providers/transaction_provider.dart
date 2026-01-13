@@ -67,7 +67,7 @@ class TransactionProvider extends ChangeNotifier {
 
   double get saldoActual => totalIngresos - totalEgresos;
 
-  double getSaldoTransaction(Transaction t){
+  double getSaldoTransaction(Transaction t) {
     if (t.isExpense) {
       return t.saldo - t.monto;
     }
@@ -129,7 +129,9 @@ class TransactionProvider extends ChangeNotifier {
           .toList();
     }
     if (_filtroActual == "year") {
-      return catFiltered(_transactions).where((tx) => tx.fecha.year == now.year).toList();
+      return catFiltered(
+        _transactions,
+      ).where((tx) => tx.fecha.year == now.year).toList();
     }
     if (_filtroActual == "week") {
       return catFiltered(_transactions).where((tx) {
@@ -163,6 +165,7 @@ class TransactionProvider extends ChangeNotifier {
     }
     return st.todoText;
   }
+
   //____GETTERS FILTROS________
   // Getter de ingresos
   double get filteredIngresos {
@@ -199,10 +202,107 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   //---------Filtro de categorias-----------
-  List<Transaction> catFiltered (List<Transaction> list) {
+  List<Transaction> catFiltered(List<Transaction> list) {
     if (_catFiltroActual != "all") {
-      return _transactions.where((t)=> t.categoria == _catFiltroActual ).toList();
+      return _transactions
+          .where((t) => t.categoria == _catFiltroActual)
+          .toList();
     }
     return _transactions;
+  }
+
+  // Dentro de la clase TransactionProvider...
+
+  void generateMockData() {
+    final now = DateTime.now();
+
+    // Lista de datos falsos ajustada a TU modelo
+    final List<Transaction> mockTransactions = [
+      // --- HOY ---
+      Transaction(
+        id: 'mock_1',
+        title: 'Diseño Freelance',
+        description: 'Pago por diseño de logo',
+        monto: 150.00,
+        saldo: 5150.00, // Simulamos un saldo acumulado
+        fecha: now,
+        isExpense: false, // Es un INGRESO
+        categoria: 'cat_job',
+      ),
+      Transaction(
+        id: 'mock_2',
+        title: 'Starbucks',
+        description: 'Café y Bagel',
+        monto: 12.50,
+        saldo: 5137.50,
+        fecha: now,
+        isExpense: true, // Es un GASTO
+        categoria: 'cat_home',
+      ),
+
+      // --- AYER ---
+      Transaction(
+        id: 'mock_3',
+        title: 'Supermercado',
+        description: 'Compras de la semana',
+        monto: 85.00,
+        saldo: 5052.50,
+        fecha: now.subtract(const Duration(days: 1)),
+        isExpense: true,
+        categoria: 'cat_pet',
+      ),
+
+      // --- HACE 2 DÍAS ---
+      Transaction(
+        id: 'mock_4',
+        title: 'Venta de Garage',
+        description: 'Vendí la bici vieja',
+        monto: 200.00,
+        saldo: 5252.50,
+        fecha: now.subtract(const Duration(days: 2)),
+        isExpense: false, // INGRESO
+        categoria: 'cat_pet',
+      ),
+      Transaction(
+        id: 'mock_5',
+        title: 'Gasolina',
+        description: 'Tanque lleno',
+        monto: 40.00,
+        saldo: 5212.50,
+        fecha: now.subtract(const Duration(days: 3)),
+        isExpense: true,
+        categoria: 'cat_pet',
+      ),
+
+      // --- HACE 4 DÍAS ---
+      Transaction(
+        id: 'mock_6',
+        title: 'Cena con amigos',
+        description: 'Pizzas y bebidas',
+        monto: 120.00,
+        saldo: 5092.50,
+        fecha: now.subtract(const Duration(days: 4)),
+        isExpense: true,
+        categoria: 'cat_pet',
+      ),
+
+      // --- HACE 6 DÍAS ---
+      Transaction(
+        id: 'mock_7',
+        title: 'Spotify',
+        description: 'Suscripción mensual',
+        monto: 15.00,
+        saldo: 5077.50,
+        fecha: now.subtract(const Duration(days: 6)),
+        isExpense: false,
+        categoria: 'cat_pet',
+      ),
+    ];
+
+    // Agregamos todo a la lista existente
+    _transactions.addAll(mockTransactions);
+
+    // Avisamos a los gráficos
+    notifyListeners();
   }
 }
