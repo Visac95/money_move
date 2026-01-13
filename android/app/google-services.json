@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "601199941384",
+    "project_id": "moneymove-6916c",
+    "storage_bucket": "moneymove-6916c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601199941384:android:fcdf9472a5680f0ee0febd",
+        "android_client_info": {
+          "package_name": "com.example.money_move"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601199941384-v3ojiu5kfvntirr3321io350rioh37m1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.money_move",
+            "certificate_hash": "f312754171745e7d3421c0ac20ea93ea4da20aff"
+          }
+        },
+        {
+          "client_id": "601199941384-93hlg5sfb08e4mndcsmo1862t1bktutc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvq7HyM9bvbnck55JB2JHwSVxA9D5wh3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601199941384-93hlg5sfb08e4mndcsmo1862t1bktutc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "601199941384-rhb7bl9i869d0asdqgfinvnrhn5r8v04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.moneyMove"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
