@@ -121,5 +121,17 @@
     "languageText": "Idioma",
     "pantallaText": "Pantalla",
     "generalText": "General",
-    "stadisticText": "Estadísticas"
+    "stadisticText": "Estadísticas",
+    "savingRateText": "Tasa de Ahorro",
+    "wellDoneText": "¡Bien hecho!",
+    "beCarefulText": "Cuidado",
+    "dailyExpenseText": "Gasto Diario",
+    "promedioEstimadoText": "Promedio estimado",
+    "flujoNetoText": "Flujo Neto",
+    "ingresosVsGastosText": "Ingresos - Gastos",
+    "bigerExpensesText": "Mayor Gasto",
+    "saldoEvolutionText": "Evolución del Saldo",
+    "cashFlowText": "Flujo de Caja",
+    "categoryExpencesText": "Gastos por Categoría",
+    "noExpensesThisPeriodText": "Sin gastos en este periodo"
 }

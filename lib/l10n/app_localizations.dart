@@ -829,6 +829,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Statistics'**
   String get stadisticText;
+
+  /// No description provided for @savingRateText.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Rate'**
+  String get savingRateText;
+
+  /// No description provided for @wellDoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done!'**
+  String get wellDoneText;
+
+  /// No description provided for @beCarefulText.
+  ///
+  /// In en, this message translates to:
+  /// **'Be careful'**
+  String get beCarefulText;
+
+  /// No description provided for @dailyExpenseText.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Spend'**
+  String get dailyExpenseText;
+
+  /// No description provided for @promedioEstimadoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. average'**
+  String get promedioEstimadoText;
+
+  /// No description provided for @flujoNetoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Balance'**
+  String get flujoNetoText;
+
+  /// No description provided for @ingresosVsGastosText.
+  ///
+  /// In en, this message translates to:
+  /// **'Income - Expenses'**
+  String get ingresosVsGastosText;
+
+  /// No description provided for @bigerExpensesText.
+  ///
+  /// In en, this message translates to:
+  /// **'Largest Expense'**
+  String get bigerExpensesText;
+
+  /// No description provided for @saldoEvolutionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Evolution'**
+  String get saldoEvolutionText;
+
+  /// No description provided for @cashFlowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Flow'**
+  String get cashFlowText;
+
+  /// No description provided for @categoryExpencesText.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses by Category'**
+  String get categoryExpencesText;
+
+  /// No description provided for @noExpensesThisPeriodText.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses in this period'**
+  String get noExpensesThisPeriodText;
 }
 
 class _AppLocalizationsDelegate

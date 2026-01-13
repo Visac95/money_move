@@ -121,5 +121,17 @@
     "languageText": "Language",
     "pantallaText": "Screen",
     "generalText": "General",
-    "stadisticText": "Statistics"
+    "stadisticText": "Statistics",
+    "savingRateText": "Savings Rate",
+    "wellDoneText": "Well done!",
+    "beCarefulText": "Be careful",
+    "dailyExpenseText": "Daily Spend",
+    "promedioEstimadoText": "Est. average",
+    "flujoNetoText": "Net Balance",
+    "ingresosVsGastosText": "Income - Expenses",
+    "bigerExpensesText": "Largest Expense",
+    "saldoEvolutionText": "Balance Evolution",
+    "cashFlowText": "Cash Flow",
+    "categoryExpencesText": "Expenses by Category",
+    "noExpensesThisPeriodText": "No expenses in this period"
 }

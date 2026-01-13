@@ -378,4 +378,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get stadisticText => 'Estadísticas';
+
+  @override
+  String get savingRateText => 'Tasa de Ahorro';
+
+  @override
+  String get wellDoneText => '¡Bien hecho!';
+
+  @override
+  String get beCarefulText => 'Cuidado';
+
+  @override
+  String get dailyExpenseText => 'Gasto Diario';
+
+  @override
+  String get promedioEstimadoText => 'Promedio estimado';
+
+  @override
+  String get flujoNetoText => 'Flujo Neto';
+
+  @override
+  String get ingresosVsGastosText => 'Ingresos - Gastos';
+
+  @override
+  String get bigerExpensesText => 'Mayor Gasto';
+
+  @override
+  String get saldoEvolutionText => 'Evolución del Saldo';
+
+  @override
+  String get cashFlowText => 'Flujo de Caja';
+
+  @override
+  String get categoryExpencesText => 'Gastos por Categoría';
+
+  @override
+  String get noExpensesThisPeriodText => 'Sin gastos en este periodo';
 }

@@ -377,4 +377,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stadisticText => 'Statistics';
+
+  @override
+  String get savingRateText => 'Savings Rate';
+
+  @override
+  String get wellDoneText => 'Well done!';
+
+  @override
+  String get beCarefulText => 'Be careful';
+
+  @override
+  String get dailyExpenseText => 'Daily Spend';
+
+  @override
+  String get promedioEstimadoText => 'Est. average';
+
+  @override
+  String get flujoNetoText => 'Net Balance';
+
+  @override
+  String get ingresosVsGastosText => 'Income - Expenses';
+
+  @override
+  String get bigerExpensesText => 'Largest Expense';
+
+  @override
+  String get saldoEvolutionText => 'Balance Evolution';
+
+  @override
+  String get cashFlowText => 'Cash Flow';
+
+  @override
+  String get categoryExpencesText => 'Expenses by Category';
+
+  @override
+  String get noExpensesThisPeriodText => 'No expenses in this period';
 }
