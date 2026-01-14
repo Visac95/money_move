@@ -139,6 +139,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       pagada: false,
     );
 
+    if (!mounted) return;
     deudaProvider.addDeuda(nuevaDeuda, transProvider, context, AppLocalizations.of(context)!, generateAutoTransaction);
 
     if (mounted) {

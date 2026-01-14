@@ -103,8 +103,9 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
                         ),
                       ],
                       onChanged: (value) {
-                        if (value != null)
+                        if (value != null) {
                           setState(() => _selectedRange = value);
+                        }
                       },
                     ),
                   ),

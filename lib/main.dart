@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:money_move/firebase_options.dart';
+import 'package:money_move/services/auth_gate.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_move/config/app_colors.dart';
@@ -9,11 +12,15 @@ import 'package:money_move/providers/locale_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
-import 'package:money_move/providers/settings_provider.dart'; // <--- 1. IMPORTA TU NUEVO ARCHIVO
-import 'package:money_move/screens/main_screen.dart';
+import 'package:money_move/providers/settings_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await initializeDateFormatting('es', null);
 
   final localeProvider = LocaleProvider();
@@ -113,7 +120,7 @@ class MyApp extends StatelessWidget {
             iconTheme: const IconThemeData(color: AppColors.darkIcon),
           ),
 
-          home: const MainScreen(),
+          home: const AuthGate(),
         );
       },
     );
