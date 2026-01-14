@@ -22,7 +22,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   @override
   void initState() {
     super.initState();
-    Provider.of<DeudaProvider>(context, listen: false).loadDeudas();
+    Provider.of<DeudaProvider>(context, listen: false).initSubscription();
   }
 
   @override

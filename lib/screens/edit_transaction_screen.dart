@@ -107,7 +107,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     }
     
     // 4. ACTUALIZAR
-    final Transaction transactionActualizada = widget.transaction.update(
+    final Transaction transactionActualizada = Transaction(
+      fecha: widget.transaction.fecha,
+      userId: widget.transaction.userId,
+      saldo: widget.transaction.saldo,
       title: titleController.text,
       monto: enteredAmount,
       description: descriptionController.text,

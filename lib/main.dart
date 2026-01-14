@@ -30,7 +30,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => TransactionProvider()..loadTransactions(),
+          create: (_) => TransactionProvider(),
         ),
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),

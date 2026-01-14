@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
@@ -126,6 +127,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
 
     const uuid = Uuid();
     final nuevaDeuda = Deuda(
+      userId: FirebaseAuth.instance.currentUser!.uid,
       id: uuid.v4(),
       title: titleController.text,
       description: descriptionController.text,

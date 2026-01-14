@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
@@ -111,6 +112,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     // Usamos las variables locales que ya capturamos, sin volver a llamar al context
     transactionProvider.addTransaction(
       Transaction(
+        userId: FirebaseAuth.instance.currentUser!.uid,
         title: titleController.text,
         description: descriptionController.text,
         monto: enteredAmount,

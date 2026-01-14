@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
@@ -17,6 +19,17 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  @override
+  void initState(){
+    super.initState();
+    // ESTO ES LO NUEVO:
+    // Esperamos a que la pantalla se dibuje (addPostFrameCallback) y luego pedimos los datos
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TransactionProvider>(context, listen: false).initSubscription();
+      Provider.of<DeudaProvider>(context, listen: false).initSubscription();
+    });
+  }
   // Lista de pantallas
   final List<Widget> screens = const [
     HomeScreen(),

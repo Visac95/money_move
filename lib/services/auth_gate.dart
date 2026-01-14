@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/login_screen.dart';
-import 'package:money_move/screens/main_screen.dart'; 
+import 'package:money_move/screens/main_screen.dart';
+import 'package:provider/provider.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -23,13 +26,19 @@ class AuthGate extends StatelessWidget {
 
         // Caso B: ¡Tenemos datos! (El usuario está logueado)
         if (snapshot.hasData) {
-          return const MainScreen(); // <--- Pasa al Home
+          Provider.of<TransactionProvider>(
+            context,
+            listen: false,
+          ).initSubscription();
+          Provider.of<DeudaProvider>(context, listen: false).initSubscription();
+          return const MainScreen();
+          // <--- Pasa al Home
         }
 
         // Caso C: No hay datos (El usuario no está logueado)
         // Como aún no tenemos LoginScreen, por ahora pondremos un "Placeholder"
         // para que no te de error el código.
-        return const LoginScreen(); 
+        return const LoginScreen();
         // <--- Usaremos esto luego
       },
     );

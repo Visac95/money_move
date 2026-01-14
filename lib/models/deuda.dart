@@ -4,6 +4,7 @@ const uuid = Uuid();
 
 class Deuda {
   final String id;
+  final String userId; // <--- 1. NUEVO: Seguridad (Dueño de la deuda)
   final String title;
   final String description;
   final double monto;
@@ -12,11 +13,12 @@ class Deuda {
   final DateTime fechaInicio;
   final DateTime fechaLimite;
   final String categoria;
-  final bool debo; // true = Gasto, false = Ingreso
+  final bool debo; 
   bool pagada;
 
   Deuda({
     String? id,
+    required this.userId, // <--- Requerido
     required this.title,
     required this.description,
     required this.monto,
@@ -29,37 +31,42 @@ class Deuda {
     required this.abono,
   }) : id = id ?? uuid.v4();
 
+  // TO MAP (Subir a la nube)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'userId': userId, // <--- Guardamos dueño
       'title': title,
       'description': description,
       'monto': monto,
-      "involucrado": involucrado,
-      "abono": abono,
-      // SQLite no guarda fechas, las guardamos como texto
-      "fechaInicio": fechaInicio.toIso8601String(),
+      'involucrado': involucrado,
+      'abono': abono,
+      'fechaInicio': fechaInicio.toIso8601String(),
       'fechaLimite': fechaLimite.toIso8601String(),
       'categoria': categoria,
-      // SQLite no tiene bool, guardamos 1 o 0
-      'debo': debo ? 1 : 0,
-      "pagada": pagada ? 1 : 0,
+      'debo': debo,     // Firebase acepta booleanos directos
+      'pagada': pagada, 
     };
   }
 
+  // FROM MAP (Bajar de la nube)
   factory Deuda.fromMap(Map<String, dynamic> map) {
     return Deuda(
       id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      monto: map['monto'],
-      involucrado: map["involucrado"],
-      abono: map["abono"],
+      userId: map['userId'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      // Protección: Si Firebase devuelve int, lo forzamos a double
+      monto: (map['monto'] ?? 0).toDouble(), 
+      involucrado: map["involucrado"] ?? '',
+      abono: (map["abono"] ?? 0).toDouble(),
       fechaInicio: DateTime.parse(map['fechaInicio']),
       fechaLimite: DateTime.parse(map['fechaLimite']),
-      categoria: map['categoria'],
-      debo: map['debo'] == 1, // Si es 1 es true, si es 0 es false
-      pagada: map["pagada"] == 1,
+      categoria: map['categoria'] ?? 'General',
+      
+      // Híbrido: Lee bien si es 1/0 (viejo) o true/false (nuevo)
+      debo: map['debo'] is int ? (map['debo'] == 1) : map['debo'],
+      pagada: map["pagada"] is int ? (map["pagada"] == 1) : map["pagada"],
     );
   }
 
@@ -77,6 +84,7 @@ class Deuda {
   }) {
     return Deuda(
       id: id,
+      userId: userId, // Mantenemos el mismo userId
       title: title ?? this.title,
       description: description ?? this.description,
       monto: monto ?? this.monto,
