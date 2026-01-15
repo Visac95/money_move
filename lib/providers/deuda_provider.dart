@@ -6,7 +6,6 @@ import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/services/database_service.dart';
-// BORRADO: import 'package:money_move/services/database_helper.dart';
 
 class DeudaProvider extends ChangeNotifier {
   List<Deuda> _deudas = [];
@@ -62,7 +61,6 @@ class DeudaProvider extends ChangeNotifier {
         ),
       );
     }
-    // No necesitamos notifyListeners(), el Stream lo hace solo.
   }
 
   // 3. BORRAR

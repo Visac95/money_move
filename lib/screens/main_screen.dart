@@ -25,9 +25,15 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     // ESTO ES LO NUEVO:
     // Esperamos a que la pantalla se dibuje (addPostFrameCallback) y luego pedimos los datos
+    // ESTO ES EL INTERRUPTOR DE ENCENDIDO 👇
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<TransactionProvider>(context, listen: false).initSubscription();
-      Provider.of<DeudaProvider>(context, listen: false).initSubscription();
+      // 1. Encendemos Transacciones
+      final txProv = Provider.of<TransactionProvider>(context, listen: false);
+      txProv.initSubscription();
+
+      // 2. Encendemos Deudas (de paso)
+      final deudaProv = Provider.of<DeudaProvider>(context, listen: false);
+      deudaProv.initSubscription();
     });
   }
   // Lista de pantallas

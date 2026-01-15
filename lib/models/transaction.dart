@@ -4,7 +4,7 @@ const uuid = Uuid();
 
 class Transaction {
   final String id;
-  final String userId; // <--- 1. NUEVO: Vital para seguridad en la nube
+  final String userId;
   final String title;
   final String description;
   final double monto;
@@ -16,7 +16,7 @@ class Transaction {
 
   Transaction({
     String? id,
-    required this.userId, // <--- Requerido ahora
+    required this.userId,
     required this.title,
     required this.description,
     required this.monto,
@@ -25,48 +25,54 @@ class Transaction {
     required this.categoria,
     required this.isExpense,
     this.deudaAsociada,
-  }) : id = id ?? uuid.v4(); // Mantenemos tu lógica de UUID, ¡es excelente!
+  }) : id = id ?? uuid.v4();
 
-  // 1. TO MAP (Para subir a Firebase)
+  // 1. TO MAP (Subir) - Esto estaba bien
   Map<String, dynamic> toMap() {
     return {
-      // 'id': id,  <-- OJO: En Firestore, el ID suele ir como nombre del documento, no dentro. 
-      // Pero si quieres guardarlo dentro también por seguridad, déjalo.
-      'id': id, 
-      'userId': userId, // <--- Guardamos a quién pertenece
+      'id': id,
+      'userId': userId,
       'title': title,
       'description': description,
       'monto': monto,
       'saldo': saldo,
       'fecha': fecha.toIso8601String(),
       'categoria': categoria,
-      
-      // CAMBIO RECOMENDADO: Firestore acepta booleanos nativos.
-      // Ya no necesitas convertir a 1 o 0.
-      'isExpense': isExpense, 
-      
+      'isExpense': isExpense,
       'deudaAsociada': deudaAsociada,
     };
   }
 
-  // 2. FROM MAP (Para bajar de Firebase)
+  // 2. FROM MAP (Bajar) - AQUÍ ESTÁ LA MEJORA BLINDADA 🛡️
   factory Transaction.fromMap(Map<String, dynamic> map) {
     return Transaction(
-      id: map['id'], // Ojo aquí (ver nota abajo)
-      userId: map['userId'] ?? '', // Prevención de nulos
-      title: map['title'] ?? '',
+      id: map['id'] ?? '', // Protección si viene null
+      userId: map['userId'] ?? '',
+      title: map['title'] ?? 'Sin título',
       description: map['description'] ?? '',
-      monto: (map['monto'] ?? 0).toDouble(), // Firebase a veces devuelve int, forzamos double
-      saldo: (map['saldo'] ?? 0).toDouble(),
-      fecha: DateTime.parse(map['fecha']),
+      
+      // Protección numérica robusta
+      monto: (map['monto'] is int) 
+          ? (map['monto'] as int).toDouble() 
+          : (map['monto'] ?? 0.0).toDouble(),
+          
+      saldo: (map['saldo'] is int) 
+          ? (map['saldo'] as int).toDouble() 
+          : (map['saldo'] ?? 0.0).toDouble(),
+
+      // --- CORRECCIÓN CRÍTICA DE FECHA ---
+      // Usamos tryParse para que no crashee si la fecha está corrupta
+      fecha: map['fecha'] != null 
+          ? DateTime.tryParse(map['fecha'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      // -----------------------------------
+
       categoria: map['categoria'] ?? 'General',
       
-      // ADAPTACIÓN HÍBRIDA:
-      // Esto hace que tu app lea bien SI ES un booleano (Firebase)
-      // O SI ES un entero (tu base de datos vieja SQLite si la tienes)
+      // Protección Booleana
       isExpense: map['isExpense'] is int 
           ? (map['isExpense'] == 1) 
-          : map['isExpense'], 
+          : (map['isExpense'] ?? true), // Default a gasto por seguridad
           
       deudaAsociada: map['deudaAsociada'] as String?,
     );

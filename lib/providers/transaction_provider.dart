@@ -3,26 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/services/database_service.dart';
 import '../models/transaction.dart';
-// BORRADO: import '../services/database_helper.dart'; (Ya no lo necesitamos)
 
 class TransactionProvider extends ChangeNotifier {
   List<Transaction> _transactions = [];
   final DatabaseService _dbService = DatabaseService();
 
+  // --- 1. AGREGAMOS EL CONSTRUCTOR AQUÍ ---
+  TransactionProvider() {
+    // Esto es magia pura:
+    // Apenas nace el Provider, se pone a vigilar si alguien entra o sale de la app.
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        print("👤 Usuario detectado: ${user.email} -> Iniciando suscripción");
+        initSubscription(); // <--- ¡AQUÍ SE ENCIENDE LA RADIO SOLA!
+      } else {
+        print("👋 Usuario salió -> Limpiando datos");
+        _transactions = []; // Limpiamos datos por seguridad
+        notifyListeners();
+      }
+    });
+  }
+  // ----------------------------------------
+
   List<Transaction> get transactions => _transactions;
 
-  // 1. ESCUCHAR EN TIEMPO REAL (Esto mantiene la lista actualizada siempre)
+  // TU FUNCION ACTUAL (Déjala igual, es correcta)
   void initSubscription() {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      _transactions = []; // Si no hay usuario, limpiamos la lista
-      notifyListeners();
-      return;
-    }
+    if (user == null) return;
 
+    // IMPORTANTE: Cancelar suscripciones viejas si fuera necesario,
+    // pero por ahora esto funcionará bien.
     _dbService.getTransactionsStream(user.uid).listen((event) {
+      print(
+        "🔥 STREAM: Recibidos ${event.length} datos",
+      ); // Debug para ver si funciona
       _transactions = event;
-      notifyListeners(); 
+      notifyListeners();
     });
   }
 
@@ -40,10 +57,6 @@ class TransactionProvider extends ChangeNotifier {
   Future<void> updateTransaction(Transaction updatedTransaction) async {
     // Llamamos a Firebase
     await _dbService.updateTransaction(updatedTransaction);
-    
-    // NOTA: No necesitamos actualizar la lista _transactions manualmente aquí.
-    // Al actualizar en la nube, Firebase dispara el "listen" de arriba
-    // y la lista se actualiza sola mágicamente. ✨
   }
 
   // --- TUS CÁLCULOS Y FILTROS (SE QUEDAN IGUAL) ---
@@ -100,7 +113,7 @@ class TransactionProvider extends ChangeNotifier {
 
   List<Transaction> get transacionesParaMostrar {
     DateTime now = DateTime.now();
-    
+
     // Filtro base por categoría
     List<Transaction> baseList = catFiltered(_transactions);
 
@@ -122,9 +135,7 @@ class TransactionProvider extends ChangeNotifier {
           .toList();
     }
     if (_filtroActual == "year") {
-      return baseList
-          .where((tx) => tx.fecha.year == now.year)
-          .toList();
+      return baseList.where((tx) => tx.fecha.year == now.year).toList();
     }
     if (_filtroActual == "week") {
       return baseList.where((tx) {
@@ -138,7 +149,7 @@ class TransactionProvider extends ChangeNotifier {
             tx.fecha.isAtSameMomentAs(startWeekClean);
       }).toList();
     }
-
+    notifyListeners();
     return baseList.toList();
   }
 

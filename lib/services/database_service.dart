@@ -1,37 +1,47 @@
-import 'package:cloud_firestore/cloud_firestore.dart'
-    hide Transaction; // <--- 1. Import vital
+import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:money_move/models/deuda.dart';
-import 'package:money_move/models/transaction.dart'; // <--- Asegúrate que este nombre coincida con tu archivo del modelo
+import 'package:money_move/models/transaction.dart';
 
 class DatabaseService {
-  // 2. CORRECCIÓN: Es FirebaseFirestore (no FirebaseForees)
   final CollectionReference _transactionsRef = FirebaseFirestore.instance
       .collection('transactions');
 
   // --- AGREGAR ---
   Future<void> addTransaction(Transaction transaction) async {
     try {
-      // 3. MEJORA: Usamos .set() con tu ID local para que coincidan
-      // Así el ID del documento en la nube es igual al ID de tu objeto
+      // Usamos .set para asegurar que el ID del documento sea igual al ID interno
       await _transactionsRef.doc(transaction.id).set(transaction.toMap());
+      print("✅ Transacción guardada en nube: ${transaction.title}");
     } catch (e) {
-      print("Error al guardar: $e ❌");
+      print("❌ Error al guardar: $e");
       rethrow;
     }
   }
 
-  // --- LEER (STREAM) ---
-  // Esta función devuelve un "Río de datos" (Stream)
-  // Cada vez que cambie algo en la nube, esta lista se actualiza sola.
+  // --- LEER (STREAM BLINDADO) ---
   Stream<List<Transaction>> getTransactionsStream(String userId) {
+    print("📡 Suscribiendo a transacciones para usuario: $userId");
+
     return _transactionsRef
-        .where('userId', isEqualTo: userId) // Solo mis gastos
-        .orderBy('fecha', descending: true) // Los más nuevos primero
-        .snapshots() // <--- Esto abre la conexión en tiempo real
+        .where('userId', isEqualTo: userId)
+        .orderBy('fecha', descending: true)
+        .snapshots()
         .map((snapshot) {
+          print(
+            "🔥 CAMBIO DETECTADO: Recibidos ${snapshot.docs.length} documentos",
+          );
+
           return snapshot.docs.map((doc) {
-            // Convertimos el dato crudo de Firebase a tu objeto Transaction
-            return Transaction.fromMap(doc.data() as Map<String, dynamic>);
+            // 1. Obtenemos la data cruda
+            final data = doc.data() as Map<String, dynamic>;
+
+            // 2. TRUCO DE SEGURIDAD:
+            // Sobrescribimos el 'id' con el ID real del documento.
+            // Esto evita errores si el campo 'id' interno se borró o está vacío.
+            data['id'] = doc.id;
+
+            // 3. Convertimos
+            return Transaction.fromMap(data);
           }).toList();
         });
   }
@@ -40,64 +50,61 @@ class DatabaseService {
   Future<void> deleteTransaction(String id) async {
     try {
       await _transactionsRef.doc(id).delete();
-      print("Transacción borrada ✅");
     } catch (e) {
-      print("Error al borrar: $e ❌");
+      print("❌ Error al borrar: $e");
     }
   }
 
+  // --- ACTUALIZAR ---
   Future<void> updateTransaction(Transaction transaction) async {
     try {
-      // .update() solo cambia los campos que le pases, no borra el documento
       await _transactionsRef.doc(transaction.id).update(transaction.toMap());
-      print("Transacción actualizada ✅");
     } catch (e) {
-      print("Error al actualizar: $e ❌");
+      print("❌ Error al actualizar: $e");
       rethrow;
     }
   }
 
   // ==========================================
-  // SECCIÓN DE DEUDAS (CORREGIDA)
+  // SECCIÓN DE DEUDAS
   // ==========================================
 
   final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
     'deudas',
   );
 
-  // 1. AGREGAR
   Future<void> addDeuda(Deuda deuda) async {
     try {
       await _deudasRef.doc(deuda.id).set(deuda.toMap());
     } catch (e) {
-      print("Error al guardar deuda: $e ❌");
+      print("❌ Error al guardar deuda: $e");
       rethrow;
     }
   }
 
-  // 2. LEER (STREAM TIPEADO)
   Stream<List<Deuda>> getDeudasStream(String userId) {
     return _deudasRef
         .where('userId', isEqualTo: userId)
-        .snapshots() // Tiempo real
+        // .orderBy('fechaLimite') // Ojo: Si activas esto, necesitarás otro Índice
+        .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
-            return Deuda.fromMap(doc.data() as Map<String, dynamic>);
+            final data = doc.data() as Map<String, dynamic>;
+            data['id'] = doc.id; // Mismo truco de seguridad para deudas
+            return Deuda.fromMap(data);
           }).toList();
         });
   }
 
-  // 3. ACTUALIZAR
   Future<void> updateDeuda(Deuda deuda) async {
     try {
       await _deudasRef.doc(deuda.id).update(deuda.toMap());
     } catch (e) {
-      print("Error al actualizar deuda: $e ❌");
+      print("❌ Error al actualizar deuda: $e");
       rethrow;
     }
   }
 
-  // 4. BORRAR
   Future<void> deleteDeuda(String id) async {
     await _deudasRef.doc(id).delete();
   }

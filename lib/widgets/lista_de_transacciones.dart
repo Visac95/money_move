@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/models/transaction.dart'; // Asegúrate de importar tu modelo
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/screens/ver_transaction_screen.dart';
@@ -9,42 +10,53 @@ import 'package:money_move/utils/date_formater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
-class ListaDeTransacciones extends StatelessWidget {
+class ListaDeTransacciones extends StatefulWidget {
   const ListaDeTransacciones({super.key});
 
   @override
+  State<ListaDeTransacciones> createState() => _ListaDeTransaccionesState();
+}
+
+class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TransactionProvider>(context, listen: false).initSubscription();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TransactionProvider>(context);
-    final lista = provider.transacionesParaMostrar;
-    final colorScheme = Theme.of(context).colorScheme;
+        
+        final provider = Provider.of<TransactionProvider>(context, );
+        final lista = provider.transacionesParaMostrar;
+        final colorScheme = Theme.of(context).colorScheme;
 
-    if (lista.isEmpty) {
-      return SizedBox(
-        height: 300, // Altura mínima para que se vea el mensaje
-        child: _buildEmptyState(context, colorScheme),
-      );
-    }
+        // A. SI ESTÁ VACÍA
+        if (lista.isEmpty) {
+          return SizedBox(
+            height: 300,
+            child: _buildEmptyState(context, colorScheme),
+          );
+        }
+        return ListView.separated(
+          // shrinkWrap + physics: Truco para que funcione dentro del Home sin scroll doble
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
+          itemCount: lista.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 15),
+          itemBuilder: (context, index) {
+            final transaction = lista[index];
+            return _TransactionCard(transaction: transaction);
+          },
+        );
+      }
+    
 
-    // --- CORRECCIÓN PRINCIPAL ---
-    // Quitamos el 'Expanded' que suele romper la pantalla si hay ScrollView padre.
-    return ListView.separated(
-      // shrinkWrap: true hace que la lista ocupe solo lo que necesitan sus items
-      shrinkWrap: true,
-      // NeverScrollableScrollPhysics hace que esta lista no tenga su propio scroll,
-      // sino que se mueva con la pantalla principal.
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
-      itemCount: lista.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 15),
-      itemBuilder: (context, index) {
-        final transaction = lista[index];
-        return _TransactionCard(transaction: transaction);
-      },
-    );
+    // 2. LISTA DE DATOS
   }
 
   Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
-    // (Tu código del EmptyState estaba perfecto, lo dejo igual pero resumido aquí)
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -79,10 +91,10 @@ class ListaDeTransacciones extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class _TransactionCard extends StatelessWidget {
-  final dynamic transaction;
+  final Transaction transaction; // Usamos el tipo fuerte 'Transaction'
 
   const _TransactionCard({required this.transaction});
 
@@ -91,15 +103,23 @@ class _TransactionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    final provider = Provider.of<TransactionProvider>(context);
+    final provider = Provider.of<TransactionProvider>(context, listen: false);
 
-    // --- PROTECCIÓN CONTRA NULOS ---
-    // Si por error algo viene nulo, usamos valores por defecto para que NO explote la app
-    final bool isExpense = transaction.isExpense ?? true;
+    // --- VARIABLES SEGURAS ---
+    final bool isExpense = transaction.isExpense;
     final Color amountColor = isExpense ? AppColors.expense : AppColors.income;
-    final double amount = transaction.monto ?? 0.0;
-    final String title = transaction.title ?? "Sin título";
-    final String category = transaction.categoria ?? "cat_other";
+    final double amount = transaction.monto;
+    final String title = transaction.title;
+    final String category = transaction.categoria;
+
+    // Calculamos el saldo acumulado (protegido contra errores)
+    String saldoText = "---";
+    try {
+      double saldoCalculado = provider.getSaldoTransaction(transaction);
+      saldoText = "\$${saldoCalculado.toStringAsFixed(2)}";
+    } catch (e) {
+      saldoText = "\$${transaction.saldo.toStringAsFixed(2)}";
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -109,7 +129,7 @@ class _TransactionCard extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
+                  color: Colors.grey.withOpacity(0.1),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -124,9 +144,9 @@ class _TransactionCard extends StatelessWidget {
               builder: (context) => VerTransactionScreen(
                 id: transaction.id,
                 title: title,
-                description: transaction.description ?? "",
+                description: transaction.description,
                 monto: amount,
-                fecha: transaction.fecha ?? DateTime.now(),
+                fecha: transaction.fecha,
                 categoria: category,
                 isExpense: isExpense,
               ),
@@ -145,7 +165,6 @@ class _TransactionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
-                    // Usamos la variable 'category' segura que definimos arriba
                     AppConstants.getIconForCategory(category),
                     color: colorScheme.onPrimaryContainer,
                     size: 26,
@@ -179,48 +198,49 @@ class _TransactionCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            formatDate(transaction.fecha ?? DateTime.now()),
+                            formatDate(transaction.fecha),
                             style: TextStyle(
                               color: colorScheme.onSurfaceVariant,
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          
                         ],
                       ),
                     ],
                   ),
                 ),
 
-                // 3. MONTO
+                // 3. MONTO Y SALDO
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       (isExpense ? '- ' : '+ ') + amount.toStringAsFixed(2),
                       style: TextStyle(
                         color: amountColor,
                         fontWeight: FontWeight.w800,
-                        fontSize: 18,
+                        fontSize: 16, // Ajustado un poco para evitar overflow
                       ),
                     ),
-                    SizedBox(height: 2),
-                          Text(
-                            "\$${((provider.getSaldoTransaction(transaction))).toStringAsFixed(2)}",
-                            style: TextStyle(
-                              color: colorScheme.outline,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                    const SizedBox(height: 2),
+                    Text(
+                      saldoText,
+                      style: TextStyle(
+                        color: colorScheme.outline,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
 
-                SizedBox(width: 10),
+                const SizedBox(width: 5), // Espacio reducido
+                // 4. MENÚ
                 SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: _buildPopupMenu(context, colorScheme),
+                  height: 30, // Un poco más grande para facilitar el toque
+                  width: 30,
+                  child: _buildPopupMenu(context, colorScheme, transaction),
                 ),
               ],
             ),
@@ -230,9 +250,11 @@ class _TransactionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPopupMenu(BuildContext context, ColorScheme colorScheme) {
-    // (Tu código del menú estaba bien, solo asegúrate de pasar 'transaction' correctamente)
-    // ... Copia tu menú anterior aquí ...
+  Widget _buildPopupMenu(
+    BuildContext context,
+    ColorScheme colorScheme,
+    Transaction tx,
+  ) {
     return PopupMenuButton(
       padding: EdgeInsets.zero,
       color: colorScheme.surfaceContainer,
@@ -249,14 +271,13 @@ class _TransactionCard extends StatelessWidget {
             Provider.of<TransactionProvider>(
               context,
               listen: false,
-            ).deleteTransaction(transaction.id);
+            ).deleteTransaction(tx.id);
           });
         }
         if (value == "editar") {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  EditTransactionScreen(transaction: transaction),
+              builder: (context) => EditTransactionScreen(transaction: tx),
             ),
           );
         }
