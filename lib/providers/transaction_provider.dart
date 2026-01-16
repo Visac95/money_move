@@ -14,10 +14,10 @@ class TransactionProvider extends ChangeNotifier {
     // Apenas nace el Provider, se pone a vigilar si alguien entra o sale de la app.
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        print("👤 Usuario detectado: ${user.email} -> Iniciando suscripción");
+        //print("👤 Usuario detectado: ${user.email} -> Iniciando suscripción");
         initSubscription(); // <--- ¡AQUÍ SE ENCIENDE LA RADIO SOLA!
       } else {
-        print("👋 Usuario salió -> Limpiando datos");
+        //print("👋 Usuario salió -> Limpiando datos");
         _transactions = []; // Limpiamos datos por seguridad
         notifyListeners();
       }
@@ -35,10 +35,8 @@ class TransactionProvider extends ChangeNotifier {
     // IMPORTANTE: Cancelar suscripciones viejas si fuera necesario,
     // pero por ahora esto funcionará bien.
     _dbService.getTransactionsStream(user.uid).listen((event) {
-      print(
-        "🔥 STREAM: Recibidos ${event.length} datos",
-      ); // Debug para ver si funciona
       _transactions = event;
+      _transactions.sort((b, a) => a.fecha.compareTo(b.fecha));
       notifyListeners();
     });
   }

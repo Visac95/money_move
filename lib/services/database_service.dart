@@ -20,11 +20,8 @@ class DatabaseService {
 
   // --- LEER (STREAM BLINDADO) ---
   Stream<List<Transaction>> getTransactionsStream(String userId) {
-    print("📡 Suscribiendo a transacciones para usuario: $userId");
-
     return _transactionsRef
         .where('userId', isEqualTo: userId)
-        .orderBy('fecha', descending: true)
         .snapshots()
         .map((snapshot) {
           print(
@@ -85,7 +82,6 @@ class DatabaseService {
   Stream<List<Deuda>> getDeudasStream(String userId) {
     return _deudasRef
         .where('userId', isEqualTo: userId)
-        // .orderBy('fechaLimite') // Ojo: Si activas esto, necesitarás otro Índice
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {

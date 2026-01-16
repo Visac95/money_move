@@ -107,21 +107,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     } else {
       nuevoSaldoCalculado = saldoActualDelProvider;
     }
-
+    final nuevaTransaccion = Transaction(
+      userId: FirebaseAuth.instance.currentUser!.uid,
+      title: titleController.text,
+      description: descriptionController.text,
+      monto: enteredAmount,
+      saldo: nuevoSaldoCalculado, // AQUÍ ASIGNAMOS EL VALOR CALCULADO
+      fecha: DateTime.now(),
+      categoria: finalCategory,
+      isExpense: isExpense,
+    );
     // 6. GUARDAR
     // Usamos las variables locales que ya capturamos, sin volver a llamar al context
-    transactionProvider.addTransaction(
-      Transaction(
-        userId: FirebaseAuth.instance.currentUser!.uid,
-        title: titleController.text,
-        description: descriptionController.text,
-        monto: enteredAmount,
-        saldo: nuevoSaldoCalculado, // AQUÍ ASIGNAMOS EL VALOR CALCULADO
-        fecha: DateTime.now(),
-        categoria: finalCategory,
-        isExpense: isExpense,
-      ),
-    );
+    transactionProvider.addTransaction(nuevaTransaccion);
 
     if (mounted) Navigator.of(context).pop();
 

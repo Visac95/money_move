@@ -10,24 +10,13 @@ import 'package:money_move/utils/date_formater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
-class ListaDeTransacciones extends StatefulWidget {
+class ListaDeTransacciones extends StatelessWidget {
   const ListaDeTransacciones({super.key});
 
   @override
-  State<ListaDeTransacciones> createState() => _ListaDeTransaccionesState();
-}
-
-class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<TransactionProvider>(context, listen: false).initSubscription();
-  }
-
-  @override
   Widget build(BuildContext context) {
-        
-        final provider = Provider.of<TransactionProvider>(context, );
+    return Consumer<TransactionProvider>(
+      builder: (context, provider, child) {
         final lista = provider.transacionesParaMostrar;
         final colorScheme = Theme.of(context).colorScheme;
 
@@ -50,8 +39,8 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
             return _TransactionCard(transaction: transaction);
           },
         );
-      }
-    
+      },
+    );
 
     // 2. LISTA DE DATOS
   }
@@ -91,7 +80,7 @@ class _ListaDeTransaccionesState extends State<ListaDeTransacciones> {
       ),
     );
   }
-
+}
 
 class _TransactionCard extends StatelessWidget {
   final Transaction transaction; // Usamos el tipo fuerte 'Transaction'

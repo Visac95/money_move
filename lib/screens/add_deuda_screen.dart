@@ -144,9 +144,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     if (!mounted) return;
     deudaProvider.addDeuda(nuevaDeuda, transProvider, context, AppLocalizations.of(context)!, generateAutoTransaction);
 
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
+    if (mounted) Navigator.of(context).pop();
     aiProvider.resetCategory();
   }
 
