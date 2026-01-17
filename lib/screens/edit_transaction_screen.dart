@@ -111,6 +111,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
     // 4. ACTUALIZAR
     final Transaction transactionActualizada = Transaction(
+      id: widget.transaction.id,
       fecha: widget.transaction.fecha,
       userId: widget.transaction.userId,
       saldo: widget.transaction.saldo,
@@ -119,6 +120,8 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       description: descriptionController.text,
       categoria: finalCategory,
       isExpense: isExpense,
+      // ignore: unnecessary_null_in_if_null_operators
+      deudaAsociada: widget.transaction.deudaAsociada ?? null, 
     );
 
     if (!mounted) return;

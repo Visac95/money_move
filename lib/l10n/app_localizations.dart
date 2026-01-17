@@ -902,6 +902,12 @@ abstract class AppLocalizations {
   /// **'No expenses in this period'**
   String get noExpensesThisPeriodText;
 
+  /// No description provided for @noExpensesText.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses'**
+  String get noExpensesText;
+
   /// No description provided for @noConectionModeText.
   ///
   /// In en, this message translates to:

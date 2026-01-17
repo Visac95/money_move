@@ -7,14 +7,13 @@ class AddTransactionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AddTransactionScreen(),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-      );
+      heroTag: "btn_guardar_transaccion",
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
+        );
+      },
+      child: Icon(Icons.add),
+    );
   }
 }

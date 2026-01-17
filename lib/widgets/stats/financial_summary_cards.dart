@@ -32,7 +32,9 @@ class FinancialSummaryCards extends StatelessWidget {
                 value: "${stats.savingsRate.toStringAsFixed(1)}%",
                 icon: Icons.savings_outlined,
                 color: _getSavingsColor(stats.savingsRate),
-                subtitle: stats.savingsRate > 0 ? strings.wellDoneText : strings.beCarefulText,
+                subtitle: stats.savingsRate > 0
+                    ? strings.wellDoneText
+                    : strings.beCarefulText,
               ),
             ),
             const SizedBox(width: 12),
@@ -65,27 +67,43 @@ class FinancialSummaryCards extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             // TARJETA 4: EL "VAMPIRO" (Gasto más grande)
+            // TARJETA 4: EL "VAMPIRO"
             Expanded(
               child: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => VerTransactionScreen(
-                      id: transaction!.id,
-                      title: transaction.title,
-                      description: transaction.description,
-                      monto: transaction.monto,
-                      fecha: transaction.fecha,
-                      categoria: transaction.categoria,
-                      isExpense: transaction.isExpense,
-                    ),
-                  ),
-                ),
+                onTap: () {
+                  // 1. Buscamos la transacción de forma segura
+                  if (transaction != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => VerTransactionScreen(
+                          id: transaction
+                              .id, // Ya no necesitamos el ! porque validamos arriba
+                          title: transaction.title,
+                          description: transaction.description,
+                          monto: transaction.monto,
+                          fecha: transaction.fecha,
+                          categoria: transaction.categoria,
+                          isExpense: transaction.isExpense,
+                        ),
+                      ),
+                    );
+                  } else {
+                    // 2. Opcional: Mostrar un mensajito si no hay nada que ver
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(strings.noExpensesThisPeriodText),
+                      ),
+                    );
+                  }
+                },
                 child: _StatCard(
                   title: strings.bigerExpensesText,
                   value: "\$${stats.maxExpenseAmount.toStringAsFixed(0)}",
                   icon: Icons.warning_amber_rounded,
                   color: Colors.redAccent,
-                  subtitle: stats.maxExpenseName, // Ej: "Supermercado"
+                  subtitle: stats.maxExpenseAmount > 0
+                      ? stats.maxExpenseName
+                      : strings.noExpensesText, // Texto amigable si está vacío
                 ),
               ),
             ),
@@ -116,7 +134,9 @@ class FinancialSummaryCards extends StatelessWidget {
       if (tx.isExpense) {
         totalExpense += tx.monto;
         // Buscar el gasto más grande
-        if (tx.monto > maxExpense) {
+        if (tx.monto > maxExpense &&
+            tx.fecha.month == DateTime.now().month &&
+            tx.fecha.year == DateTime.now().year) {
           maxExpense = tx.monto;
           maxExpenseName = tx.title;
           maxExpenseId = tx.id;

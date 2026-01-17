@@ -40,24 +40,31 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     super.dispose();
   }
 
-  // --- LÓGICA IA LIMPIA ---
+  // --- LÓGICA IA CORREGIDA ---
   void _classifyTitle() {
-    final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-    aiProvider.resetCategory();
-
-    // 1. REGLA DE ORO: Si el usuario ya eligió manualmente, la IA no hace NADA.
-    if (aiProvider.manualCategory != null) return;
-
-    // Debounce para no llamar a la API por cada letra
+    // 1. Debounce: Esperamos a que el usuario deje de escribir
     if (debounce?.isActive ?? false) debounce!.cancel();
 
-    debounce = Timer(const Duration(milliseconds: 1000), () {
-      // Doble chequeo por si el usuario eligió una categoría mientras corría el timer
+    debounce = Timer(const Duration(milliseconds: 800), () {
+      // Verificamos que el widget siga vivo
+      if (!mounted) return;
+
+      final aiProvider = Provider.of<AiCategoryProvider>(
+        context,
+        listen: false,
+      );
+
+      // 2. REGLA DE ORO: Si ya eligió manual, no molestamos
       if (aiProvider.manualCategory != null) return;
 
-      // Si el título no está vacío, pedimos ayuda a la IA
-      if (titleController.text.trim().isNotEmpty) {
-        aiProvider.requestClassification(titleController.text);
+      final text = titleController.text.trim();
+
+      // 3. Solo reseteamos y buscamos si hay texto real y ha cambiado
+      if (text.isNotEmpty) {
+        // Opcional: Solo resetear justo antes de buscar nueva clasificacion
+        // para evitar notificar a los listeners en cada tecla pulsada.
+        aiProvider.resetCategory();
+        aiProvider.requestClassification(text);
       }
     });
   }
@@ -144,23 +151,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
       }
     } catch (e, /*stackTrace*/ _) {
-      // // EN VEZ DE PRINT O GUARDAR EN FIRESTORE:
-
-      // FirebaseCrashlytics.instance.recordError(
-      //   e, // El error
-      //   stackTrace, // El "rastro" de dónde vino
-      //   reason: 'Falló al intentar guardar la transacción', // Tu nota personal
-      //   fatal: false, // false porque la app no se cerró, solo falló esa acción
-      // );
-
-      // // Y aquí muestras tu SnackBar al usuario para que sepa que algo pasó
-      // mounted
-      //     ? UiUtils.showSnackBar(
-      //         context,
-      //         "Ocurrió un error inesperado",
-      //         AppColors.brandSecondary as MaterialColor?,
-      //       )
-      //     : {};
+      //hi
     }
 
     if (mounted) Navigator.of(context).pop();

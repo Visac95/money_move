@@ -29,10 +29,7 @@ class DatabaseService {
   Stream<List<Transaction>> getTransactionsStream(String userId) {
     return _transactionsRef
         .where('userId', isEqualTo: userId)
-        .orderBy(
-          'fecha',
-          descending: true,
-        ) // Opcional: Para que salgan ordenadas
+        // Opcional: Para que salgan ordenadas
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {

@@ -134,6 +134,7 @@
     "cashFlowText": "Flujo de Caja",
     "categoryExpencesText": "Gastos por Categoría",
     "noExpensesThisPeriodText": "Sin gastos en este periodo",
+    "noExpensesText": "No hay gastos",
     "noConectionModeText": "Modo sin conexión",
     "noConectionModeDescriptionText": "Parece que no tienes internet. Puedes seguir usando la app, pero los cambios de otros dispositivos no se verán hasta que recuperes la conexión.",
     "noShowAgainText": "No volver a mostrar este aviso",

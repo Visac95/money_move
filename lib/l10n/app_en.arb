@@ -134,6 +134,7 @@
     "cashFlowText": "Cash Flow",
     "categoryExpencesText": "Expenses by Category",
     "noExpensesThisPeriodText": "No expenses in this period",
+    "noExpensesText": "No expenses",
     "noConectionModeText": "No Connection Mode",
     "noConectionModeDescriptionText": "It seems you are offline. You can continue using the app, but changes from other devices won't be reflected until you regain connection.",
     "noShowAgainText": "Don't show this again",
@@ -146,4 +147,5 @@
     "loginText": "Log In",
     "orContinueWithText": "Or continue with",
     "errorAlEntrarEnText": "Error logging in"
+
 }

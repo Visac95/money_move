@@ -38,4 +38,33 @@ class AuthService {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }
+
+  // En auth_service.dart
+
+  // 1. Iniciar sesión con Correo y Clave
+  Future<User?> signInWithEmail(String email, String password) async {
+    try {
+      final credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      // Aquí puedes manejar errores específicos (contraseña errónea, usuario no existe)
+      throw e; // Lanzamos el error para mostrarlo en la pantalla
+    }
+  }
+
+  // 2. Registrarse (Crear cuenta nueva)
+  Future<User?> registerWithEmail(String email, String password) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      throw e;
+    }
+  }
 }

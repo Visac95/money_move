@@ -415,6 +415,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noExpensesThisPeriodText => 'No expenses in this period';
 
   @override
+  String get noExpensesText => 'No expenses';
+
+  @override
   String get noConectionModeText => 'No Connection Mode';
 
   @override
