@@ -195,17 +195,17 @@ class _LoginScreenState extends State<LoginScreen> {
       String message = "Ocurrió un error";
 
       // Mensajes de error amigables en español
-      if (e.code == 'user-not-found')
+      if (e.code == 'user-not-found') {
         message = "No existe usuario con ese correo.";
-      else if (e.code == 'wrong-password')
+      } else if (e.code == 'wrong-password') {
         message = "Contraseña incorrecta.";
-      else if (e.code == 'email-already-in-use')
+      } else if (e.code == 'email-already-in-use') {
         message = "Este correo ya está registrado.";
-      else if (e.code == 'invalid-email')
+      } else if (e.code == 'invalid-email') {
         message = "El correo no es válido.";
-      else if (e.code == 'weak-password')
+      } else if (e.code == 'weak-password') {
         message = "La contraseña es muy débil.";
-
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message), backgroundColor: Colors.red),

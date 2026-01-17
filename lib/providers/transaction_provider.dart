@@ -57,12 +57,7 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> updateTransaction(Transaction transactionEditada) async {
     try {
-      // MÉTODO "OFFLINE FRIENDLY"
-      // Vamos directo al documento por su ID y le pegamos los nuevos datos.
-      print(
-        "INTENTANDO ACTUALIZAR ID: '${transactionEditada.id}'",
-      ); // <--- AGREGA ESTO
-      print("EN LA COLECCIÓN: 'transactions'");
+      
       await FirebaseFirestore.instance
           .collection('transactions')
           .doc(
@@ -72,9 +67,8 @@ class TransactionProvider extends ChangeNotifier {
 
       // Si usas notifyListeners() para actualizar algo local manual, ponlo aquí.
       notifyListeners();
-    } catch (e) {
-      print("Error al editar: $e");
-      // Aquí podrías guardar el error si quisieras, pero por ahora solo imprímelo
+    } catch (_) {
+      //hola
     }
   }
 
@@ -168,7 +162,6 @@ class TransactionProvider extends ChangeNotifier {
             tx.fecha.isAtSameMomentAs(startWeekClean);
       }).toList();
     }
-    notifyListeners();
     return baseList.toList();
   }
 

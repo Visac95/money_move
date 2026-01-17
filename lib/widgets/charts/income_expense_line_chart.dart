@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_move/config/app_colors.dart'; // Asegúrate de tener tus colores aquí
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/providers/locale_provider.dart';
@@ -27,16 +27,25 @@ class IncomeExpenseLineChart extends StatelessWidget {
     for (final spot in expenseSpots) {
       if (spot.y > maxY) maxY = spot.y;
     }
-    maxY = maxY * 1.2; // 20% de margen superior
+    // Si no hay datos, ponemos un techo ficticio para que no se rompa
+    if (maxY == 0) maxY = 100;
+
+    // Le damos un poco de aire arriba (20%)
+    final double yMaxWithPadding = maxY * 1.2;
+    
+    // Calculamos un intervalo para que solo salgan 4 o 5 líneas horizontales
+    final double interval = yMaxWithPadding / 4;
 
     final strings = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    //final isDark = theme.brightness == Brightness.dark;
 
     return AspectRatio(
       aspectRatio: 1.5,
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: Theme.of(context).colorScheme.surfaceContainer,
+        color: theme.colorScheme.surfaceContainer,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -51,7 +60,7 @@ class IncomeExpenseLineChart extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
                   // Leyenda pequeña
@@ -77,9 +86,9 @@ class IncomeExpenseLineChart extends StatelessWidget {
                 child: LineChart(
                   LineChartData(
                     minY: 0,
-                    maxY: maxY == 0 ? 100 : maxY,
+                    maxY: yMaxWithPadding,
 
-                    // Configuración de interacción (Tooltips)
+                    // --- TOOLTIPS (Al tocar) ---
                     lineTouchData: LineTouchData(
                       touchTooltipData: LineTouchTooltipData(
                         getTooltipColor: (_) =>
@@ -88,7 +97,6 @@ class IncomeExpenseLineChart extends StatelessWidget {
                           return touchedSpots.map((spot) {
                             final isIncome = spot.barIndex == 0;
                             return LineTooltipItem(
-                              // Mostramos flechita arriba o abajo según sea ingreso o gasto
                               '${isIncome ? '⬆' : '⬇'} ${spot.y.toStringAsFixed(0)}',
                               TextStyle(
                                 color: isIncome
@@ -104,9 +112,21 @@ class IncomeExpenseLineChart extends StatelessWidget {
                       handleBuiltInTouches: true,
                     ),
 
-                    gridData: const FlGridData(
-                      show: false,
-                    ), // Limpio, sin cuadrícula
+                    // --- CUADRÍCULA (Sutil) ---
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false, // Sin líneas verticales (limpieza)
+                      horizontalInterval: interval, // Usamos el intervalo calculado
+                      getDrawingHorizontalLine: (value) {
+                        return FlLine(
+                          color: theme.dividerColor.withValues(alpha: 0.1), // Muy sutil
+                          strokeWidth: 1,
+                          dashArray: [5, 5], // Línea punteada para que sea discreto
+                        );
+                      },
+                    ),
+
+                    // --- EJES Y TÍTULOS ---
                     titlesData: FlTitlesData(
                       show: true,
                       rightTitles: const AxisTitles(
@@ -115,10 +135,38 @@ class IncomeExpenseLineChart extends StatelessWidget {
                       topTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
-                      leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ), // Ocultamos montos eje Y para limpieza
-                      // Eje X (Días)
+                      
+                      // EJE Y (IZQUIERDA) - Aquí está la magia de los números
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: interval,
+                          reservedSize: 40, // Espacio reservado para los números
+                          getTitlesWidget: (value, meta) {
+                            if (value == 0) return const SizedBox(); // Ocultar el 0 si quieres más limpieza
+                            
+                            // Formateo compacto (1k, 1.5k, etc)
+                            String text;
+                            if (value >= 1000) {
+                              text = '${(value / 1000).toStringAsFixed(1).replaceAll('.0', '')}k';
+                            } else {
+                              text = value.toInt().toString();
+                            }
+
+                            return Text(
+                              text,
+                              style: TextStyle(
+                                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                fontSize: 10, // Letra pequeñita
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.left,
+                            );
+                          },
+                        ),
+                      ),
+
+                      // EJE X (DÍAS)
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
@@ -137,8 +185,8 @@ class IncomeExpenseLineChart extends StatelessWidget {
                                       context,
                                     ).locale.toString(),
                                   ).format(date)[0].toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.grey,
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -154,25 +202,28 @@ class IncomeExpenseLineChart extends StatelessWidget {
 
                     // --- LAS DOS LÍNEAS ---
                     lineBarsData: [
-                      // LÍNEA 1: INGRESOS (Verde/Azul)
+                      // LÍNEA 1: INGRESOS
                       LineChartBarData(
                         spots: incomeSpots,
-                        isCurved: false,
+                        isCurved: false, 
                         color: AppColors.income,
                         barWidth: 3,
                         isStrokeCapRound: true,
-                        dotData: const FlDotData(
-                          show: false,
-                        ), // Sin puntos para que sea más fluido
+                        dotData: const FlDotData(show: false),
                         belowBarData: BarAreaData(
                           show: true,
-                          color: AppColors.income.withValues(
-                            alpha: 0.2,
-                          ), // Relleno suave
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.income.withValues(alpha: 0.25),
+                              AppColors.income.withValues(alpha: 0.0),
+                            ],
+                          ),
                         ),
                       ),
 
-                      // LÍNEA 2: GASTOS (Rojo)
+                      // LÍNEA 2: GASTOS
                       LineChartBarData(
                         spots: expenseSpots,
                         isCurved: false,
@@ -182,9 +233,14 @@ class IncomeExpenseLineChart extends StatelessWidget {
                         dotData: const FlDotData(show: false),
                         belowBarData: BarAreaData(
                           show: true,
-                          color: AppColors.expense.withValues(
-                            alpha: 0.2,
-                          ), // Relleno suave
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.expense.withValues(alpha: 0.25),
+                              AppColors.expense.withValues(alpha: 0.0),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -235,7 +291,7 @@ class IncomeExpenseLineChart extends StatelessWidget {
   }
 }
 
-// Widget pequeño para la leyenda (Círculo de color + Texto)
+// Widget pequeño para la leyenda
 class _LegendIndicator extends StatelessWidget {
   final Color color;
   final String text;
@@ -254,10 +310,10 @@ class _LegendIndicator extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
       ],

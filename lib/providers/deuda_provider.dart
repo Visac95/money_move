@@ -104,8 +104,8 @@ class DeudaProvider extends ChangeNotifier {
       // Guardamos en Firebase
       await updateDeuda(d);
       
-    } catch (e) {
-      print("Error al pagar deuda: $e");
+    } catch (_) {
+      //print("Error al pagar deuda: $e");
     }
   }
 

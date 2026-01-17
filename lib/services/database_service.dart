@@ -20,7 +20,7 @@ class DatabaseService {
       // Usamos .set para que el ID del documento coincida con el ID interno (UUID)
       await _transactionsRef.doc(transaction.id).set(transaction.toMap());
     } catch (e) {
-      print("❌ Error al guardar transacción: $e");
+      //print("❌ Error al guardar transacción: $e");
       rethrow;
     }
   }
@@ -53,7 +53,7 @@ class DatabaseService {
       // Al usar el ID correcto (gracias al parche de arriba), esto ya no fallará
       await _transactionsRef.doc(transaction.id).update(transaction.toMap());
     } catch (e) {
-      print("❌ Error al actualizar transacción: $e");
+      //print("❌ Error al actualizar transacción: $e");
       rethrow;
     }
   }
@@ -63,7 +63,7 @@ class DatabaseService {
     try {
       await _transactionsRef.doc(id).delete();
     } catch (e) {
-      print("❌ Error al borrar transacción: $e");
+      //print("❌ Error al borrar transacción: $e");
     }
   }
 
@@ -75,7 +75,7 @@ class DatabaseService {
     try {
       await _deudasRef.doc(deuda.id).set(deuda.toMap());
     } catch (e) {
-      print("❌ Error al guardar deuda: $e");
+      //print("❌ Error al guardar deuda: $e");
       rethrow;
     }
   }
@@ -97,7 +97,7 @@ class DatabaseService {
     try {
       await _deudasRef.doc(deuda.id).update(deuda.toMap());
     } catch (e) {
-      print("❌ Error al actualizar deuda: $e");
+      //print("❌ Error al actualizar deuda: $e");
       rethrow;
     }
   }
@@ -106,7 +106,7 @@ class DatabaseService {
     try {
       await _deudasRef.doc(id).delete();
     } catch (e) {
-      print("❌ Error al borrar deuda: $e");
+      //print("❌ Error al borrar deuda: $e");
     }
   }
 }

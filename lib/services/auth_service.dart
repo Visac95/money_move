@@ -28,7 +28,7 @@ class AuthService {
       // (Esto es lo que dispara el cambio en el AuthGate)
       return await _auth.signInWithCredential(credential);
     } catch (e) {
-      print("Error en Google Sign-In: $e");
+      //print("Error en Google Sign-In: $e");
       rethrow; // Pasamos el error para que la pantalla lo muestre
     }
   }
@@ -49,9 +49,9 @@ class AuthService {
         password: password,
       );
       return credential.user;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       // Aquí puedes manejar errores específicos (contraseña errónea, usuario no existe)
-      throw e; // Lanzamos el error para mostrarlo en la pantalla
+      rethrow; // Lanzamos el error para mostrarlo en la pantalla
     }
   }
 
@@ -63,8 +63,8 @@ class AuthService {
         password: password,
       );
       return credential.user;
-    } on FirebaseAuthException catch (e) {
-      throw e;
+    } on FirebaseAuthException catch (_) {
+      rethrow;
     }
   }
 }
