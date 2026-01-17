@@ -139,5 +139,11 @@
     "noShowAgainText": "No volver a mostrar este aviso",
     "gotItText": "Entendido",
     "noConecctionAddTraxText": "Guardado en dispositivo. Se subirá al tener internet ☁️⏳",
-    "savedTrasactionSuccessText": "Transacción guardada exitosamente ✅"
+    "savedTrasactionSuccessText": "Transacción guardada exitosamente ✅",
+    "welcomeText": "¡Bienvenido a MoneyMove!",
+    "emailText": "Correo Electrónico",
+    "paswordText": "Contraseña",
+    "loginText": "Iniciar Sesión",
+    "orContinueWithText": "O continuar con",
+    "errorAlEntrarEnText": "Error al entrar"
 }

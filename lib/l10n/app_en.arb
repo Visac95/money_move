@@ -139,5 +139,11 @@
     "noShowAgainText": "Don't show this again",
     "gotItText": "Got it",
     "noConecctionAddTraxText": "Saved on device. It will upload when online ☁️⏳",
-    "savedTrasactionSuccessText": "Transaction saved successfully ✅"
+    "savedTrasactionSuccessText": "Transaction saved successfully ✅",
+    "welcomeText": "Welcome to MoneyMove!",
+    "emailText": "Email",
+    "paswordText": "Password",
+    "loginText": "Log In",
+    "orContinueWithText": "Or continue with",
+    "errorAlEntrarEnText": "Error logging in"
 }

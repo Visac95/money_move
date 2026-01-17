@@ -937,6 +937,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transaction saved successfully ✅'**
   String get savedTrasactionSuccessText;
+
+  /// No description provided for @welcomeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to MoneyMove!'**
+  String get welcomeText;
+
+  /// No description provided for @emailText.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailText;
+
+  /// No description provided for @paswordText.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get paswordText;
+
+  /// No description provided for @loginText.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get loginText;
+
+  /// No description provided for @orContinueWithText.
+  ///
+  /// In en, this message translates to:
+  /// **'Or continue with'**
+  String get orContinueWithText;
+
+  /// No description provided for @errorAlEntrarEnText.
+  ///
+  /// In en, this message translates to:
+  /// **'Error logging in'**
+  String get errorAlEntrarEnText;
 }
 
 class _AppLocalizationsDelegate

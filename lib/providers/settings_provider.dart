@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider extends ChangeNotifier {
   // 1. Variable privada en memoria (RAM)
-  bool _isDarkMode = true;
+  bool _isDarkMode = false;
 
   // Getter para que la UI lo lea
   bool get isDarkMode => _isDarkMode;

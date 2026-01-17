@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/services/auth_service.dart'; // Asegúrate de importar tu servicio
+import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/services/auth_service.dart';
+import 'package:path/path.dart'; // Asegúrate de importar tu servicio
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,14 +14,17 @@ class _LoginScreenState extends State<LoginScreen> {
   // Controladores para leer lo que escribe el usuario
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  
+
   // Para mostrar la ruedita de carga
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final strings = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Fondo suave
+      backgroundColor: colorScheme.surface, // Fondo suave
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -28,10 +33,14 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 1. TÍTULO O LOGO
-              const Icon(Icons.account_balance_wallet, size: 80, color: Colors.blueAccent),
+              Icon(
+                Icons.account_balance_wallet,
+                size: 80,
+                color: colorScheme.primary ,
+              ),
               const SizedBox(height: 20),
-              const Text(
-                'Bienvenido',
+              Text(
+                strings.welcomeText,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
@@ -41,20 +50,24 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Correo Electrónico',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  labelText: strings.emailText,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   prefixIcon: const Icon(Icons.email),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              
+
               TextField(
                 controller: _passController,
                 obscureText: true, // Ocultar contraseña
                 decoration: InputDecoration(
-                  labelText: 'Contraseña',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  labelText: strings.paswordText,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   prefixIcon: const Icon(Icons.lock),
                 ),
               ),
@@ -69,32 +82,51 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+
+                        ),
+                        backgroundColor: colorScheme.primary
                       ),
-                      child: const Text('Iniciar Sesión', style: TextStyle(fontSize: 16)),
+                      child: Text(
+                        strings.loginText,
+                        style: TextStyle(fontSize: 16,
+                        color: colorScheme.surface),
+                        
+                      ),
                     ),
-              
+
               const SizedBox(height: 20),
-              
-              const Row(children: [
-                Expanded(child: Divider()),
-                Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text("O continúa con")),
-                Expanded(child: Divider()),
-              ]),
-              
+
+              Row(
+                children: [
+                  Expanded(child: Divider()),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(strings.orContinueWithText),
+                  ),
+                  Expanded(child: Divider()),
+                ],
+              ),
+
               const SizedBox(height: 20),
 
               // 4. BOTÓN DE GOOGLE
               OutlinedButton.icon(
                 onPressed: () async {
-                   // LÓGICA DE GOOGLE AQUÍ
-                   await _handleGoogleLogin();
+                  // LÓGICA DE GOOGLE AQUÍ
+                  await _handleGoogleLogin(strings);
                 },
-                icon: const Icon(Icons.g_mobiledata, size: 30), // Icono simple, puedes poner el logo real luego
+                icon: const Icon(
+                  Icons.g_mobiledata,
+                  size: 30,
+                ), // Icono simple, puedes poner el logo real luego
                 label: const Text("Google"),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ],
@@ -105,18 +137,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Función auxiliar para manejar el login de Google
-  Future<void> _handleGoogleLogin() async {
+  Future<void> _handleGoogleLogin(strings) async {
     setState(() => _isLoading = true);
     try {
       // Llamamos a nuestro servicio
       await AuthService().signInWithGoogle();
-      // No necesitamos navegar manualmente a Home. 
+      // No necesitamos navegar manualmente a Home.
       // El AuthGate escuchará el cambio y nos llevará solos.
     } catch (e) {
       // Si falla, mostramos un aviso
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al entrar: $e")),
+        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+          SnackBar(content: Text("${strings.errorAlEntrarEnText} $e")),
         );
       }
     } finally {

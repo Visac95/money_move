@@ -433,4 +433,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savedTrasactionSuccessText => 'Transaction saved successfully ✅';
+
+  @override
+  String get welcomeText => 'Welcome to MoneyMove!';
+
+  @override
+  String get emailText => 'Email';
+
+  @override
+  String get paswordText => 'Password';
+
+  @override
+  String get loginText => 'Log In';
+
+  @override
+  String get orContinueWithText => 'Or continue with';
+
+  @override
+  String get errorAlEntrarEnText => 'Error logging in';
 }
