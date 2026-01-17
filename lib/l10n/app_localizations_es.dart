@@ -414,4 +414,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noExpensesThisPeriodText => 'Sin gastos en este periodo';
+
+  @override
+  String get noConectionModeText => 'Modo sin conexión';
+
+  @override
+  String get noConectionModeDescriptionText =>
+      'Parece que no tienes internet. Puedes seguir usando la app, pero los cambios de otros dispositivos no se verán hasta que recuperes la conexión.';
+
+  @override
+  String get noShowAgainText => 'No volver a mostrar este aviso';
+
+  @override
+  String get gotItText => 'Entendido';
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,6 +26,12 @@ void main() async {
 
   final localeProvider = LocaleProvider();
   await localeProvider.fetchLocale();
+
+  // Esto fuerza a Firestore a guardar datos en el disco del celular
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true, 
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED, // Opcional: Para guardar mucha data
+  );
 
   runApp(
     MultiProvider(

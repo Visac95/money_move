@@ -133,5 +133,9 @@
     "saldoEvolutionText": "Balance Evolution",
     "cashFlowText": "Cash Flow",
     "categoryExpencesText": "Expenses by Category",
-    "noExpensesThisPeriodText": "No expenses in this period"
+    "noExpensesThisPeriodText": "No expenses in this period",
+    "noConectionModeText": "No Connection Mode",
+    "noConectionModeDescriptionText": "It seems you are offline. You can continue using the app, but changes from other devices won't be reflected until you regain connection.",
+    "noShowAgainText": "Don't show this again",
+    "gotItText": "Got it"
 }

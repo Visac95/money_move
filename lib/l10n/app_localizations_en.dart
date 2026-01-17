@@ -413,4 +413,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noExpensesThisPeriodText => 'No expenses in this period';
+
+  @override
+  String get noConectionModeText => 'No Connection Mode';
+
+  @override
+  String get noConectionModeDescriptionText =>
+      'It seems you are offline. You can continue using the app, but changes from other devices won\'t be reflected until you regain connection.';
+
+  @override
+  String get noShowAgainText => 'Don\'t show this again';
+
+  @override
+  String get gotItText => 'Got it';
 }

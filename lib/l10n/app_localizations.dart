@@ -901,6 +901,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No expenses in this period'**
   String get noExpensesThisPeriodText;
+
+  /// No description provided for @noConectionModeText.
+  ///
+  /// In en, this message translates to:
+  /// **'No Connection Mode'**
+  String get noConectionModeText;
+
+  /// No description provided for @noConectionModeDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'It seems you are offline. You can continue using the app, but changes from other devices won\'t be reflected until you regain connection.'**
+  String get noConectionModeDescriptionText;
+
+  /// No description provided for @noShowAgainText.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show this again'**
+  String get noShowAgainText;
+
+  /// No description provided for @gotItText.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotItText;
 }
 
 class _AppLocalizationsDelegate

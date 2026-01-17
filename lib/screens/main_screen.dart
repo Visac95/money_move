@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
@@ -10,6 +11,7 @@ import 'package:money_move/screens/home_screen.dart';
 import 'package:money_move/screens/settings_screen.dart';
 import 'package:money_move/screens/stadistic_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,12 +21,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
+  static bool _avisoOfflineMostradoEnEstaSesion = false;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    // ESTO ES LO NUEVO:
-    // Esperamos a que la pantalla se dibuje (addPostFrameCallback) y luego pedimos los datos
+    _verificarConexionYMostrarAlerta();
+
     // ESTO ES EL INTERRUPTOR DE ENCENDIDO 👇
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 1. Encendemos Transacciones
@@ -36,31 +38,125 @@ class _MainScreenState extends State<MainScreen> {
       deudaProv.initSubscription();
     });
   }
+
+  Future<void> _verificarConexionYMostrarAlerta() async {
+    // 1. Si ya lo mostramos en esta sesión, no hacemos nada.
+    if (_avisoOfflineMostradoEnEstaSesion) return;
+
+    // 2. Verificamos si hay internet
+    final connectivityResult = await Connectivity().checkConnectivity();
+    bool sinInternet = connectivityResult.contains(ConnectivityResult.none);
+
+    if (sinInternet) {
+      // 3. Verificamos si el usuario marcó "No volver a mostrar" en el pasado
+      final prefs = await SharedPreferences.getInstance();
+      bool ocultarAviso = prefs.getBool('ocultar_aviso_offline') ?? false;
+
+      if (!ocultarAviso && mounted) {
+        // Marcamos que ya se mostró en esta sesión
+        _avisoOfflineMostradoEnEstaSesion = true;
+
+        // 4. Mostramos el diálogo
+        _mostrarDialogoOffline(context);
+      }
+    }
+  }
+
+  void _mostrarDialogoOffline(BuildContext context) {
+    bool noVolverAMostrar = false;
+    final strings = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        // StatefulBuilder para que el checkbox funcione dentro del diálogo
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(Icons.cloud_off_rounded, color: Colors.orange),
+                  SizedBox(width: 10),
+                  Text(strings.noConectionModeText),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    strings.noConectionModeDescriptionText,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: noVolverAMostrar,
+                        onChanged: (val) {
+                          setState(() {
+                            noVolverAMostrar = val ?? false;
+                          });
+                        },
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              noVolverAMostrar = !noVolverAMostrar;
+                            });
+                          },
+                          child: Text(
+                            strings.noShowAgainText,
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    if (noVolverAMostrar) {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('ocultar_aviso_offline', true);
+                    }
+                    if (context.mounted) Navigator.of(ctx).pop();
+                  },
+                  child: Text(strings.gotItText),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   // Lista de pantallas
   final List<Widget> screens = const [
     HomeScreen(),
     AllTransactionsScreen(),
     StadisticScreen(),
     AllDeudasScreen(),
-    SettingsScreen()
+    SettingsScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
     final int currentIndex = uiProvider.selectedIndex;
-    
+
     final l10n = AppLocalizations.of(context)!;
-    
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex, 
-        children: screens
-      ),
-      
+      body: IndexedStack(index: currentIndex, children: screens),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) {
@@ -68,31 +164,30 @@ class _MainScreenState extends State<MainScreen> {
         },
         backgroundColor: colorScheme.surface,
         selectedItemColor: colorScheme.primary,
-        unselectedItemColor: colorScheme.onSurface.withValues(alpha:  0.6),
+        unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.6),
         type: BottomNavigationBarType.fixed,
 
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home), 
-            label: l10n.navigationTextHome
+            icon: const Icon(Icons.home),
+            label: l10n.navigationTextHome,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.monetization_on), 
-            label: l10n.navigationTextTransactions
+            icon: const Icon(Icons.monetization_on),
+            label: l10n.navigationTextTransactions,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.bar_chart), 
-            label: l10n.stadisticText
+            icon: const Icon(Icons.bar_chart),
+            label: l10n.stadisticText,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.receipt_long), 
-            label: l10n.navigationTextDeudas
+            icon: const Icon(Icons.receipt_long),
+            label: l10n.navigationTextDeudas,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings), 
-            label: l10n.settingsTitle
+            icon: const Icon(Icons.settings),
+            label: l10n.settingsTitle,
           ),
-          
         ],
       ),
     );
