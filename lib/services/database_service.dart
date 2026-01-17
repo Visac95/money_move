@@ -6,35 +6,42 @@ class DatabaseService {
   final CollectionReference _transactionsRef = FirebaseFirestore.instance
       .collection('transactions');
 
+  final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
+    'deudas',
+  );
+
+  // ==========================================
+  // 💰 SECCIÓN DE TRANSACCIONES
+  // ==========================================
+
   // --- AGREGAR ---
   Future<void> addTransaction(Transaction transaction) async {
     try {
-      // Usamos .set para asegurar que el ID del documento sea igual al ID interno
+      // Usamos .set para que el ID del documento coincida con el ID interno (UUID)
       await _transactionsRef.doc(transaction.id).set(transaction.toMap());
-      print("✅ Transacción guardada en nube: ${transaction.title}");
     } catch (e) {
-      print("❌ Error al guardar: $e");
+      print("❌ Error al guardar transacción: $e");
       rethrow;
     }
   }
 
-  // --- LEER (STREAM BLINDADO) ---
+  // --- LEER (CORREGIDO PARA EVITAR CRASH) ---
   Stream<List<Transaction>> getTransactionsStream(String userId) {
     return _transactionsRef
         .where('userId', isEqualTo: userId)
+        .orderBy(
+          'fecha',
+          descending: true,
+        ) // Opcional: Para que salgan ordenadas
         .snapshots()
         .map((snapshot) {
-          print(
-            "🔥 CAMBIO DETECTADO: Recibidos ${snapshot.docs.length} documentos",
-          );
-
           return snapshot.docs.map((doc) {
-            // 1. Obtenemos la data cruda
+            // 1. Obtenemos la data
             final data = doc.data() as Map<String, dynamic>;
 
-            // 2. TRUCO DE SEGURIDAD:
-            // Sobrescribimos el 'id' con el ID real del documento.
-            // Esto evita errores si el campo 'id' interno se borró o está vacío.
+            // 2. PARCHE DE SEGURIDAD CRÍTICO 🛡️
+            // Sobrescribimos el 'id' con el ID real de Firestore.
+            // Esto soluciona el error "not-found" al editar.
             data['id'] = doc.id;
 
             // 3. Convertimos
@@ -43,32 +50,29 @@ class DatabaseService {
         });
   }
 
+  // --- ACTUALIZAR ---
+  Future<void> updateTransaction(Transaction transaction) async {
+    try {
+      // Al usar el ID correcto (gracias al parche de arriba), esto ya no fallará
+      await _transactionsRef.doc(transaction.id).update(transaction.toMap());
+    } catch (e) {
+      print("❌ Error al actualizar transacción: $e");
+      rethrow;
+    }
+  }
+
   // --- BORRAR ---
   Future<void> deleteTransaction(String id) async {
     try {
       await _transactionsRef.doc(id).delete();
     } catch (e) {
-      print("❌ Error al borrar: $e");
-    }
-  }
-
-  // --- ACTUALIZAR ---
-  Future<void> updateTransaction(Transaction transaction) async {
-    try {
-      await _transactionsRef.doc(transaction.id).update(transaction.toMap());
-    } catch (e) {
-      print("❌ Error al actualizar: $e");
-      rethrow;
+      print("❌ Error al borrar transacción: $e");
     }
   }
 
   // ==========================================
-  // SECCIÓN DE DEUDAS
+  // 💸 SECCIÓN DE DEUDAS
   // ==========================================
-
-  final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
-    'deudas',
-  );
 
   Future<void> addDeuda(Deuda deuda) async {
     try {
@@ -80,16 +84,16 @@ class DatabaseService {
   }
 
   Stream<List<Deuda>> getDeudasStream(String userId) {
-    return _deudasRef
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            data['id'] = doc.id; // Mismo truco de seguridad para deudas
-            return Deuda.fromMap(data);
-          }).toList();
-        });
+    return _deudasRef.where('userId', isEqualTo: userId).snapshots().map((
+      snapshot,
+    ) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        // Aplicamos el mismo parche de seguridad a las deudas
+        data['id'] = doc.id;
+        return Deuda.fromMap(data);
+      }).toList();
+    });
   }
 
   Future<void> updateDeuda(Deuda deuda) async {
@@ -102,6 +106,10 @@ class DatabaseService {
   }
 
   Future<void> deleteDeuda(String id) async {
-    await _deudasRef.doc(id).delete();
+    try {
+      await _deudasRef.doc(id).delete();
+    } catch (e) {
+      print("❌ Error al borrar deuda: $e");
+    }
   }
 }

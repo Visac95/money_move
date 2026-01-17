@@ -925,6 +925,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get gotItText;
+
+  /// No description provided for @noConecctionAddTraxText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on device. It will upload when online ☁️⏳'**
+  String get noConecctionAddTraxText;
+
+  /// No description provided for @savedTrasactionSuccessText.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction saved successfully ✅'**
+  String get savedTrasactionSuccessText;
 }
 
 class _AppLocalizationsDelegate

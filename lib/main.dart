@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_move/firebase_options.dart';
@@ -18,9 +21,16 @@ import 'package:money_move/providers/settings_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Captura errores de Flutter (pantalla roja) y los manda a Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  // (Opcional) Captura errores asíncronos que no rompen la app pero son feos
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   await initializeDateFormatting('es', null);
 
@@ -29,16 +39,15 @@ void main() async {
 
   // Esto fuerza a Firestore a guardar datos en el disco del celular
   FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true, 
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED, // Opcional: Para guardar mucha data
+    persistenceEnabled: true,
+    cacheSizeBytes:
+        Settings.CACHE_SIZE_UNLIMITED, // Opcional: Para guardar mucha data
   );
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => TransactionProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),

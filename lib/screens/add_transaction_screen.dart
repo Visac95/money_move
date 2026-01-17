@@ -1,7 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/utils/ui_utils.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
 import 'package:provider/provider.dart';
@@ -68,8 +72,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     final double? enteredAmount = double.tryParse(amountController.text);
     if (enteredAmount == null) return;
 
-    // 2. CAPTURA DE PROVIDERS (Hacemos esto AL PRINCIPIO, antes de cualquier await)
-    // Esto soluciona el problema del "Async Gap" y el contexto.
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
     final transactionProvider = Provider.of<TransactionProvider>(
       context,
@@ -118,8 +120,51 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       isExpense: isExpense,
     );
     // 6. GUARDAR
-    // Usamos las variables locales que ya capturamos, sin volver a llamar al context
-    transactionProvider.addTransaction(nuevaTransaccion);
+
+    try {
+      transactionProvider.addTransaction(nuevaTransaccion);
+      final connectivityResult = await Connectivity().checkConnectivity();
+      bool sinInternet = connectivityResult.contains(ConnectivityResult.none);
+
+      if (mounted) {
+        String mensaje;
+        if (sinInternet) {
+          mensaje = AppLocalizations.of(context)!.noConecctionAddTraxText;
+        } else {
+          mensaje = AppLocalizations.of(context)!.savedTrasactionSuccessText;
+        }
+
+        //Navigator.pop(context);
+        // Mostramos el mensaje personalizado
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(mensaje),
+            backgroundColor: sinInternet
+                ? Colors.orange[800]
+                : Colors.green[700],
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e, /*stackTrace*/ _) {
+      // // EN VEZ DE PRINT O GUARDAR EN FIRESTORE:
+
+      // FirebaseCrashlytics.instance.recordError(
+      //   e, // El error
+      //   stackTrace, // El "rastro" de dónde vino
+      //   reason: 'Falló al intentar guardar la transacción', // Tu nota personal
+      //   fatal: false, // false porque la app no se cerró, solo falló esa acción
+      // );
+
+      // // Y aquí muestras tu SnackBar al usuario para que sepa que algo pasó
+      // mounted
+      //     ? UiUtils.showSnackBar(
+      //         context,
+      //         "Ocurrió un error inesperado",
+      //         AppColors.brandSecondary as MaterialColor?,
+      //       )
+      //     : {};
+    }
 
     if (mounted) Navigator.of(context).pop();
 

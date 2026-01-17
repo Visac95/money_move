@@ -39,9 +39,9 @@ class UiUtils {
   static void showSnackBar(
     BuildContext context,
     String label,
-    MaterialColor color,
+    MaterialColor? color,
   ) {
-    showSnackBar(context, label, color);
+    showSnackBar(context, label, color ?? Colors.blue);
   }
 
   static void showConfirmationDialog(

@@ -426,4 +426,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gotItText => 'Got it';
+
+  @override
+  String get noConecctionAddTraxText =>
+      'Saved on device. It will upload when online ☁️⏳';
+
+  @override
+  String get savedTrasactionSuccessText => 'Transaction saved successfully ✅';
 }

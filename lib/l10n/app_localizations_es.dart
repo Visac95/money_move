@@ -427,4 +427,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get gotItText => 'Entendido';
+
+  @override
+  String get noConecctionAddTraxText =>
+      'Guardado en dispositivo. Se subirá al tener internet ☁️⏳';
+
+  @override
+  String get savedTrasactionSuccessText =>
+      'Transacción guardada exitosamente ✅';
 }

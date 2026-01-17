@@ -46,6 +46,7 @@ dependencies:
   google_sign_in: ^6.2.0 # La UI nativa de Google
   cloud_firestore: ^5.6.12
   connectivity_plus: ^7.0.0
+  firebase_crashlytics: ^4.3.10
 
 dev_dependencies:
   flutter_test:

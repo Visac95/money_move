@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -52,9 +53,29 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   // 4. ACTUALIZAR (Corregido para usar Firebase)
-  Future<void> updateTransaction(Transaction updatedTransaction) async {
-    // Llamamos a Firebase
-    await _dbService.updateTransaction(updatedTransaction);
+  // En tu TransactionProvider
+
+  Future<void> updateTransaction(Transaction transactionEditada) async {
+    try {
+      // MÉTODO "OFFLINE FRIENDLY"
+      // Vamos directo al documento por su ID y le pegamos los nuevos datos.
+      print(
+        "INTENTANDO ACTUALIZAR ID: '${transactionEditada.id}'",
+      ); // <--- AGREGA ESTO
+      print("EN LA COLECCIÓN: 'transactions'");
+      await FirebaseFirestore.instance
+          .collection('transactions')
+          .doc(
+            transactionEditada.id,
+          ) // <--- CLAVE: Asegúrate que el ID no sea null
+          .update(transactionEditada.toMap()); // Convierte tu objeto a Mapa
+
+      // Si usas notifyListeners() para actualizar algo local manual, ponlo aquí.
+      notifyListeners();
+    } catch (e) {
+      print("Error al editar: $e");
+      // Aquí podrías guardar el error si quisieras, pero por ahora solo imprímelo
+    }
   }
 
   // --- TUS CÁLCULOS Y FILTROS (SE QUEDAN IGUAL) ---

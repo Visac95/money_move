@@ -39,7 +39,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
+        final aiProvider = Provider.of<AiCategoryProvider>(
+          context,
+          listen: false,
+        );
         aiProvider.manualCategory = widget.transaction.categoria;
       }
     });
@@ -47,8 +50,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   @override
   void dispose() {
-    Future.microtask(() {
-    });
+    Future.microtask(() {});
     debounce?.cancel();
     titleController.dispose();
     amountController.dispose();
@@ -82,11 +84,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     } catch (e) {
       return;
     }
-    
+
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
     // 2. DECISIÓN DE CATEGORÍA
-    String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
+    String finalCategory =
+        aiProvider.manualCategory ?? aiProvider.suggestedCategory;
 
     // 3. SI NO HAY CATEGORÍA
     if (finalCategory.isEmpty || finalCategory == 'manual_category') {
@@ -105,7 +108,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
         return; // Canceló
       }
     }
-    
+
     // 4. ACTUALIZAR
     final Transaction transactionActualizada = Transaction(
       fecha: widget.transaction.fecha,
@@ -117,10 +120,13 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       categoria: finalCategory,
       isExpense: isExpense,
     );
-    
+
     if (!mounted) return;
-    context.read<TransactionProvider>().updateTransaction(transactionActualizada);
-    
+    Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    ).updateTransaction(transactionActualizada);
+
     Navigator.of(context).pop();
 
     // Reseteamos el provider para la próxima vez
@@ -135,7 +141,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       // Aseguramos limpiar el provider si el usuario da "Atrás" sin guardar
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-           Provider.of<AiCategoryProvider>(context, listen: false).resetCategory();
+          Provider.of<AiCategoryProvider>(
+            context,
+            listen: false,
+          ).resetCategory();
         }
       },
       child: Scaffold(
@@ -143,15 +152,15 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
           title: Text(
             AppLocalizations.of(context)!.editTransaccionText,
             style: TextStyle(
-              fontWeight: FontWeight.bold, 
-              color: colorScheme.onSurface 
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
             ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           iconTheme: IconThemeData(color: colorScheme.onSurface),
         ),
-        
+
         body: TransactionForm(
           titleController: titleController,
           amountController: amountController,
