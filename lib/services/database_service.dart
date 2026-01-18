@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
+import 'package:rxdart/rxdart.dart';
 
 class DatabaseService {
   final CollectionReference _transactionsRef = FirebaseFirestore.instance
@@ -8,6 +9,10 @@ class DatabaseService {
 
   final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
     'deudas',
+  );
+
+  final CollectionReference _usersRef = FirebaseFirestore.instance.collection(
+    'users',
   );
 
   // ==========================================
@@ -25,26 +30,41 @@ class DatabaseService {
     }
   }
 
-  // --- LEER (CORREGIDO PARA EVITAR CRASH) ---
-  Stream<List<Transaction>> getTransactionsStream(String userId) {
-    return _transactionsRef
+  // --- LEER ---
+  Stream<List<Transaction>> getTransactionsStream(
+    String userId,
+    String? partnerUid,
+  ) {
+    // 1. Tu lista (Stream A)
+    Stream<List<Transaction>> myList = _transactionsRef
         .where('userId', isEqualTo: userId)
-        // Opcional: Para que salgan ordenadas
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            // 1. Obtenemos la data
-            final data = doc.data() as Map<String, dynamic>;
+        .map(
+          _mapSnapshotToTransactions,
+        ); // ✨ Usamos una función auxiliar para no repetir código
 
-            // 2. PARCHE DE SEGURIDAD CRÍTICO 🛡️
-            // Sobrescribimos el 'id' con el ID real de Firestore.
-            // Esto soluciona el error "not-found" al editar.
-            data['id'] = doc.id;
+    // 2. Verificamos si hay pareja
+    if (partnerUid != null && partnerUid.isNotEmpty) {
+      // Agregué isNotEmpty por seguridad
 
-            // 3. Convertimos
-            return Transaction.fromMap(data);
-          }).toList();
-        });
+      // 3. Lista Pareja (Stream B)
+      Stream<List<Transaction>> partnerList = _transactionsRef
+          .where('userId', isEqualTo: partnerUid)
+          .snapshots()
+          .map(_mapSnapshotToTransactions);
+
+      // 4. LA FUSIÓN ORDENADA
+      return Rx.combineLatest2(myList, partnerList, (listaMia, listaPareja) {
+        // A. Unimos
+        var listaTotal = [...listaMia, ...listaPareja];
+        return listaTotal;
+      });
+    } else {
+      // Si está solo, también las ordenamos por si acaso
+      return myList.map((lista) {
+        return lista;
+      });
+    }
   }
 
   // --- ACTUALIZAR ---
@@ -108,5 +128,14 @@ class DatabaseService {
     } catch (e) {
       //print("❌ Error al borrar deuda: $e");
     }
+  }
+
+  // ✨ Función auxiliar para no escribir lo mismo 2 veces (DRY: Don't Repeat Yourself)
+  List<Transaction> _mapSnapshotToTransactions(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return Transaction.fromMap(data);
+    }).toList();
   }
 }

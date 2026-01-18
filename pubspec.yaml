@@ -47,6 +47,7 @@ dependencies:
   cloud_firestore: ^5.6.12
   connectivity_plus: ^7.0.0
   firebase_crashlytics: ^4.3.10
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

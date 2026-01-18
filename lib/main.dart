@@ -51,10 +51,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
-
-        // 2. AGREGA TU SETTINGS PROVIDER AQUÍ
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-
         ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: const MyApp(),

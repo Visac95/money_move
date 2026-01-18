@@ -4,6 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
+import 'package:money_move/models/user_model.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/services/database_service.dart';
 
@@ -14,7 +15,7 @@ class DeudaProvider extends ChangeNotifier {
   List<Deuda> get deudas => _deudas;
 
   // 1. ESCUCHAR CAMBIOS (El corazón del sistema)
-  void initSubscription() {
+  void initSubscription(UserModel? userData) {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       _deudas = [];

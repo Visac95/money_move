@@ -46,3 +46,7 @@ app.*.map.json
 
 #Clave de Api
 /lib/config/api_keys.dart
+
+key.properties
+**/*.keystore
+**/*.jks

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/date_formater.dart';
@@ -22,7 +23,11 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   @override
   void initState() {
     super.initState();
-    Provider.of<DeudaProvider>(context, listen: false).initSubscription();
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+    Provider.of<DeudaProvider>(
+      context,
+      listen: false,
+    ).initSubscription(userProv.usuarioActual);
   }
 
   @override
@@ -75,7 +80,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
 
     // TRUCO PRO: En lugar de shade50 (que es blanco), usamos opacidad.
     // Esto funciona perfecto en Dark Mode porque se mezcla con el gris oscuro.
-    final Color chipBgColor = mainColor.withValues(alpha:isDark ? 0.15 : 0.1);
+    final Color chipBgColor = mainColor.withValues(alpha: isDark ? 0.15 : 0.1);
 
     final strings = AppLocalizations.of(context)!;
 
@@ -101,7 +106,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha:0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -141,8 +146,11 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:
-                                        !widget.pagada ? chipBgColor : AppColors.income.withValues(alpha: 0.15), // Color translúcido adaptable
+                                    color: !widget.pagada
+                                        ? chipBgColor
+                                        : AppColors.income.withValues(
+                                            alpha: 0.15,
+                                          ), // Color translúcido adaptable
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Row(
@@ -150,7 +158,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                       Icon(
                                         iconStatus,
                                         size: 12,
-                                        color: !widget.pagada ? mainColor : AppColors.income,
+                                        color: !widget.pagada
+                                            ? mainColor
+                                            : AppColors.income,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
@@ -158,7 +168,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: !widget.pagada ? mainColor : AppColors.income,
+                                          color: !widget.pagada
+                                              ? mainColor
+                                              : AppColors.income,
                                         ),
                                       ),
                                     ],

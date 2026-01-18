@@ -5,6 +5,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
@@ -30,12 +31,15 @@ class _MainScreenState extends State<MainScreen> {
     // ESTO ES EL INTERRUPTOR DE ENCENDIDO 👇
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 1. Encendemos Transacciones
+      final userProv = Provider.of<UserProvider>(context, listen: false);
+      userProv.initSubscription();
+
       final txProv = Provider.of<TransactionProvider>(context, listen: false);
-      txProv.initSubscription();
+      txProv.initSubscription(userProv.usuarioActual);
 
       // 2. Encendemos Deudas (de paso)
       final deudaProv = Provider.of<DeudaProvider>(context, listen: false);
-      deudaProv.initSubscription();
+      deudaProv.initSubscription(userProv.usuarioActual);
     });
   }
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/models/user_model.dart';
 import 'package:money_move/services/database_service.dart';
 import '../models/transaction.dart';
 
@@ -10,32 +11,32 @@ class TransactionProvider extends ChangeNotifier {
   final DatabaseService _dbService = DatabaseService();
 
   // --- 1. AGREGAMOS EL CONSTRUCTOR AQUÍ ---
-  TransactionProvider() {
-    // Esto es magia pura:
-    // Apenas nace el Provider, se pone a vigilar si alguien entra o sale de la app.
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        //print("👤 Usuario detectado: ${user.email} -> Iniciando suscripción");
-        initSubscription(); // <--- ¡AQUÍ SE ENCIENDE LA RADIO SOLA!
-      } else {
-        //print("👋 Usuario salió -> Limpiando datos");
-        _transactions = []; // Limpiamos datos por seguridad
-        notifyListeners();
-      }
-    });
-  }
+  // TransactionProvider() {
+  //   // Esto es magia pura:
+  //   // Apenas nace el Provider, se pone a vigilar si alguien entra o sale de la app.
+  //   FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  //     if (user != null) {
+  //       //print("👤 Usuario detectado: ${user.email} -> Iniciando suscripción");
+  //       initSubscription(); // <--- ¡AQUÍ SE ENCIENDE LA RADIO SOLA!
+  //     } else {
+  //       //print("👋 Usuario salió -> Limpiando datos");
+  //       _transactions = []; // Limpiamos datos por seguridad
+  //       notifyListeners();
+  //     }
+  //   });
+  // }
   // ----------------------------------------
 
   List<Transaction> get transactions => _transactions;
 
   // TU FUNCION ACTUAL (Déjala igual, es correcta)
-  void initSubscription() {
+  void initSubscription(UserModel? userData) {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
     // IMPORTANTE: Cancelar suscripciones viejas si fuera necesario,
     // pero por ahora esto funcionará bien.
-    _dbService.getTransactionsStream(user.uid).listen((event) {
+    _dbService.getTransactionsStream(user.uid, userData?.linkedAccountId).listen((event) {
       _transactions = event;
       _transactions.sort((b, a) => a.fecha.compareTo(b.fecha));
       notifyListeners();
