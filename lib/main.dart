@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_move/firebase_options.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/services/auth_gate.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +55,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_)=> SpaceProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: const MyApp(),
@@ -99,6 +101,7 @@ class MyApp extends StatelessWidget {
             colorScheme: const ColorScheme.light(
               primary: AppColors.lightPrimary,
               secondary: AppColors.income,
+              inversePrimary: AppColors.lightInversePrimary,
               surface: AppColors.lightSurface,
               onSurface: AppColors.lightTextPrimary,
               outline: AppColors.lightTextSecondary,
@@ -121,6 +124,7 @@ class MyApp extends StatelessWidget {
             colorScheme: const ColorScheme.dark(
               primary: AppColors.darkPrimary,
               secondary: AppColors.income,
+              inversePrimary: AppColors.darkInversePrimary,
               surface: AppColors.darkSurface,
               onSurface: AppColors.darkTextPrimary,
               outline: AppColors.darkTextSecondary,

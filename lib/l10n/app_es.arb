@@ -153,5 +153,8 @@
     "sharedSpaceDescriptionText": "Lleva tus finanzas junto a otra persona",
     "sharedSpaceLargeDescriptionText": "Conecta tu cuenta con un socio, familiar o compañero. Visualicen sus balances unificados, registren movimientos conjuntos y alcancen sus metas financieras trabajando como un solo equipo.",
     "inviteSomeoneText": "Invitar a alguien",
-    "inviteSomeoneDescriptionText": "Comparte tu espacio financiero con alguien más. Administran sus finanzas juntos y logren sus objetivos económicos en equipo."
+    "inviteSomeoneDescriptionText": "Comparte tu espacio financiero con alguien más. Administran sus finanzas juntos y logren sus objetivos económicos en equipo.",
+    "personalText": "Personal",
+    "compartidoText": "Compartido",
+    "actualSpaceText": "Espacio actual"
 }

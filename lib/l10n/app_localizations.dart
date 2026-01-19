@@ -1021,6 +1021,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team.'**
   String get inviteSomeoneDescriptionText;
+
+  /// No description provided for @personalText.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get personalText;
+
+  /// No description provided for @compartidoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared'**
+  String get compartidoText;
+
+  /// No description provided for @actualSpaceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Space'**
+  String get actualSpaceText;
 }
 
 class _AppLocalizationsDelegate

@@ -4,7 +4,7 @@ class AppColors {
   // --- PALETA BASE (Los "ingredientes" puros) ---
   // Estos son tus colores de marca, no cambian.
   static const Color brandPrimary = Color(0xFF4F46E5); // Tu índigo principal
-  static const Color brandSecondary = Colors.orange;
+  static const Color brandSecondary = Color(0xFFF59E0B);
   
   // Finanzas (Iguales para ambos, o ligeramente ajustados si quisieras)
   static const Color expense = Color(0xFFEF4444); 
@@ -13,6 +13,7 @@ class AppColors {
 
   // --- MODO CLARO (Light Mode) ---
   static const Color lightPrimary = brandPrimary;
+  static const Color lightInversePrimary = Color(0xFFF59E0B); // Un gris claro para contraste con el primario
   static const Color lightBackground = Color(0xFFF9FAFB); // Tu blanco humo
   static const Color lightSurface = Colors.white;         // Para tarjetas
   static const Color lightTextPrimary = Color(0xFF1F2937); // Tu negro suave
@@ -24,6 +25,7 @@ class AppColors {
   // --- MODO OSCURO (Dark Mode) ---
   // Aquí corregimos: El fondo pasa a ser oscuro y el texto claro.
   static const Color darkPrimary = Color(0xFF818CF8); // Un índigo más pastel para que no brille tanto en lo oscuro
+  static const Color darkInversePrimary = Color.fromARGB(255, 255, 188, 88);
   static const Color darkBackground = Color(0xFF121212); // Negro casi puro
   static const Color darkSurface = Color(0xFF1E1E1E);    // Gris oscuro para tarjetas
   static const Color darkTextPrimary = Color(0xFFF3F4F6); // Blanco hueso

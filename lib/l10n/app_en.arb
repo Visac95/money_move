@@ -153,5 +153,8 @@
     "sharedSpaceDescriptionText": "Manage your finances together with someone else",
     "sharedSpaceLargeDescriptionText": "Connect your account with a partner, family member, or associate. View unified balances, track joint transactions, and reach your financial goals by working as a single team.",
     "inviteSomeoneText": "Invite someone",
-    "inviteSomeoneDescriptionText": "Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team."
+    "inviteSomeoneDescriptionText": "Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team.",
+    "personalText": "Personal",
+    "compartidoText": "Shared",
+    "actualSpaceText": "Current Space"
 }

@@ -480,4 +480,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get inviteSomeoneDescriptionText =>
       'Comparte tu espacio financiero con alguien más. Administran sus finanzas juntos y logren sus objetivos económicos en equipo.';
+
+  @override
+  String get personalText => 'Personal';
+
+  @override
+  String get compartidoText => 'Compartido';
+
+  @override
+  String get actualSpaceText => 'Espacio actual';
 }
