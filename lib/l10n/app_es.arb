@@ -147,5 +147,8 @@
     "loginText": "Iniciar Sesión",
     "orContinueWithText": "O continuar con",
     "errorAlEntrarEnText": "Error al entrar",
-    "filtrosText": "Filtros"
+    "filtrosText": "Filtros",
+    "profileText": "Perfil",
+    "sharedSpaceText": "Espacio Compartido",
+    "sharedSpaceDescriptionText": "Lleva tus finanzas junto a otra persona"
 }

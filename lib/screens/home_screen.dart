@@ -3,7 +3,9 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/add_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
+import 'package:money_move/widgets/charts/category_pie_chart.dart';
 import 'package:money_move/widgets/drawer_user.dart';
+import 'package:money_move/widgets/settings_button.dart';
 import 'package:money_move/widgets/ultimas_deudas.dart';
 import 'package:money_move/widgets/ultimas_transacciones.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +30,7 @@ class HomeScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [settingsButton(context)],
         leading: LeadingDrawer(),
       ),
 
@@ -44,6 +47,10 @@ class HomeScreen extends StatelessWidget {
             ),
             UltimasTransacciones(),
             UltimasDeudas(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CategoryPieChart(transactions: tProvider.transactions),
+            )
           ],
         ),
       ),

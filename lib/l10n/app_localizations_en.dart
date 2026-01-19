@@ -457,4 +457,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filtrosText => 'Filters';
+
+  @override
+  String get profileText => 'Profile';
+
+  @override
+  String get sharedSpaceText => 'Shared Space';
+
+  @override
+  String get sharedSpaceDescriptionText =>
+      'Manage your finances together with someone else';
 }

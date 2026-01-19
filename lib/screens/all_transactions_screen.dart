@@ -45,7 +45,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                   ),
                 ],
               ),
-              actions: [settingsButton(context), const SizedBox(width: 10)],
+              actions: [settingsButton(context)],
 
               // 3. AQUÍ VA EL BALANCE (Propiedad 'bottom')
               // Usamos 'bottom' y 'PreferredSize' para anclar el balance a la barra.

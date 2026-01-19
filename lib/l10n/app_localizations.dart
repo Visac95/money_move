@@ -985,6 +985,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filters'**
   String get filtrosText;
+
+  /// No description provided for @profileText.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileText;
+
+  /// No description provided for @sharedSpaceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Space'**
+  String get sharedSpaceText;
+
+  /// No description provided for @sharedSpaceDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your finances together with someone else'**
+  String get sharedSpaceDescriptionText;
 }
 
 class _AppLocalizationsDelegate

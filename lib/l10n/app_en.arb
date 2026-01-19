@@ -147,5 +147,8 @@
     "loginText": "Log In",
     "orContinueWithText": "Or continue with",
     "errorAlEntrarEnText": "Error logging in",
-    "filtrosText": "Filters"
+    "filtrosText": "Filters",
+    "profileText": "Profile",
+    "sharedSpaceText": "Shared Space",
+    "sharedSpaceDescriptionText": "Manage your finances together with someone else"
 }
