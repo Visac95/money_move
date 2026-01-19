@@ -1016,11 +1016,11 @@ abstract class AppLocalizations {
   /// **'Invite someone'**
   String get inviteSomeoneText;
 
-  /// No description provided for @inviteSomeoneDescriptionText.
+  /// No description provided for @uHaveCodeEnterHere.
   ///
   /// In en, this message translates to:
-  /// **'Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team.'**
-  String get inviteSomeoneDescriptionText;
+  /// **'Already have a code? Enter it here'**
+  String get uHaveCodeEnterHere;
 
   /// No description provided for @personalText.
   ///
@@ -1039,6 +1039,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Current Space'**
   String get actualSpaceText;
+
+  /// No description provided for @userText.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get userText;
+
+  /// No description provided for @noEmailText.
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get noEmailText;
+
+  /// No description provided for @logoutText.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logoutText;
 }
 
 class _AppLocalizationsDelegate

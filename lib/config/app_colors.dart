@@ -25,7 +25,7 @@ class AppColors {
   // --- MODO OSCURO (Dark Mode) ---
   // Aquí corregimos: El fondo pasa a ser oscuro y el texto claro.
   static const Color darkPrimary = Color(0xFF818CF8); // Un índigo más pastel para que no brille tanto en lo oscuro
-  static const Color darkInversePrimary = Color.fromARGB(255, 255, 188, 88);
+  static const Color darkInversePrimary = Color(0xFFD97706);
   static const Color darkBackground = Color(0xFF121212); // Negro casi puro
   static const Color darkSurface = Color(0xFF1E1E1E);    // Gris oscuro para tarjetas
   static const Color darkTextPrimary = Color(0xFFF3F4F6); // Blanco hueso

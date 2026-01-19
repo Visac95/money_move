@@ -478,8 +478,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get inviteSomeoneText => 'Invitar a alguien';
 
   @override
-  String get inviteSomeoneDescriptionText =>
-      'Comparte tu espacio financiero con alguien más. Administran sus finanzas juntos y logren sus objetivos económicos en equipo.';
+  String get uHaveCodeEnterHere => '¿Ya tienes un código? Ingresalo aquí';
 
   @override
   String get personalText => 'Personal';
@@ -489,4 +488,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get actualSpaceText => 'Espacio actual';
+
+  @override
+  String get userText => 'Usuario';
+
+  @override
+  String get noEmailText => 'Sin correo electrónico';
+
+  @override
+  String get logoutText => 'Cerrar sesión';
 }

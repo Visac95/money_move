@@ -1,8 +1,7 @@
 {
-    "i18n-ally.localesPaths": ["lib/l10n"],
-    "i18n-ally.sourceLanguage": "en", 
-    "i18n-ally.displayLanguage": "es",
+    "i18n-ally.localesPaths": ["lib/l10n"], // O donde tengas tus .arb
     "i18n-ally.keystyle": "flat",
-    "cmake.ignoreCMakeListsMissing": true
-   
+    "i18n-ally.sourceLanguage": "es", // Tu idioma base
+    "i18n-ally.displayLanguage": "es", // En qué idioma quieres ver las ayudas
+    "i18n-ally.enabledParsers": ["arb"]
 }

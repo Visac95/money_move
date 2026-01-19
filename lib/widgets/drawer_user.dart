@@ -21,12 +21,10 @@ Drawer drawerUser(BuildContext context) {
         // A. CABECERA CON DATOS DE GOOGLE
         UserAccountsDrawerHeader(
           accountName: Text(
-            user.displayName ?? "Usuario",
-            style: TextStyle(color: colorScheme.surface),
+            user.displayName ?? strings.userText,
           ),
           accountEmail: Text(
-            user.email ?? "Sin correo",
-            style: TextStyle(color: colorScheme.surface),
+            user.email ?? strings.noEmailText,
           ),
           currentAccountPicture: CircleAvatar(
             backgroundImage: user.photoURL != null
@@ -42,24 +40,29 @@ Drawer drawerUser(BuildContext context) {
                 : colorScheme.primary,
           ),
         ),
-        
-        userProv.usuarioActual!.linkedAccountId == null
+
+        userProv.usuarioActual!.linkedAccountId != null
             ? SizedBox()
             : Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Row(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
-                    Icon(Icons.people_alt_outlined),
-                    SizedBox(width: 5,),
-                    Text("${strings.actualSpaceText}:", style: TextStyle(fontSize: 16),),
+                    Row(
+                      children: [
+                        Icon(Icons.people_alt_outlined),
+                        SizedBox(width: 5),
+                        Text(
+                          "${strings.actualSpaceText}:",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    ModeToggle(),
                   ],
-                ), 
-                SizedBox(height: 5,),
-                ModeToggle()]),
-            ),
+                ),
+              ),
 
         const Spacer(), // Empuja el botón de salida al final
         const Divider(),
@@ -67,8 +70,8 @@ Drawer drawerUser(BuildContext context) {
         // C. BOTÓN DE SALIDA (LOGOUT)
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
-          title: const Text(
-            "Cerrar Sesión",
+          title:  Text(
+            strings.logoutText,
             style: TextStyle(color: Colors.red),
           ),
           onTap: () async {

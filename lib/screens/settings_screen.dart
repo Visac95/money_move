@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/models/user_model.dart';
 import 'package:money_move/providers/user_provider.dart';
-import 'package:money_move/screens/shared_space_screen.dart';
+import 'package:money_move/screens/shared_intro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
 import 'package:money_move/providers/locale_provider.dart';
@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
               context,
               strings.sharedSpaceText,
               strings.sharedSpaceDescriptionText,
-              SharedSpaceScreen(),
+              SharedIntroScreen(),
               Icons.people_alt_outlined,
             ),
             // --- SECCIÓN IDIOMA ---
