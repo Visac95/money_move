@@ -467,4 +467,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sharedSpaceDescriptionText =>
       'Manage your finances together with someone else';
+
+  @override
+  String get sharedSpaceLargeDescriptionText =>
+      'Connect your account with a partner, family member, or associate. View unified balances, track joint transactions, and reach your financial goals by working as a single team.';
+
+  @override
+  String get inviteSomeoneText => 'Invite someone';
+
+  @override
+  String get inviteSomeoneDescriptionText =>
+      'Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team.';
 }

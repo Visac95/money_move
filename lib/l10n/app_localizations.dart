@@ -1003,6 +1003,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your finances together with someone else'**
   String get sharedSpaceDescriptionText;
+
+  /// No description provided for @sharedSpaceLargeDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your account with a partner, family member, or associate. View unified balances, track joint transactions, and reach your financial goals by working as a single team.'**
+  String get sharedSpaceLargeDescriptionText;
+
+  /// No description provided for @inviteSomeoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite someone'**
+  String get inviteSomeoneText;
+
+  /// No description provided for @inviteSomeoneDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your financial space with someone else. Manage your finances together and achieve your economic goals as a team.'**
+  String get inviteSomeoneDescriptionText;
 }
 
 class _AppLocalizationsDelegate

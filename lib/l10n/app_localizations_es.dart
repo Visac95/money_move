@@ -469,4 +469,15 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get sharedSpaceDescriptionText =>
       'Lleva tus finanzas junto a otra persona';
+
+  @override
+  String get sharedSpaceLargeDescriptionText =>
+      'Conecta tu cuenta con un socio, familiar o compañero. Visualicen sus balances unificados, registren movimientos conjuntos y alcancen sus metas financieras trabajando como un solo equipo.';
+
+  @override
+  String get inviteSomeoneText => 'Invitar a alguien';
+
+  @override
+  String get inviteSomeoneDescriptionText =>
+      'Comparte tu espacio financiero con alguien más. Administran sus finanzas juntos y logren sus objetivos económicos en equipo.';
 }

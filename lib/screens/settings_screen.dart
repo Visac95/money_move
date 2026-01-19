@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/models/user_model.dart';
 import 'package:money_move/providers/user_provider.dart';
+import 'package:money_move/screens/shared_space_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
 import 'package:money_move/providers/locale_provider.dart';
@@ -30,36 +31,12 @@ class SettingsScreen extends StatelessWidget {
             //------Profile Information-----------
             _profileContainer(colorScheme, user, strings, context),
             _SectionHeader(title: strings.profileText, icon: Icons.person),
-            Card(
-              elevation: 0,
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.people_alt_outlined),
-                title: Text(strings.sharedSpaceText),
-                subtitle: Text(
-                  strings.sharedSpaceDescriptionText,
-                ),
-                trailing: PopupMenuButton<Locale>(
-                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onSelected: (Locale newLocale) {
-                    // AQUÍ ESTÁ LA MAGIA: Cambiamos el idioma global
-                    localeProv.changeLocale(newLocale);
-                  },
-                  itemBuilder: (context) => <PopupMenuEntry<Locale>>[
-                    const PopupMenuItem(
-                      value: Locale('es'),
-                      child: Text("🇪🇸 Español"),
-                    ),
-                    const PopupMenuItem(
-                      value: Locale('en'),
-                      child: Text("🇺🇸 English"),
-                    ),
-                  ],
-                ),
-              ),
+            _navigationCardOption(
+              context,
+              strings.sharedSpaceText,
+              strings.sharedSpaceDescriptionText,
+              SharedSpaceScreen(),
+              Icons.people_alt_outlined,
             ),
             // --- SECCIÓN IDIOMA ---
             _SectionHeader(title: strings.generalText, icon: Icons.settings),
@@ -72,7 +49,10 @@ class SettingsScreen extends StatelessWidget {
               ),
               child: ListTile(
                 leading: const Icon(Icons.language),
-                title: Text(strings.languageText),
+                title: Text(
+                  strings.languageText,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text(
                   _getLanguageName(localeProv.locale.languageCode),
                 ),
@@ -112,7 +92,10 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: Text(strings.darkModeText),
+                    title: Text(
+                      strings.darkModeText,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     secondary: const Icon(
                       Icons.dark_mode_rounded,
                     ), // Icono a la izquierda
@@ -128,6 +111,31 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Card _navigationCardOption(
+    BuildContext context,
+    String title,
+    String subtitle,
+    dynamic screen,
+    IconData icon,
+  ) {
+    return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle),
+        trailing: IconButton(
+          onPressed: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => screen)),
+          icon: Icon(Icons.arrow_forward_ios, size: 16),
         ),
       ),
     );
