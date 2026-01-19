@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
-import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/date_formater.dart';
@@ -23,11 +22,6 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
   @override
   void initState() {
     super.initState();
-    final userProv = Provider.of<UserProvider>(context, listen: false);
-    Provider.of<DeudaProvider>(
-      context,
-      listen: false,
-    ).initSubscription(userProv.usuarioActual);
   }
 
   @override

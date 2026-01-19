@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
-import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/transaction_provider.dart';
-import 'package:money_move/utils/category_translater.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class BalanceCard extends StatelessWidget {
@@ -29,8 +25,6 @@ class BalanceCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final strings = AppLocalizations.of(context)!;
-    final provider = Provider.of<TransactionProvider>(context, listen: false);
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -58,7 +52,9 @@ class BalanceCard extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 130, // Le damos una altura fija o mínima para que respire
+            height: withFilterButton
+                ? 110
+                : 140, // Le damos una altura fija o mínima para que respire
             width: double.infinity, // OBLIGAMOS al Stack a usar todo el ancho
             child: Stack(
               alignment: Alignment.center,
@@ -87,85 +83,6 @@ class BalanceCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
-                // B. EL BOTÓN (En la esquina)
-                withFilterButton
-                    ? Positioned(
-                        top: 10,
-                        right: 10,
-                        child: PopupMenuButton(
-                          // Le quitamos el padding por defecto para que no ocupe espacio extra invisible
-                          padding: EdgeInsets.zero,
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(
-                              colorScheme.primary,
-                            ),
-                            // Hacemos el botón un poco más pequeño y redondeado
-                            shape: WidgetStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 4,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Hice el icono y texto un poco más pequeños para que encajen bien en la esquina
-                                Icon(
-                                  AppConstants.getIconForCategory(
-                                    provider.catFiltroActual,
-                                  ),
-                                  size: 16,
-                                  color: colorScheme.primary,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  getCategoryName(
-                                    context,
-                                    provider.catFiltroActual,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 16,
-                                  color: colorScheme.primary,
-                                ),
-                              ],
-                            ),
-                          ),
-                          onSelected: (value) {
-                            provider.cambiarCatFiltro(value);
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                                _popupMenuItem(context, "all"),
-                                _popupMenuItem(context, "cat_food"),
-                                _popupMenuItem(context, "cat_transport"),
-                                _popupMenuItem(context, "cat_leisure"),
-                                _popupMenuItem(context, "cat_health"),
-                                _popupMenuItem(context, "cat_education"),
-                                _popupMenuItem(context, "cat_church"),
-                                _popupMenuItem(context, "cat_job"),
-                                _popupMenuItem(context, "cat_pet"),
-                                _popupMenuItem(context, "cat_home"),
-                                _popupMenuItem(context, "cat_services"),
-                                _popupMenuItem(context, "cat_debt"),
-                                _popupMenuItem(context, "cat_others"),
-                              ],
-                        ),
-                      )
-                    : SizedBox.shrink(),
               ],
             ),
           ),
@@ -232,30 +149,6 @@ class BalanceCard extends StatelessWidget {
                   bgColor: AppColors.expense.withValues(alpha: 0.15),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  PopupMenuItem<String> _popupMenuItem(BuildContext context, String caregory) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    return PopupMenuItem<String>(
-      value: caregory,
-      child: Row(
-        children: [
-          Icon(
-            AppConstants.getIconForCategory(caregory),
-            color: colorScheme.primary,
-          ),
-          SizedBox(width: 10),
-          Text(
-            getCategoryName(context, caregory),
-            style: TextStyle(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],

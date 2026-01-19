@@ -6,10 +6,10 @@ import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
+import 'package:money_move/screens/ahorros_screen.dart';
 import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
-import 'package:money_move/screens/settings_screen.dart';
 import 'package:money_move/screens/stadistic_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
     AllTransactionsScreen(),
     StadisticScreen(),
     AllDeudasScreen(),
-    SettingsScreen(),
+    AhorrosScreen(),
   ];
 
   @override
@@ -177,7 +177,7 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navigationTextHome,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.monetization_on),
+            icon: const Icon(Icons.payments),
             label: l10n.navigationTextTransactions,
           ),
           BottomNavigationBarItem(
@@ -189,7 +189,7 @@ class _MainScreenState extends State<MainScreen> {
             label: l10n.navigationTextDeudas,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.savings),
             label: l10n.settingsTitle,
           ),
         ],

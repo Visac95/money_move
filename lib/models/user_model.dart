@@ -3,11 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserModel {
   final String uid;
   final String email;
-  final String? linkedAccountId; // <--- 1. Agregas esto (puede ser nulo)
+  final String name;
+  final String? photoUrl;
+  final String? linkedAccountId; 
 
   UserModel({
     required this.uid,
     required this.email,
+    required this.name,
+    this.photoUrl,
     this.linkedAccountId, // <--- 2. Lo agregas al constructor
   });
 
@@ -18,7 +22,13 @@ class UserModel {
     return UserModel(
       uid: doc.id,
       email: data['email'] ?? '',
+      name: data['name'] ?? '',
+      photoUrl: data['photoUrl'],
       linkedAccountId: data['linkedAccountId'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {"uid": uid, "email": email, "name": name, "photoUrl": photoUrl, "linkedAccountId": linkedAccountId};
   }
 }

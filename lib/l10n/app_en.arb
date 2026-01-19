@@ -146,6 +146,6 @@
     "paswordText": "Password",
     "loginText": "Log In",
     "orContinueWithText": "Or continue with",
-    "errorAlEntrarEnText": "Error logging in"
-
+    "errorAlEntrarEnText": "Error logging in",
+    "filtrosText": "Filters"
 }

@@ -979,6 +979,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error logging in'**
   String get errorAlEntrarEnText;
+
+  /// No description provided for @filtrosText.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filtrosText;
 }
 
 class _AppLocalizationsDelegate

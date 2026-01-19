@@ -454,4 +454,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorAlEntrarEnText => 'Error logging in';
+
+  @override
+  String get filtrosText => 'Filters';
 }

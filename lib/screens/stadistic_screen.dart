@@ -5,6 +5,7 @@ import 'package:money_move/widgets/charts/balance_trend_chart.dart';
 import 'package:money_move/widgets/charts/category_pie_chart.dart';
 import 'package:money_move/widgets/charts/chart_slider.dart';
 import 'package:money_move/widgets/charts/income_expense_line_chart.dart';
+import 'package:money_move/widgets/settings_button.dart';
 import 'package:money_move/widgets/stats/financial_summary_cards.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class StadisticScreen extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(right: 0.0, top: 8, bottom: 8),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
@@ -59,6 +60,7 @@ class StadisticScreen extends StatelessWidget {
               ),
             ),
           ),
+          settingsButton(context),
         ],
       ),
       body: SingleChildScrollView(

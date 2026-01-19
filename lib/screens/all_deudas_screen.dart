@@ -3,6 +3,7 @@ import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRE
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/add_deuda_button.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
+import 'package:money_move/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 
 class AllDeudasScreen extends StatefulWidget {
@@ -22,22 +23,29 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         elevation: 0,
-        title: Text(
-          strings.titleDeudasScreen,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            Icon(Icons.receipt_long),
+            SizedBox(width: 5),
+            Text(
+              strings.titleDeudasScreen,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(right: 0.0, top: 8, bottom: 8),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 // Fondo suave basado en tu color primario
                 color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                ),
               ),
               child: Row(
                 children: [
@@ -60,6 +68,8 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
               ),
             ),
           ),
+
+          settingsButton(context),
         ],
       ),
       body: SingleChildScrollView(

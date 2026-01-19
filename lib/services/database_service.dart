@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
+import 'package:money_move/models/user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DatabaseService {
@@ -14,6 +15,19 @@ class DatabaseService {
   final CollectionReference _usersRef = FirebaseFirestore.instance.collection(
     'users',
   );
+
+  // ==========================================
+  // 👤 SECCIÓN DE USERS
+  // ==========================================
+
+  Future<void> addUser(UserModel userData) async {
+    try {
+      await _usersRef.doc(userData.uid).set(userData.toMap());
+    } catch (e) {
+      print("💀💀💀💀💀💀💀💀DataServise AddUser <---------");
+      rethrow;
+    }
+  }
 
   // ==========================================
   // 💰 SECCIÓN DE TRANSACCIONES
