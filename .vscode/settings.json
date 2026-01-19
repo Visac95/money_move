@@ -4,4 +4,5 @@
     "i18n-ally.sourceLanguage": "es", // Tu idioma base
     "i18n-ally.displayLanguage": "es", // En qué idioma quieres ver las ayudas
     "i18n-ally.enabledParsers": ["arb"]
+    
 }

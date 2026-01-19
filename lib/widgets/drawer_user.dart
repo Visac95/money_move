@@ -41,7 +41,7 @@ Drawer drawerUser(BuildContext context) {
           ),
         ),
 
-        userProv.usuarioActual!.linkedAccountId != null
+        userProv.usuarioActual!.linkedAccountId == null
             ? SizedBox()
             : Padding(
                 padding: const EdgeInsets.all(12.0),

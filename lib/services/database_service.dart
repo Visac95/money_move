@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:money_move/models/deuda.dart';
+import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/models/user_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,6 +16,9 @@ class DatabaseService {
   final CollectionReference _usersRef = FirebaseFirestore.instance.collection(
     'users',
   );
+
+  final CollectionReference _invitacionRef = FirebaseFirestore.instance
+      .collection('invitations');
 
   // ==========================================
   // 👤 SECCIÓN DE USERS
@@ -141,6 +145,26 @@ class DatabaseService {
       await _deudasRef.doc(id).delete();
     } catch (e) {
       //print("❌ Error al borrar deuda: $e");
+    }
+  }
+
+  // ==========================================
+  // 👤 SECCIÓN DE invitaciones
+  // ==========================================
+
+  Future<void> addInvitacion(Invitacion i) async {
+    try {
+      await _invitacionRef.doc(i.codeInvitacion).set(i.toMap());
+    } catch (e) {
+      //print("❌ Error: $e");
+    }
+  }
+
+  Future<void> deleteInvitacion(String id) async {
+    try {
+      await _invitacionRef.doc(id).delete();
+    } catch (e) {
+      //print("❌ Error: $e");
     }
   }
 

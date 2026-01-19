@@ -5,14 +5,16 @@ class UserModel {
   final String email;
   final String name;
   final String? photoUrl;
-  final String? linkedAccountId; 
+  final String? linkedAccountId;
+  final String? spaceId;
 
   UserModel({
     required this.uid,
     required this.email,
     required this.name,
     this.photoUrl,
-    this.linkedAccountId, // <--- 2. Lo agregas al constructor
+    this.linkedAccountId,
+    this.spaceId,
   });
 
   // Paso B: Lo lees en tu factory (donde conviertes el JSON a Objeto)
@@ -25,10 +27,18 @@ class UserModel {
       name: data['name'] ?? '',
       photoUrl: data['photoUrl'],
       linkedAccountId: data['linkedAccountId'],
+      spaceId: data['spaceId'],
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {"uid": uid, "email": email, "name": name, "photoUrl": photoUrl, "linkedAccountId": linkedAccountId};
+    return {
+      "uid": uid,
+      "email": email,
+      "name": name,
+      "photoUrl": photoUrl,
+      "linkedAccountId": linkedAccountId,
+      "spaceId": spaceId,
+    };
   }
 }
