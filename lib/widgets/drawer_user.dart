@@ -13,6 +13,9 @@ Drawer drawerUser(BuildContext context) {
   final userProv = Provider.of<UserProvider>(context);
   final spaceProv = Provider.of<SpaceProvider>(context);
   final strings = AppLocalizations.of(context)!;
+  bool modoSpace =
+      (spaceProv.isSharedMode &&
+      userProv.usuarioActual!.linkedAccountId != null);
 
   return Drawer(
     child: Column(
@@ -20,12 +23,8 @@ Drawer drawerUser(BuildContext context) {
       children: [
         // A. CABECERA CON DATOS DE GOOGLE
         UserAccountsDrawerHeader(
-          accountName: Text(
-            user.displayName ?? strings.userText,
-          ),
-          accountEmail: Text(
-            user.email ?? strings.noEmailText,
-          ),
+          accountName: Text(user.displayName ?? strings.userText),
+          accountEmail: Text(user.email ?? strings.noEmailText),
           currentAccountPicture: CircleAvatar(
             backgroundImage: user.photoURL != null
                 ? NetworkImage(user.photoURL!)
@@ -35,7 +34,7 @@ Drawer drawerUser(BuildContext context) {
                 : null,
           ),
           decoration: BoxDecoration(
-            color: spaceProv.isSharedMode
+            color: modoSpace
                 ? colorScheme.inversePrimary
                 : colorScheme.primary,
           ),
@@ -70,10 +69,7 @@ Drawer drawerUser(BuildContext context) {
         // C. BOTÓN DE SALIDA (LOGOUT)
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
-          title:  Text(
-            strings.logoutText,
-            style: TextStyle(color: Colors.red),
-          ),
+          title: Text(strings.logoutText, style: TextStyle(color: Colors.red)),
           onTap: () async {
             // 1. Llamamos al servicio para desconectar Google y Firebase
             await AuthService().logout();

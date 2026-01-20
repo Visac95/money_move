@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/space_provider.dart';
+import 'package:provider/provider.dart';
 
 class SharedIntroScreen extends StatelessWidget {
   const SharedIntroScreen({super.key});
@@ -9,6 +12,7 @@ class SharedIntroScreen extends StatelessWidget {
     final accentColor = const Color(0xFFF59E0B);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final strings = AppLocalizations.of(context)!;
+    final spaceProvider = Provider.of<SpaceProvider>(context);
 
     return Scaffold(
       backgroundColor: Theme.of(
@@ -69,8 +73,114 @@ class SharedIntroScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: FilledButton.icon(
-                        onPressed: () {
-                          print("Generar Invitación");
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          );
+
+                          final invitacion = await spaceProvider
+                              .generateInvitacion();
+
+                          if (!context.mounted) return;
+                          Navigator.of(
+                            context,
+                          ).pop(); // Esto cierra el diálogo de carga
+
+                          // 4. LÓGICA FINAL
+                          if (invitacion != null) {
+                            showModalBottomSheet(
+                              showDragHandle: true,
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                // Redondeamos las esquinas de arriba
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(15),
+                                ),
+                              ),
+                              builder: (context) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    right: 20,
+                                    left: 20,
+                                    bottom: 20,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "¡Invitación Creada!",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Tu código: ${invitacion.codeInvitacion}",
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          letterSpacing: 2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          ElevatedButton.icon(
+                                            icon: const Icon(Icons.copy),
+                                            label: const Text("Copiar Link"),
+                                            onPressed: () async {
+                                              // 1. Copiar al portapapeles
+                                              await Clipboard.setData(
+                                                ClipboardData(
+                                                  text:
+                                                      invitacion.linkInvitacion,
+                                                ),
+                                              );
+
+                                              // 2. Cerrar el modal (Opcional, a veces es mejor dejarlo abierto)
+                                              // Navigator.pop(context);
+
+                                              // 3. Dar feedback al usuario (¡Muy importante!)
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    "¡Copiado al portapapeles!",
+                                                  ),
+                                                  backgroundColor: Colors.green,
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                            print(
+                              "¡Listo! Invitación creada: ${invitacion.codeInvitacion}",
+                            );
+                          } else {
+                            // ❌ ERROR:
+                            // Puedes mostrar un snackbar o una alerta de error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error al crear la invitación'),
+                              ),
+                            );
+                          }
                         },
                         style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(

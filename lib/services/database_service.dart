@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/transaction.dart';
@@ -158,6 +159,21 @@ class DatabaseService {
     } catch (e) {
       //print("❌ Error: $e");
     }
+  }
+
+  Future<Invitacion?> getActiveInvitationFuture() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+
+    final snapshot = await _invitacionRef
+        .where('creatorId', isEqualTo: user.uid)
+        .limit(1) 
+        .get(); //Uso .get() en vez de .snapshots() para que sea Future y no stream xd
+
+    if (snapshot.docs.isEmpty) return null;
+
+    final data = snapshot.docs.first.data() as Map<String, dynamic>;
+    return Invitacion.fromMap(data);
   }
 
   Future<void> deleteInvitacion(String id) async {

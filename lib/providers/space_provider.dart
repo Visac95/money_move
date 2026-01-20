@@ -27,27 +27,50 @@ class SpaceProvider extends ChangeNotifier {
   Invitacion? get invitacion => _invitacion;
 
   Future<Invitacion?> generateInvitacion() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-
-      String shortCode = generarCodigoCorto();
-      String spaceId = const Uuid().v4();
-      String linkInvitacion = "https://moneymove.app/join?c=$shortCode";
-
-      _invitacion = Invitacion(
-        codeInvitacion: shortCode,
-        linkInvitacion: linkInvitacion,
-        creationDate: DateTime.now(),
-        creatorId: user!.uid,
-        spaceId: spaceId,
-      );
-      await _dbService.addInvitacion(_invitacion!);
-      return invitacion;
-    } catch (e) {
-      print("Error generando invitación: $e");
-      return null;
-    }
+  final user = FirebaseAuth.instance.currentUser;
+  
+  // 1. Seguridad: Si no hay usuario, no hacemos nada.
+  if (user == null) {
+    //print("Error: No hay usuario logueado");
+    return null; 
   }
+
+  try {
+    Invitacion? invitacionExistente = await _dbService.getActiveInvitationFuture(); 
+
+    if (invitacionExistente != null) {
+      if (invitacionExistente.creationDate.sigueVigente) {
+        _invitacion = invitacionExistente;
+        //print("♻️ Reutilizando invitación activa");
+        return _invitacion;
+      }
+      
+      await _dbService.deleteInvitacion(invitacionExistente.codeInvitacion);
+    }
+
+    String shortCode = generarCodigoCorto();
+    String spaceId = const Uuid().v4();
+    // Tip: Usa Uri.encodeComponent por si acaso, aunque con tu generador no hace falta.
+    String linkInvitacion = "https://moneymove.app/join?c=$shortCode";
+
+    _invitacion = Invitacion(
+      codeInvitacion: shortCode,
+      linkInvitacion: linkInvitacion,
+      creationDate: DateTime.now(),
+      creatorId: user.uid, // Ya validamos arriba que user no es null
+      spaceId: spaceId,
+    );
+
+    await _dbService.addInvitacion(_invitacion!);
+    print("✨ Nueva invitación creada: $shortCode");
+    
+    return _invitacion;
+
+  } catch (e) {
+    print("Error generando invitación: $e");
+    return null;
+  }
+}
 
   Future<void> deleteInvitacion(String id) async {
     _dbService.deleteInvitacion(id);
@@ -105,7 +128,7 @@ class SpaceProvider extends ChangeNotifier {
       // ordenamos que se autodestruya en el mismo momento que nos unimos.
       batch.delete(inviteRef);
 
-      // 4. EJECUTAR TODO
+      // 4. EJECUTAR TOdo
       await batch.commit();
 
       return InvitacionStatus.success; // Éxito total
@@ -115,10 +138,12 @@ class SpaceProvider extends ChangeNotifier {
     }
   }
 }
-enum InvitacionStatus {
-  noUser,
-  expired,
-  selfInvitacion,
-  success,
-  error
+
+enum InvitacionStatus { noUser, expired, selfInvitacion, success, error }
+
+extension DateChecks on DateTime {
+  bool get sigueVigente {
+    final fechaVencimiento = this.add(const Duration(hours: 24));
+    return DateTime.now().isBefore(fechaVencimiento);
+  }
 }

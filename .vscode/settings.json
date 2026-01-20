@@ -3,6 +3,9 @@
     "i18n-ally.keystyle": "flat",
     "i18n-ally.sourceLanguage": "es", // Tu idioma base
     "i18n-ally.displayLanguage": "es", // En qué idioma quieres ver las ayudas
-    "i18n-ally.enabledParsers": ["arb"]
+    "i18n-ally.enabledParsers": [
+        "arb"
+    ],
+    "cmake.sourceDirectory": "C:/Users/09796/OneDrive/Documentos/A_Samuel/PROYECTOS.V/money_move/linux"
     
 }
