@@ -51,7 +51,7 @@ class SpaceProvider extends ChangeNotifier {
     String shortCode = generarCodigoCorto();
     String spaceId = const Uuid().v4();
     // Tip: Usa Uri.encodeComponent por si acaso, aunque con tu generador no hace falta.
-    String linkInvitacion = "https://moneymove.app/join?c=$shortCode";
+    String linkInvitacion = "https://moneymove.visacstudio.online/invite?code=$shortCode";
 
     _invitacion = Invitacion(
       codeInvitacion: shortCode,

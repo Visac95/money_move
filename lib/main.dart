@@ -9,6 +9,7 @@ import 'package:money_move/firebase_options.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/services/auth_gate.dart';
+import 'package:money_move/services/deep_link_service.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_move/config/app_colors.dart';
@@ -45,6 +46,8 @@ void main() async {
     cacheSizeBytes:
         Settings.CACHE_SIZE_UNLIMITED, // Opcional: Para guardar mucha data
   );
+
+  await DeepLinkService().initDeepLinks();
 
   runApp(
     MultiProvider(
