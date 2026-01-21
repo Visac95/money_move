@@ -115,7 +115,7 @@ class SharedIntroScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        "¡Invitación Creada!",
+                                        strings.invitationCreatedText,
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class SharedIntroScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "Tu código: ${invitacion.codeInvitacion}",
+                                        "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
                                         style: const TextStyle(
                                           fontSize: 30,
                                           letterSpacing: 2,
@@ -134,7 +134,7 @@ class SharedIntroScreen extends StatelessWidget {
                                         children: [
                                           ElevatedButton.icon(
                                             icon: const Icon(Icons.copy),
-                                            label: const Text("Copiar Link"),
+                                            label: Text(strings.copyLinkText),
                                             onPressed: () async {
                                               // 1. Copiar al portapapeles
                                               await Clipboard.setData(
@@ -148,12 +148,14 @@ class SharedIntroScreen extends StatelessWidget {
                                               // Navigator.pop(context);
 
                                               // 3. Dar feedback al usuario (¡Muy importante!)
+                                              if (!context.mounted) return;
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    "¡Copiado al portapapeles!",
+                                                    strings
+                                                        .copiedToClipboardText,
                                                   ),
                                                   backgroundColor: Colors.green,
                                                   duration: Duration(
@@ -171,14 +173,14 @@ class SharedIntroScreen extends StatelessWidget {
                               },
                             );
                             print(
-                              "¡Listo! Invitación creada: ${invitacion.codeInvitacion}",
+                              "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
                             );
                           } else {
                             // ❌ ERROR:
                             // Puedes mostrar un snackbar o una alerta de error
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Error al crear la invitación'),
+                               SnackBar(
+                                content: Text(strings.errorCreatingInvitationText),
                               ),
                             );
                           }

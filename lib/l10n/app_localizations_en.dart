@@ -535,4 +535,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get okText => 'OK';
+
+  @override
+  String get invitationCreatedText => 'Invitation Created!';
+
+  @override
+  String get yourCodeText => 'Your code';
+
+  @override
+  String get copyLinkText => 'Copy Link';
+
+  @override
+  String get copiedToClipboardText => 'Copied to clipboard!';
+
+  @override
+  String get readyInvitationCreatedText => 'Ready! Invitation created';
+
+  @override
+  String get errorCreatingInvitationText => 'Error creating invitation';
 }

@@ -171,5 +171,11 @@
     "alreadyInSharedSpaceText": "You are already in a shared space",
     "enterInviteCodeText": "Enter invitation code",
     "inviteCodeHintText": "Enter the invitation code here",
-    "okText": "OK"
+    "okText": "OK",
+    "invitationCreatedText": "Invitation Created!",
+    "yourCodeText": "Your code",
+    "copyLinkText": "Copy Link",
+    "copiedToClipboardText": "Copied to clipboard!",
+    "readyInvitationCreatedText": "Ready! Invitation created",
+    "errorCreatingInvitationText": "Error creating invitation"
 }

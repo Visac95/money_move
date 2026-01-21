@@ -1129,6 +1129,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get okText;
+
+  /// No description provided for @invitationCreatedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation Created!'**
+  String get invitationCreatedText;
+
+  /// No description provided for @yourCodeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your code'**
+  String get yourCodeText;
+
+  /// No description provided for @copyLinkText.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Link'**
+  String get copyLinkText;
+
+  /// No description provided for @copiedToClipboardText.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard!'**
+  String get copiedToClipboardText;
+
+  /// No description provided for @readyInvitationCreatedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready! Invitation created'**
+  String get readyInvitationCreatedText;
+
+  /// No description provided for @errorCreatingInvitationText.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating invitation'**
+  String get errorCreatingInvitationText;
 }
 
 class _AppLocalizationsDelegate
