@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/join_space_screen.dart';
+import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
 class SharedIntroScreen extends StatelessWidget {
@@ -14,6 +17,8 @@ class SharedIntroScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final strings = AppLocalizations.of(context)!;
     final spaceProvider = Provider.of<SpaceProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: Theme.of(
@@ -69,162 +74,33 @@ class SharedIntroScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
 
-                    // Botón Principal
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: FilledButton.icon(
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            },
-                          );
-
-                          final invitacion = await spaceProvider
-                              .generateInvitacion();
-
-                          if (!context.mounted) return;
-                          Navigator.of(
-                            context,
-                          ).pop(); // Esto cierra el diálogo de carga
-
-                          // 4. LÓGICA FINAL
-                          if (invitacion != null) {
-                            showModalBottomSheet(
-                              showDragHandle: true,
-                              context: context,
-                              shape: const RoundedRectangleBorder(
-                                // Redondeamos las esquinas de arriba
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(15),
+                    userProvider.usuarioActual!.spaceId != null
+                        ? Column(
+                            children: [
+                              Text(
+                                strings.alreadyInSharedSpaceText,
+                                style: TextStyle(
+                                  color: colorScheme.inversePrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
                               ),
-                              builder: (context) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                    right: 20,
-                                    left: 20,
-                                    bottom: 20,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        strings.invitationCreatedText,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          letterSpacing: 2,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        children: [
-                                          ElevatedButton.icon(
-                                            icon: const Icon(Icons.copy),
-                                            label: Text(strings.copyLinkText),
-                                            onPressed: () async {
-                                              // 1. Copiar al portapapeles
-                                              await Clipboard.setData(
-                                                ClipboardData(
-                                                  text:
-                                                      invitacion.linkInvitacion,
-                                                ),
-                                              );
-
-                                              // 2. Cerrar el modal (Opcional, a veces es mejor dejarlo abierto)
-                                              // Navigator.pop(context);
-
-                                              // 3. Dar feedback al usuario (¡Muy importante!)
-                                              if (!context.mounted) return;
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    strings
-                                                        .copiedToClipboardText,
-                                                  ),
-                                                  backgroundColor: Colors.green,
-                                                  duration: Duration(
-                                                    seconds: 2,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                            print(
-                              "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
-                            );
-                          } else {
-                            // ❌ ERROR:
-                            // Puedes mostrar un snackbar o una alerta de error
-                            ScaffoldMessenger.of(context).showSnackBar(
-                               SnackBar(
-                                content: Text(strings.errorCreatingInvitationText),
+                              const SizedBox(height: 16),
+                              _cancelExitSpaceButton(
+                                context,
+                                strings,
+                                colorScheme,
+                                spaceProvider,
+                                userProvider,
                               ),
-                            );
-                          }
-                        },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Theme.of(
+                            ],
+                          )
+                        : _createSpaceButtons(
                             context,
-                          ).colorScheme.inversePrimary,
-                          foregroundColor: Colors.white,
-                        ),
-                        icon: const Icon(Icons.link, size: 24),
-                        label: Text(
-                          strings.inviteSomeoneText,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
+                            spaceProvider,
+                            strings,
+                            accentColor,
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Botón Secundario
-                    TextButton(
-                      onPressed: () async {
-                        final String code = await _showInputDialog(
-                          context,
-                          strings,
-                        );
-
-                        if (code.isEmpty) return;
-                        if (!context.mounted) return;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => JoinSpaceScreen(code: code),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        strings.uHaveCodeEnterHere,
-                        style: TextStyle(color: accentColor),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -250,6 +126,259 @@ class SharedIntroScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  SizedBox _cancelExitSpaceButton(
+    BuildContext context,
+    AppLocalizations strings,
+    ColorScheme colorScheme,
+    SpaceProvider spaceProv,
+    UserProvider userProv,
+  ) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: FilledButton.icon(
+        onPressed: () async {
+          bool? deleteSpace = await _showDialogExitSpace(
+            context,
+            strings,
+            colorScheme,
+          );
+
+          if (deleteSpace == null ||
+              deleteSpace == false ||
+              userProv.usuarioActual!.spaceId == null) {
+            return;
+          }
+
+          final exitSpaceStatus = await spaceProv.exitSpace(
+            userProv.usuarioActual!.spaceId.toString(),
+          );
+          if (!context.mounted) return;
+          if (exitSpaceStatus) {
+            UiUtils.scaffoldMessengerSnackBar(
+              context,
+              strings.leftSharedSpaceSuccessText,
+              colorScheme.secondary,
+            );
+          } else {
+            UiUtils.scaffoldMessengerSnackBar(
+              context,
+              strings.errorHasOccurredText,
+              colorScheme.error,
+            );
+          }
+        },
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.expense,
+          foregroundColor: colorScheme.surface,
+        ),
+        icon: const Icon(Icons.exit_to_app, size: 24),
+        label: Text(
+          strings.exitSharedSpaceText,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+        ),
+      ),
+    );
+  }
+
+  Future<bool?> _showDialogExitSpace(
+    BuildContext context,
+    AppLocalizations strings,
+    ColorScheme colorScheme,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(strings.areYouSureExitText),
+              SizedBox(height: 10),
+              Text(strings.exitSharedSpaceDescriptionText),
+              SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FilledButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        colorScheme.onSurface,
+                      ),
+                    ),
+                    onPressed: () {
+                      //cancelar
+                      Navigator.pop(context, false);
+                    },
+                    label: Text(
+                      strings.cancelText,
+                      style: TextStyle(color: colorScheme.surface),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  FilledButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        AppColors.expense,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    label: Text(
+                      strings.exitText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: colorScheme.surface),
+                    ),
+                    icon: Icon(Icons.exit_to_app),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Column _createSpaceButtons(
+    BuildContext context,
+    SpaceProvider spaceProvider,
+    AppLocalizations strings,
+    Color accentColor,
+  ) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: FilledButton.icon(
+            onPressed: () async {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return const Center(child: CircularProgressIndicator());
+                },
+              );
+
+              final invitacion = await spaceProvider.generateInvitacion();
+
+              if (!context.mounted) return;
+              Navigator.of(context).pop(); // Esto cierra el diálogo de carga
+
+              // 4. LÓGICA FINAL
+              if (invitacion != null) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    // Redondeamos las esquinas de arriba
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                  ),
+                  builder: (context) {
+                    return Container(
+                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            strings.invitationCreatedText,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
+                            style: const TextStyle(
+                              fontSize: 30,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              ElevatedButton.icon(
+                                icon: const Icon(Icons.copy),
+                                label: Text(strings.copyLinkText),
+                                onPressed: () async {
+                                  // 1. Copiar al portapapeles
+                                  await Clipboard.setData(
+                                    ClipboardData(
+                                      text: invitacion.linkInvitacion,
+                                    ),
+                                  );
+
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        strings.copiedToClipboardText,
+                                      ),
+                                      backgroundColor: Colors.green,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+                print(
+                  "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
+                );
+              } else {
+                // ❌ ERROR:
+                // Puedes mostrar un snackbar o una alerta de error
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(strings.errorCreatingInvitationText)),
+                );
+              }
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              foregroundColor: Colors.white,
+            ),
+            icon: const Icon(Icons.link, size: 24),
+            label: Text(
+              strings.inviteSomeoneText,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Botón Secundario
+        TextButton(
+          onPressed: () async {
+            final String code = await _showInputDialog(context, strings);
+
+            if (code.isEmpty) return;
+            if (!context.mounted) return;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JoinSpaceScreen(code: code),
+              ),
+            );
+          },
+          child: Text(
+            strings.uHaveCodeEnterHere,
+            style: TextStyle(color: accentColor),
+          ),
+        ),
+      ],
     );
   }
 }

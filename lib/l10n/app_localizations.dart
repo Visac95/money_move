@@ -1165,6 +1165,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error creating invitation'**
   String get errorCreatingInvitationText;
+
+  /// No description provided for @exitSharedSpaceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Shared Space'**
+  String get exitSharedSpaceText;
+
+  /// No description provided for @exitSharedSpaceDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'By exiting the shared space, your account will return to personal and you will no longer have access to joint finances. Your personal data will remain intact.'**
+  String get exitSharedSpaceDescriptionText;
+
+  /// No description provided for @areYouSureExitText.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit?'**
+  String get areYouSureExitText;
+
+  /// No description provided for @leftSharedSpaceSuccessText.
+  ///
+  /// In en, this message translates to:
+  /// **'You have successfully left the shared space! 🎉'**
+  String get leftSharedSpaceSuccessText;
+
+  /// No description provided for @exitText.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exitText;
 }
 
 class _AppLocalizationsDelegate

@@ -4,7 +4,6 @@ import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/user_model.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
-import 'package:money_move/screens/home_screen.dart';
 import 'package:money_move/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -129,6 +128,7 @@ class JoinSpaceScreen extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 40),
 
                       //---------Boton------------
                       SizedBox(

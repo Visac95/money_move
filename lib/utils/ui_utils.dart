@@ -49,7 +49,7 @@ class UiUtils {
     String content,
     BuildContext context,
     VoidCallback onConfirm,
-    Color color
+    Color color,
   ) {
     showDialog(
       context: context,
@@ -73,7 +73,17 @@ class UiUtils {
             ),
           ),
         ],
-      ), 
+      ),
     );
+  }
+
+  static void scaffoldMessengerSnackBar(
+    BuildContext context,
+    String text,
+    Color color,
+  ) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(text), backgroundColor: color));
   }
 }

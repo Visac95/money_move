@@ -553,4 +553,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCreatingInvitationText => 'Error creating invitation';
+
+  @override
+  String get exitSharedSpaceText => 'Exit Shared Space';
+
+  @override
+  String get exitSharedSpaceDescriptionText =>
+      'By exiting the shared space, your account will return to personal and you will no longer have access to joint finances. Your personal data will remain intact.';
+
+  @override
+  String get areYouSureExitText => 'Are you sure you want to exit?';
+
+  @override
+  String get leftSharedSpaceSuccessText =>
+      'You have successfully left the shared space! 🎉';
+
+  @override
+  String get exitText => 'Exit';
 }

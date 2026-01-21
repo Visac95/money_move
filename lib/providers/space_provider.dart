@@ -203,6 +203,60 @@ class SpaceProvider extends ChangeNotifier {
       return (null, InvitacionStatus.error);
     }
   }
+
+  Future<bool> exitSpace(String id) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      final authUser = FirebaseAuth.instance.currentUser;
+      if (authUser == null) return false;
+
+      final userSnapshot = await firestore
+          .collection("users")
+          .doc(authUser.uid)
+          .get();
+
+      if (!userSnapshot.exists) return false;
+
+      final guestUser = UserModel.fromFirestore(userSnapshot);
+
+      final String? partnerUid = guestUser.linkedAccountId; // ID de tu amigo
+      final String? spaceId = guestUser.spaceId; // ID del nuevo grupo
+
+      if (partnerUid == null) return false;
+      if (spaceId == null) {
+        print("😍🫶😊 El usuario no pertenece a un Space");
+        return false;
+      }
+
+      // 3. PREPARAR EL BATCH (El paquete todo-en-uno) 📦
+      WriteBatch batch = firestore.batch();
+
+      // A. Actualizar al DUEÑO (Host)
+      final hostRef = firestore.collection('users').doc(partnerUid);
+      batch.update(hostRef, {
+        'linkedAccountId': null, // Le decimos quién es su pareja
+        'spaceId': null, // Le asignamos el grupo
+      });
+
+      // B. Actualizar al INVITADO (Yo)
+      final guestRef = firestore.collection('users').doc(guestUser.uid);
+      batch.update(guestRef, {
+        'linkedAccountId': null, // Guardo quién es mi pareja
+        'spaceId': null, // Me asigno el grupo
+      });
+
+      //batch.delete(inviteRef);
+
+      // 4. EJECUTAR TOdo
+      await batch.commit();
+      return true;
+    } catch (e) {
+      print("💀😍❤️🤑💀 Space Provider ExitSpace $e");
+    }
+
+    return false;
+  }
 }
 
 enum InvitacionStatus {
