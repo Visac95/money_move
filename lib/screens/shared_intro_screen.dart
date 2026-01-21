@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/screens/join_space_screen.dart';
 import 'package:provider/provider.dart';
 
 class SharedIntroScreen extends StatelessWidget {
@@ -202,7 +203,21 @@ class SharedIntroScreen extends StatelessWidget {
 
                     // Botón Secundario
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final String code = await _showInputDialog(
+                          context,
+                          strings,
+                        );
+
+                        if (code.isEmpty) return;
+                        if (!context.mounted) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JoinSpaceScreen(code: code),
+                          ),
+                        );
+                      },
                       child: Text(
                         strings.uHaveCodeEnterHere,
                         style: TextStyle(color: accentColor),
@@ -235,4 +250,46 @@ class SharedIntroScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<String> _showInputDialog(
+  BuildContext context,
+  AppLocalizations strings,
+) async {
+  String tempCode = ""; // Variable temporal
+
+  // 1. AWAIT: Esperamos a que el diálogo se cierre y nos devuelva un valor
+  final result = await showDialog<String>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(strings.enterInviteCodeText),
+        content: TextField(
+          autofocus: true, // Para que el teclado salga automático
+          onChanged: (value) {
+            tempCode = value; // Guardamos lo que escribe
+          },
+          decoration: InputDecoration(hintText: strings.inviteCodeHintText),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Cierra sin devolver nada (null)
+            },
+            child: Text(strings.cancelText),
+          ),
+          TextButton(
+            onPressed: () {
+              // Devolvemos el código escrito al cerrar
+              Navigator.pop(context, tempCode);
+            },
+            child: Text(strings.okText),
+          ),
+        ],
+      );
+    },
+  );
+
+  // Devolvemos el resultado o vacío si canceló
+  return result ?? "";
 }

@@ -495,4 +495,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logoutText => 'Log out';
+
+  @override
+  String get invitationMessageText =>
+      'Has invited you to join their shared space.';
+
+  @override
+  String get aceptInvitationText => 'Accept Invitation';
+
+  @override
+  String get invitationCodeErrorText => 'Invalid invitation code';
+
+  @override
+  String get invitationExpiredText => 'The invitation code has expired';
+
+  @override
+  String get invitationSelfErrorText => 'You cannot join your own space';
+
+  @override
+  String get invitationSuccessText =>
+      'You have successfully joined the shared space! 🎉';
+
+  @override
+  String get acceptInvitationAlertText =>
+      'By accepting the invitation, your account will merge with the shared space and you will be able to view and manage joint finances. You will have access to your personal and shared finances in one place.';
+
+  @override
+  String get noLogInAlertText =>
+      'To access this feature, please log in or create an account.';
+
+  @override
+  String get alreadyInSharedSpaceText => 'You are already in a shared space';
+
+  @override
+  String get enterInviteCodeText => 'Enter invitation code';
+
+  @override
+  String get inviteCodeHintText => 'Enter the invitation code here';
+
+  @override
+  String get okText => 'OK';
 }

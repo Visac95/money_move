@@ -21,6 +21,8 @@ import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -58,7 +60,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(create: (_)=> SpaceProvider()),
+        ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: const MyApp(),
@@ -75,6 +77,7 @@ class MyApp extends StatelessWidget {
     return Consumer2<LocaleProvider, SettingsProvider>(
       builder: (context, localeProv, settingsProv, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Money Move',
 

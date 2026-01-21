@@ -1057,6 +1057,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log out'**
   String get logoutText;
+
+  /// No description provided for @invitationMessageText.
+  ///
+  /// In en, this message translates to:
+  /// **'Has invited you to join their shared space.'**
+  String get invitationMessageText;
+
+  /// No description provided for @aceptInvitationText.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Invitation'**
+  String get aceptInvitationText;
+
+  /// No description provided for @invitationCodeErrorText.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid invitation code'**
+  String get invitationCodeErrorText;
+
+  /// No description provided for @invitationExpiredText.
+  ///
+  /// In en, this message translates to:
+  /// **'The invitation code has expired'**
+  String get invitationExpiredText;
+
+  /// No description provided for @invitationSelfErrorText.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot join your own space'**
+  String get invitationSelfErrorText;
+
+  /// No description provided for @invitationSuccessText.
+  ///
+  /// In en, this message translates to:
+  /// **'You have successfully joined the shared space! 🎉'**
+  String get invitationSuccessText;
+
+  /// No description provided for @acceptInvitationAlertText.
+  ///
+  /// In en, this message translates to:
+  /// **'By accepting the invitation, your account will merge with the shared space and you will be able to view and manage joint finances. You will have access to your personal and shared finances in one place.'**
+  String get acceptInvitationAlertText;
+
+  /// No description provided for @noLogInAlertText.
+  ///
+  /// In en, this message translates to:
+  /// **'To access this feature, please log in or create an account.'**
+  String get noLogInAlertText;
+
+  /// No description provided for @alreadyInSharedSpaceText.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already in a shared space'**
+  String get alreadyInSharedSpaceText;
+
+  /// No description provided for @enterInviteCodeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter invitation code'**
+  String get enterInviteCodeText;
+
+  /// No description provided for @inviteCodeHintText.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the invitation code here'**
+  String get inviteCodeHintText;
+
+  /// No description provided for @okText.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okText;
 }
 
 class _AppLocalizationsDelegate

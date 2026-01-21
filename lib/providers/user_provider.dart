@@ -1,3 +1,4 @@
+import 'dart:async'; // Necesario para StreamSubscription
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,37 +6,78 @@ import 'package:money_move/models/user_model.dart';
 import 'package:money_move/services/database_service.dart';
 
 class UserProvider extends ChangeNotifier {
-  UserModel? _usuarioActual = UserModel(uid: "", email: "", name: "");
+  final DatabaseService _dbService = DatabaseService();
+  UserModel? _usuarioActual; // Puede empezar nulo
+
+  // Guardamos la suscripción para poder controlarla
+  StreamSubscription<DocumentSnapshot>? _userSubscription;
 
   UserModel? get usuarioActual => _usuarioActual;
 
   void initSubscription() {
-    final user = FirebaseAuth.instance.currentUser!;
-    // ignore: no_leading_underscores_for_local_identifiers
-    final DatabaseService _dbService = DatabaseService();
+    final user = FirebaseAuth.instance.currentUser;
 
-    FirebaseFirestore.instance
+    // 1. SEGURIDAD: Si no hay usuario logueado o YA estamos escuchando, no hacemos nada.
+    // Esto evita el spam de logs y duplicidad.
+    if (user == null) return;
+    if (_userSubscription != null) return;
+
+    print("🎧 Iniciando suscripción al usuario: ${user.uid}");
+
+    _userSubscription = FirebaseFirestore.instance
         .collection("users")
         .doc(user.uid)
         .snapshots()
-        .listen((snapshot) {
-          if (snapshot.exists) {
-            print("✅✅✅✅✅✅✅✅UserProvider line 25");
-            print("${snapshot.data()}");
-            _usuarioActual = UserModel.fromFirestore(snapshot);
+        .listen(
+          (snapshot) {
+            if (snapshot.exists) {
+              print("✅✅✅ CAMBIO DETECTADO EN USUARIO");
+              // Convertimos la data
+              _usuarioActual = UserModel.fromFirestore(snapshot);
 
-            notifyListeners();
-          } else {
-            print("💀💀💀💀💀💀💀💀UserProvider line 25");
-            _dbService.addUser(
-              UserModel(
+              // 2. IMPORTANTE: Avisar a la app que hay datos nuevos
+              notifyListeners();
+            } else {
+              print("💀 Usuario no existe en DB, creándolo...");
+              // Si no existe, lo creamos
+              final newUser = UserModel(
                 uid: user.uid,
                 email: user.email ?? "",
-                name: user.displayName ?? "",
+                name: user.displayName ?? "Usuario",
                 photoUrl: user.photoURL,
-              ),
-            );
-          }
-        });
+              );
+
+              _dbService.addUser(newUser);
+              // No hace falta notifyListeners aquí porque al crearlo,
+              // Firebase disparará este listener de nuevo con 'exists' en true.
+            }
+          },
+          onError: (error) {
+            print("🚨 Error en el listener del usuario: $error");
+          },
+        );
+  }
+
+  // Método para cerrar la escucha cuando cierras sesión (importante)
+  void stopSubscription() {
+    _userSubscription?.cancel();
+    _userSubscription = null;
+    _usuarioActual = null;
+    notifyListeners();
+  }
+
+  Future<UserModel?> getUserByUid(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .get();
+
+      if (!doc.exists) return null;
+      return UserModel.fromFirestore(doc);
+    } catch (e) {
+      print("Error obteniendo usuario por UID: $e");
+      return null;
+    }
   }
 }

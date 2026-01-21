@@ -159,5 +159,17 @@
     "actualSpaceText": "Espacio actual",
     "userText": "Usuario",
     "noEmailText": "Sin correo electrónico",
-    "logoutText": "Cerrar sesión"
+    "logoutText": "Cerrar sesión",
+    "invitationMessageText": "Te ha invitado a unirte a su espacio compartido.",
+    "aceptInvitationText": "Aceptar invitación",
+    "invitationCodeErrorText": "Código de invitación inválido",
+    "invitationExpiredText": "El código de invitación ha expirado",
+    "invitationSelfErrorText": "No puedes unirte a tu propio espacio",
+    "invitationSuccessText": "¡Has unido exitosamente al espacio compartido! 🎉",
+    "acceptInvitationAlertText": "Al aceptar la invitación, tu cuenta se fusionará con el espacio compartido y podrás ver y gestionar las finanzas conjuntas. Tendras acceso a tus finanazas personales y las compartidas en un solo lugar.",
+    "noLogInAlertText": "Para acceder a esta función, por favor inicia sesión o crea una cuenta.",
+    "alreadyInSharedSpaceText": "Ya estás en un espacio compartido",
+    "enterInviteCodeText": "Ingresar código de invitación",
+    "inviteCodeHintText": "Escribe el código de invitación aquí",
+    "okText": "OK"
 }

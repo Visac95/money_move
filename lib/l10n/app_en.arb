@@ -159,5 +159,17 @@
     "actualSpaceText": "Current Space",
     "userText": "User",
     "noEmailText": "No email",
-    "logoutText": "Log out"
+    "logoutText": "Log out",
+    "invitationMessageText": "Has invited you to join their shared space.",
+    "aceptInvitationText": "Accept Invitation",
+    "invitationCodeErrorText": "Invalid invitation code",
+    "invitationExpiredText": "The invitation code has expired",
+    "invitationSelfErrorText": "You cannot join your own space",
+    "invitationSuccessText": "You have successfully joined the shared space! 🎉",
+    "acceptInvitationAlertText": "By accepting the invitation, your account will merge with the shared space and you will be able to view and manage joint finances. You will have access to your personal and shared finances in one place.",
+    "noLogInAlertText": "To access this feature, please log in or create an account.",
+    "alreadyInSharedSpaceText": "You are already in a shared space",
+    "enterInviteCodeText": "Enter invitation code",
+    "inviteCodeHintText": "Enter the invitation code here",
+    "okText": "OK"
 }

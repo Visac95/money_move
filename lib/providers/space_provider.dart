@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/models/invitacion.dart';
+import 'package:money_move/models/user_model.dart';
 import 'package:money_move/services/database_service.dart';
 import 'package:money_move/utils/generar_codigo_corto.dart';
 import 'package:uuid/uuid.dart';
@@ -27,50 +28,51 @@ class SpaceProvider extends ChangeNotifier {
   Invitacion? get invitacion => _invitacion;
 
   Future<Invitacion?> generateInvitacion() async {
-  final user = FirebaseAuth.instance.currentUser;
-  
-  // 1. Seguridad: Si no hay usuario, no hacemos nada.
-  if (user == null) {
-    //print("Error: No hay usuario logueado");
-    return null; 
-  }
+    final user = FirebaseAuth.instance.currentUser;
 
-  try {
-    Invitacion? invitacionExistente = await _dbService.getActiveInvitationFuture(); 
-
-    if (invitacionExistente != null) {
-      if (invitacionExistente.creationDate.sigueVigente) {
-        _invitacion = invitacionExistente;
-        //print("♻️ Reutilizando invitación activa");
-        return _invitacion;
-      }
-      
-      await _dbService.deleteInvitacion(invitacionExistente.codeInvitacion);
+    // 1. Seguridad: Si no hay usuario, no hacemos nada.
+    if (user == null) {
+      //print("Error: No hay usuario logueado");
+      return null;
     }
 
-    String shortCode = generarCodigoCorto();
-    String spaceId = const Uuid().v4();
-    // Tip: Usa Uri.encodeComponent por si acaso, aunque con tu generador no hace falta.
-    String linkInvitacion = "https://moneymove.visacstudio.online/invite?code=$shortCode";
+    try {
+      Invitacion? invitacionExistente = await _dbService
+          .getActiveInvitationFuture();
 
-    _invitacion = Invitacion(
-      codeInvitacion: shortCode,
-      linkInvitacion: linkInvitacion,
-      creationDate: DateTime.now(),
-      creatorId: user.uid, // Ya validamos arriba que user no es null
-      spaceId: spaceId,
-    );
+      if (invitacionExistente != null) {
+        if (invitacionExistente.creationDate.sigueVigente) {
+          _invitacion = invitacionExistente;
+          //print("♻️ Reutilizando invitación activa");
+          return _invitacion;
+        }
 
-    await _dbService.addInvitacion(_invitacion!);
-    print("✨ Nueva invitación creada: $shortCode");
-    
-    return _invitacion;
+        await _dbService.deleteInvitacion(invitacionExistente.codeInvitacion);
+      }
 
-  } catch (e) {
-    print("Error generando invitación: $e");
-    return null;
+      String shortCode = generarCodigoCorto();
+      String spaceId = const Uuid().v4();
+      // Tip: Usa Uri.encodeComponent por si acaso, aunque con tu generador no hace falta.
+      String linkInvitacion =
+          "https://moneymove.visacstudio.online/invite?code=$shortCode";
+
+      _invitacion = Invitacion(
+        codeInvitacion: shortCode,
+        linkInvitacion: linkInvitacion,
+        creationDate: DateTime.now(),
+        creatorId: user.uid, // Ya validamos arriba que user no es null
+        spaceId: spaceId,
+      );
+
+      await _dbService.addInvitacion(_invitacion!);
+      print("✨ Nueva invitación creada: $shortCode");
+
+      return _invitacion;
+    } catch (e) {
+      print("Error generando invitación: $e");
+      return null;
+    }
   }
-}
 
   Future<void> deleteInvitacion(String id) async {
     _dbService.deleteInvitacion(id);
@@ -80,23 +82,23 @@ class SpaceProvider extends ChangeNotifier {
     final firestore = FirebaseFirestore.instance;
     final guestUser = FirebaseAuth.instance.currentUser;
 
-    if (guestUser == null) return InvitacionStatus.noUser;
+    if (guestUser == null) {
+      print("No hay usuario logueado💀💀💀");
+      return InvitacionStatus.noUser;
+    }
+    ;
 
     try {
-      // 1. BUSCAR LA INVITACIÓN
-      // Usamos el código ingresado como ID del documento (porque así lo guardamos antes)
       final inviteRef = firestore.collection('invitations').doc(codeInput);
       final inviteSnapshot = await inviteRef.get();
 
-      // Validar si existe
       if (!inviteSnapshot.exists) {
-        print("Código inválido o expirado");
-        return InvitacionStatus.expired;
+        print("Código inválido");
+        return InvitacionStatus.invalid;
       }
 
-      // 2. EXTRAER DATOS
-      // Convertimos el snapshot a tu modelo (o sacamos los datos raw)
       final inviteData = inviteSnapshot.data()!;
+      final i = Invitacion.fromMap(inviteData);
       final String hostUid = inviteData['creatorId']; // ID de tu amigo
       final String spaceId = inviteData['spaceId']; // ID del nuevo grupo
 
@@ -104,6 +106,18 @@ class SpaceProvider extends ChangeNotifier {
       if (hostUid == guestUser.uid) {
         print("No puedes unirte a tu propia invitación");
         return InvitacionStatus.selfInvitacion;
+      }
+
+      if (!i.creationDate.sigueVigente) {
+        print("Ya expiro la invitacion");
+        try {
+          await deleteInvitacion(i.codeInvitacion);
+        } catch (_) {
+          print(
+            "No se pudo borrar la invitación expirada (probablemente permisos)",
+          );
+        }
+        return InvitacionStatus.expired;
       }
 
       // 3. PREPARAR EL BATCH (El paquete todo-en-uno) 📦
@@ -133,13 +147,73 @@ class SpaceProvider extends ChangeNotifier {
 
       return InvitacionStatus.success; // Éxito total
     } catch (e) {
-      print("Error al unirse: $e");
+      print("💀💀💀💀💀Error al unirse: $e");
       return InvitacionStatus.error;
+    }
+  }
+
+  Future<(Invitacion?, InvitacionStatus)> getInvitacionByCode(
+    String code,
+  ) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      final authUser = FirebaseAuth.instance.currentUser;
+      if (authUser == null) return (null, InvitacionStatus.noUser);
+
+      final userSnapshot = await firestore
+          .collection("users")
+          .doc(authUser.uid)
+          .get();
+
+      if (!userSnapshot.exists) return (null, InvitacionStatus.error);
+
+      final guestUser = UserModel.fromFirestore(userSnapshot);
+
+      if (guestUser.spaceId != null) {
+        print("El usuario ya pertenece a un Space");
+        return (null, InvitacionStatus.alreadyInSpace);
+      }
+
+      final inviteRef = firestore.collection('invitations').doc(code);
+      final inviteSnapshot = await inviteRef.get();
+
+      if (!inviteSnapshot.exists) {
+        print("Código inválido o expirado");
+        return (null, InvitacionStatus.expired);
+      }
+
+      final inviteData = inviteSnapshot.data()!;
+      final i = Invitacion.fromMap(inviteData);
+
+      if (i.creatorId == guestUser.uid) {
+        print("No puedes unirte a tu propia invitación");
+        return (null, InvitacionStatus.selfInvitacion);
+      }
+
+      if (!i.creationDate.sigueVigente) {
+        print("Ya expiro la invitacion");
+        await deleteInvitacion(i.codeInvitacion);
+        return (null, InvitacionStatus.expired);
+      }
+
+      return (i, InvitacionStatus.success);
+    } catch (e) {
+      print("💀💀💀 getInvitacionByCode $e");
+      return (null, InvitacionStatus.error);
     }
   }
 }
 
-enum InvitacionStatus { noUser, expired, selfInvitacion, success, error }
+enum InvitacionStatus {
+  noUser,
+  invalid,
+  expired,
+  selfInvitacion,
+  success,
+  error,
+  alreadyInSpace,
+}
 
 extension DateChecks on DateTime {
   bool get sigueVigente {
