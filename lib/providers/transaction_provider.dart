@@ -12,7 +12,8 @@ class TransactionProvider extends ChangeNotifier {
   bool _isLoading = true; // 1. Empieza cargando
   bool get isLoading => _isLoading;
 
-  void set isLoading(bool value) {
+
+  set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();
   }

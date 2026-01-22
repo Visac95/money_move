@@ -335,7 +335,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
               Provider.of<DeudaProvider>(
                 context,
                 listen: false,
-              ).deleteDeuda(deuda.id);
+              ).deleteDeuda(deuda.id, deuda.userId);
             });
           }
           if (value == "editar") {

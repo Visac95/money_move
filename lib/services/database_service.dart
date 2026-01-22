@@ -9,9 +9,6 @@ class DatabaseService {
   final CollectionReference _userRef = FirebaseFirestore.instance.collection(
     'users',
   );
-  final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
-    'deudas',
-  );
   final CollectionReference _invitacionRef = FirebaseFirestore.instance
       .collection('invitations');
 
@@ -81,6 +78,7 @@ class DatabaseService {
 
   // --- BORRAR ---
   Future<void> deleteTransaction(String id) async {
+    // ignore: no_leading_underscores_for_local_identifiers
     final CollectionReference _transactionsRef = _userRef
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("transactions");
@@ -96,18 +94,22 @@ class DatabaseService {
   // ==========================================
 
   Future<void> addDeuda(Deuda deuda) async {
+    final CollectionReference _deudasRef = _userRef
+        .doc(deuda.userId)
+        .collection("deudas");
     try {
       await _deudasRef.doc(deuda.id).set(deuda.toMap());
     } catch (e) {
-      //print("❌ Error al guardar deuda: $e");
+      print("❌ Error al guardar deuda: $e");
       rethrow;
     }
   }
 
   Stream<List<Deuda>> getDeudasStream(String userId) {
-    return _deudasRef.where('userId', isEqualTo: userId).snapshots().map((
-      snapshot,
-    ) {
+    final CollectionReference _deudasRef = _userRef
+        .doc(userId)
+        .collection("deudas");
+    return _deudasRef.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         // Aplicamos el mismo parche de seguridad a las deudas
@@ -118,15 +120,21 @@ class DatabaseService {
   }
 
   Future<void> updateDeuda(Deuda deuda) async {
+    final CollectionReference _deudasRef = _userRef
+        .doc(deuda.userId)
+        .collection("deudas");
     try {
       await _deudasRef.doc(deuda.id).update(deuda.toMap());
     } catch (e) {
-      //print("❌ Error al actualizar deuda: $e");
+      print("❌ Error al actualizar deuda: $e");
       rethrow;
     }
   }
 
-  Future<void> deleteDeuda(String id) async {
+  Future<void> deleteDeuda(String id, String userId) async {
+    final CollectionReference _deudasRef = _userRef
+        .doc(userId)
+        .collection("deudas");
     try {
       await _deudasRef.doc(id).delete();
     } catch (e) {

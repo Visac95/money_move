@@ -65,8 +65,8 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   // 3. BORRAR
-  Future<void> deleteDeuda(String id) async {
-    await _dbService.deleteDeuda(id);
+  Future<void> deleteDeuda(String id, String userId) async {
+    await _dbService.deleteDeuda(id, userId);
   }
 
   // 4. ACTUALIZAR (Básico)

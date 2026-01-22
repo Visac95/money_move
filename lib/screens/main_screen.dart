@@ -11,6 +11,7 @@ import 'package:money_move/screens/ahorros_screen.dart';
 import 'package:money_move/screens/all_transactions_screen.dart';
 import 'package:money_move/screens/all_deudas_screen.dart';
 import 'package:money_move/screens/home_screen.dart';
+import 'package:money_move/screens/loading_screen.dart';
 import 'package:money_move/screens/stadistic_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
       _userProv = Provider.of<UserProvider>(context, listen: false);
       _userProv.initSubscription();
       _userProv.addListener(_onUserChange);
-
       final txProv = Provider.of<TransactionProvider>(context, listen: false);
       txProv.initSubscription(_userProv.usuarioActual);
       // 2. Encendemos Deudas (de paso)
@@ -46,13 +46,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onUserChange() {
-    // Como estamos fuera del build, usamos listen: false
-    // Nota: Asegúrate de que el widget siga montado
     if (!mounted) return;
 
     final userProv = Provider.of<UserProvider>(context, listen: false);
     final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
-    //final txProv = Provider.of<TransactionProvider>(context, listen: false);
 
     // Obtenemos el usuario actual (puede ser null al principio)
     final user = userProv.usuarioActual;
@@ -60,10 +57,6 @@ class _MainScreenState extends State<MainScreen> {
     // A. Actualizamos el SpaceProvider
     // Si user es null, pasamos null. Si tiene spaceId, se conecta.
     spaceProv.initSpaceSubscription(user?.spaceId);
-
-    // B. (Opcional pero recomendado) Actualizamos las transacciones también
-    // Porque si antes era null y ahora ya cargó, txProv necesita saberlo.
-    // txProv.initSubscription(user);
   }
 
   Future<void> _verificarConexionYMostrarAlerta() async {
@@ -182,12 +175,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
+    final tProvider = Provider.of<TransactionProvider>(context);
     final int currentIndex = uiProvider.selectedIndex;
 
     final l10n = AppLocalizations.of(context)!;
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    if (tProvider.isLoading) {
+      return const LoadingScreen();
+    }
 
     return Scaffold(
       body: IndexedStack(index: currentIndex, children: screens),

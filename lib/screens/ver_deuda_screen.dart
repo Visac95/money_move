@@ -222,7 +222,7 @@ class VerDeuda extends StatelessWidget {
                       Provider.of<DeudaProvider>(
                         context,
                         listen: false,
-                      ).deleteDeuda(deuda.id);
+                      ).deleteDeuda(deuda.id, deuda.userId);
                       Navigator.pop(context);
                     });
                   },
