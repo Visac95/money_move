@@ -41,4 +41,20 @@ class UserModel {
       "spaceId": spaceId,
     };
   }
+
+  UserModel update({
+    String? name,
+    String? photoUrl,
+    String? linkedAccountId,
+    String? spaceId,
+  }) {
+    return UserModel(
+      uid: uid,
+      email: email,
+      name: name ?? this.name,
+      photoUrl: photoUrl ?? this.photoUrl,
+      linkedAccountId: linkedAccountId ?? this.linkedAccountId,
+      spaceId: spaceId ?? this.spaceId,
+    );
+  }
 }

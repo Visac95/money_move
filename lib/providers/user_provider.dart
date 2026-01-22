@@ -31,11 +31,13 @@ class UserProvider extends ChangeNotifier {
         .listen(
           (snapshot) {
             if (snapshot.exists) {
-              print("✅✅✅ CAMBIO DETECTADO EN USUARIO");
-              // Convertimos la data
-              _usuarioActual = UserModel.fromFirestore(snapshot);
+              final newUser = UserModel.fromFirestore(snapshot);
 
-              // 2. IMPORTANTE: Avisar a la app que hay datos nuevos
+              if (_usuarioActual?.spaceId != null && newUser.spaceId == null) {
+                print("💔💔💔💔💔💔 Me han sacado del grupo");
+              }
+
+              _usuarioActual = newUser; // Actualizamos
               notifyListeners();
             } else {
               print("💀 Usuario no existe en DB, creándolo...");

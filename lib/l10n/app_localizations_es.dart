@@ -568,8 +568,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get leftSharedSpaceSuccessText =>
-      '¡Has salido exitosamente del espacio compartido! 🎉';
+      'Has salido exitosamente del espacio compartido';
 
   @override
   String get exitText => 'Salir';
+
+  @override
+  String get loadingFinancesText => 'Cargando tus finanzas...';
 }

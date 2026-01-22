@@ -4,20 +4,14 @@ import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/models/user_model.dart';
-import 'package:rxdart/rxdart.dart';
 
 class DatabaseService {
-  final CollectionReference _transactionsRef = FirebaseFirestore.instance
-      .collection('transactions');
-
+  final CollectionReference _userRef = FirebaseFirestore.instance.collection(
+    'users',
+  );
   final CollectionReference _deudasRef = FirebaseFirestore.instance.collection(
     'deudas',
   );
-
-  final CollectionReference _usersRef = FirebaseFirestore.instance.collection(
-    'users',
-  );
-
   final CollectionReference _invitacionRef = FirebaseFirestore.instance
       .collection('invitations');
 
@@ -27,7 +21,7 @@ class DatabaseService {
 
   Future<void> addUser(UserModel userData) async {
     try {
-      await _usersRef.doc(userData.uid).set(userData.toMap());
+      await _userRef.doc(userData.uid).set(userData.toMap());
     } catch (e) {
       print("💀💀💀💀💀💀💀💀DataServise AddUser <---------");
       rethrow;
@@ -40,11 +34,15 @@ class DatabaseService {
 
   // --- AGREGAR ---
   Future<void> addTransaction(Transaction transaction) async {
+    final CollectionReference _trasantionsRef = _userRef
+        .doc(transaction.userId)
+        .collection("transactions");
+
     try {
       // Usamos .set para que el ID del documento coincida con el ID interno (UUID)
-      await _transactionsRef.doc(transaction.id).set(transaction.toMap());
+      await _trasantionsRef.doc(transaction.id).set(transaction.toMap());
     } catch (e) {
-      //print("❌ Error al guardar transacción: $e");
+      print("❌❌❌❌❌ Error al guardar transacción: $e");
       rethrow;
     }
   }
@@ -52,57 +50,44 @@ class DatabaseService {
   // --- LEER ---
   Stream<List<Transaction>> getTransactionsStream(
     String userId,
-    String? partnerUid,
+    String? spaceId,
   ) {
+    // ignore: no_leading_underscores_for_local_identifiers
+    final CollectionReference _transactionsRef = _userRef
+        .doc(userId)
+        .collection("transactions");
     // 1. Tu lista (Stream A)
-    Stream<List<Transaction>> myList = _transactionsRef
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map(
-          _mapSnapshotToTransactions,
-        ); // ✨ Usamos una función auxiliar para no repetir código
-
-    // 2. Verificamos si hay pareja
-    if (partnerUid != null && partnerUid.isNotEmpty) {
-      // Agregué isNotEmpty por seguridad
-
-      // 3. Lista Pareja (Stream B)
-      Stream<List<Transaction>> partnerList = _transactionsRef
-          .where('userId', isEqualTo: partnerUid)
-          .snapshots()
-          .map(_mapSnapshotToTransactions);
-
-      // 4. LA FUSIÓN ORDENADA
-      return Rx.combineLatest2(myList, partnerList, (listaMia, listaPareja) {
-        // A. Unimos
-        var listaTotal = [...listaMia, ...listaPareja];
-        return listaTotal;
-      });
-    } else {
-      // Si está solo, también las ordenamos por si acaso
-      return myList.map((lista) {
-        return lista;
-      });
-    }
+    Stream<List<Transaction>> myList = _transactionsRef.snapshots().map(
+      _mapSnapshotToTransactions,
+    );
+    return myList.map((lista) {
+      return lista;
+    });
   }
 
   // --- ACTUALIZAR ---
   Future<void> updateTransaction(Transaction transaction) async {
+    final CollectionReference _transactionsRef = _userRef
+        .doc(transaction.userId)
+        .collection("transactions");
     try {
       // Al usar el ID correcto (gracias al parche de arriba), esto ya no fallará
       await _transactionsRef.doc(transaction.id).update(transaction.toMap());
     } catch (e) {
-      //print("❌ Error al actualizar transacción: $e");
+      print("❌❌❌❌❌ Error al actualizar transacción: $e");
       rethrow;
     }
   }
 
   // --- BORRAR ---
   Future<void> deleteTransaction(String id) async {
+    final CollectionReference _transactionsRef = _userRef
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("transactions");
     try {
       await _transactionsRef.doc(id).delete();
     } catch (e) {
-      //print("❌ Error al borrar transacción: $e");
+      print("❌❌❌❌❌ Error al borrar transacción: $e");
     }
   }
 
@@ -167,7 +152,7 @@ class DatabaseService {
 
     final snapshot = await _invitacionRef
         .where('creatorId', isEqualTo: user.uid)
-        .limit(1) 
+        .limit(1)
         .get(); //Uso .get() en vez de .snapshots() para que sea Future y no stream xd
 
     if (snapshot.docs.isEmpty) return null;

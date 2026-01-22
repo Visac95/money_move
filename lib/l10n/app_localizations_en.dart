@@ -570,4 +570,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exitText => 'Exit';
+
+  @override
+  String get loadingFinancesText => 'Loading your finances...';
 }

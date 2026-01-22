@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/models/invitacion.dart';
+import 'package:money_move/models/space.dart';
 import 'package:money_move/models/user_model.dart';
 import 'package:money_move/services/database_service.dart';
 import 'package:money_move/utils/generar_codigo_corto.dart';
@@ -9,6 +12,7 @@ import 'package:uuid/uuid.dart';
 
 class SpaceProvider extends ChangeNotifier {
   final DatabaseService _dbService = DatabaseService();
+
   bool _isSharedMode = false;
 
   bool get isSharedMode => _isSharedMode;
@@ -22,6 +26,10 @@ class SpaceProvider extends ChangeNotifier {
     _isSharedMode = value;
     notifyListeners();
   }
+
+  //----------------------------------
+  //-------📨 INVITACIONES ------------
+  //----------------------------------
 
   Invitacion? _invitacion;
 
@@ -74,10 +82,14 @@ class SpaceProvider extends ChangeNotifier {
     }
   }
 
+  //------------BORRAR INVITACIÓN-----------
+  //----------------------------------------
   Future<void> deleteInvitacion(String id) async {
     _dbService.deleteInvitacion(id);
   }
 
+  //------------Entrar al space-----------
+  //----------------------------------------
   Future<InvitacionStatus> joinSpace(String codeInput) async {
     final firestore = FirebaseFirestore.instance;
     final guestUser = FirebaseAuth.instance.currentUser;
@@ -99,10 +111,9 @@ class SpaceProvider extends ChangeNotifier {
 
       final inviteData = inviteSnapshot.data()!;
       final i = Invitacion.fromMap(inviteData);
-      final String hostUid = inviteData['creatorId']; // ID de tu amigo
-      final String spaceId = inviteData['spaceId']; // ID del nuevo grupo
+      final String hostUid = inviteData['creatorId'];
+      final String spaceId = inviteData['spaceId'];
 
-      // Evitar que te unas a tu propia invitación (opcional)
       if (hostUid == guestUser.uid) {
         print("No puedes unirte a tu propia invitación");
         return InvitacionStatus.selfInvitacion;
@@ -120,30 +131,31 @@ class SpaceProvider extends ChangeNotifier {
         return InvitacionStatus.expired;
       }
 
-      // 3. PREPARAR EL BATCH (El paquete todo-en-uno) 📦
       WriteBatch batch = firestore.batch();
 
-      // A. Actualizar al DUEÑO (Host)
       final hostRef = firestore.collection('users').doc(hostUid);
       batch.update(hostRef, {
-        'linkedAccountId': guestUser.uid, // Le decimos quién es su pareja
-        'spaceId': spaceId, // Le asignamos el grupo
+        'linkedAccountId': guestUser.uid,
+        'spaceId': spaceId,
       });
 
-      // B. Actualizar al INVITADO (Yo)
       final guestRef = firestore.collection('users').doc(guestUser.uid);
-      batch.update(guestRef, {
-        'linkedAccountId': hostUid, // Guardo quién es mi pareja
-        'spaceId': spaceId, // Me asigno el grupo
-      });
+      batch.update(guestRef, {'linkedAccountId': hostUid, 'spaceId': spaceId});
 
-      // C. BORRAR LA INVITACIÓN 🗑️
-      // Aquí es donde ocurre la magia. Como ya usamos los datos,
-      // ordenamos que se autodestruya en el mismo momento que nos unimos.
       batch.delete(inviteRef);
 
-      // 4. EJECUTAR TOdo
       await batch.commit();
+      _invitacion = null;
+
+      await firestore.collection("spaces").doc(spaceId).set({
+        'id': spaceId,
+        'createdAt': DateTime.now(),
+        'members': [hostUid, guestUser.uid],
+      });
+
+      print("📨✅📨✅📨✅ ${firestore.collection("spaces").doc(spaceId).get()}");
+
+      notifyListeners();
 
       return InvitacionStatus.success; // Éxito total
     } catch (e) {
@@ -204,7 +216,9 @@ class SpaceProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> exitSpace(String id) async {
+  //------------Salir del space-----------
+  //----------------------------------------
+  Future<bool> exitSpace() async {
     try {
       final firestore = FirebaseFirestore.instance;
 
@@ -229,33 +243,85 @@ class SpaceProvider extends ChangeNotifier {
         return false;
       }
 
-      // 3. PREPARAR EL BATCH (El paquete todo-en-uno) 📦
       WriteBatch batch = firestore.batch();
 
-      // A. Actualizar al DUEÑO (Host)
       final hostRef = firestore.collection('users').doc(partnerUid);
-      batch.update(hostRef, {
-        'linkedAccountId': null, // Le decimos quién es su pareja
-        'spaceId': null, // Le asignamos el grupo
-      });
+      batch.update(hostRef, {'linkedAccountId': null, 'spaceId': null});
 
-      // B. Actualizar al INVITADO (Yo)
       final guestRef = firestore.collection('users').doc(guestUser.uid);
-      batch.update(guestRef, {
-        'linkedAccountId': null, // Guardo quién es mi pareja
-        'spaceId': null, // Me asigno el grupo
-      });
+      batch.update(guestRef, {'linkedAccountId': null, 'spaceId': null});
 
       //batch.delete(inviteRef);
 
-      // 4. EJECUTAR TOdo
       await batch.commit();
+      await firestore.collection("spaces").doc(spaceId).delete();
+      print("📨✅📨✅📨✅ ${firestore.collection("spaces").doc(spaceId).get()}");
+
+      clearSpace();
+      notifyListeners();
       return true;
     } catch (e) {
       print("💀😍❤️🤑💀 Space Provider ExitSpace $e");
     }
 
     return false;
+  }
+
+  //----------------------------------------
+  //------------SECCION SPACE GROUP-----------
+  //----------------------------------------
+
+  Space? _currentSpace;
+  StreamSubscription<DocumentSnapshot>?
+  _spaceSubscription; // Variable para controlar el grifo
+
+  Space? get currentSpace => _currentSpace;
+  bool get isInSpace => _currentSpace != null;
+
+  // 1. Recibimos el ID directamente. No lo buscamos.
+  void initSpaceSubscription(String? spaceId) {
+    _spaceSubscription?.cancel();
+    _spaceSubscription = null;
+
+    // B. VALIDACIÓN:
+    // Si el usuario no tiene spaceId (es null), limpiamos el modelo y nos vamos.
+    if (spaceId == null || spaceId.isEmpty) {
+      _currentSpace = null;
+      notifyListeners();
+      return;
+    }
+
+    print("🛰️✅✅ SpaceProvider: Conectando al espacio $spaceId...");
+
+    // C. SUSCRIPCIÓN:
+    _spaceSubscription = FirebaseFirestore.instance
+        .collection("spaces")
+        .doc(spaceId)
+        .snapshots()
+        .listen(
+          (snapshot) {
+            if (snapshot.exists && snapshot.data() != null) {
+              print("✅ Datos del espacio recibidos/actualizados");
+              _currentSpace = Space.fromMap(snapshot.data()!);
+            } else {
+              print("⚠️ El documento del espacio no existe (¿Fue borrado?)");
+              _currentSpace = null;
+            }
+            notifyListeners(); // Avisamos a la UI para que redibuje
+          },
+          onError: (error) {
+            print("🚨 Error escuchando el space: $error");
+          },
+        );
+  }
+
+  // 2. Método para limpiar todo (Logout o Salir del grupo)
+  void clearSpace() {
+    print("🧹 SpaceProvider: Limpiando espacio local");
+    _spaceSubscription?.cancel(); // IMPORTANTE: Cortar la conexión
+    _spaceSubscription = null;
+    _currentSpace = null;
+    notifyListeners();
   }
 }
 

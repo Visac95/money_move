@@ -1195,6 +1195,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exit'**
   String get exitText;
+
+  /// No description provided for @loadingFinancesText.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your finances...'**
+  String get loadingFinancesText;
 }
 
 class _AppLocalizationsDelegate

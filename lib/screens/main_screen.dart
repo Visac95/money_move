@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
@@ -23,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   static bool _avisoOfflineMostradoEnEstaSesion = false;
+  late UserProvider _userProv;
   @override
   void initState() {
     super.initState();
@@ -31,16 +33,37 @@ class _MainScreenState extends State<MainScreen> {
     // ESTO ES EL INTERRUPTOR DE ENCENDIDO 👇
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 1. Encendemos Transacciones
-      final userProv = Provider.of<UserProvider>(context, listen: false);
-      userProv.initSubscription();
+      _userProv = Provider.of<UserProvider>(context, listen: false);
+      _userProv.initSubscription();
+      _userProv.addListener(_onUserChange);
 
       final txProv = Provider.of<TransactionProvider>(context, listen: false);
-      txProv.initSubscription(userProv.usuarioActual);
-
+      txProv.initSubscription(_userProv.usuarioActual);
       // 2. Encendemos Deudas (de paso)
       final deudaProv = Provider.of<DeudaProvider>(context, listen: false);
-      deudaProv.initSubscription(userProv.usuarioActual);
+      deudaProv.initSubscription(_userProv.usuarioActual);
     });
+  }
+
+  void _onUserChange() {
+    // Como estamos fuera del build, usamos listen: false
+    // Nota: Asegúrate de que el widget siga montado
+    if (!mounted) return;
+
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+    final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+    //final txProv = Provider.of<TransactionProvider>(context, listen: false);
+
+    // Obtenemos el usuario actual (puede ser null al principio)
+    final user = userProv.usuarioActual;
+
+    // A. Actualizamos el SpaceProvider
+    // Si user es null, pasamos null. Si tiene spaceId, se conecta.
+    spaceProv.initSpaceSubscription(user?.spaceId);
+
+    // B. (Opcional pero recomendado) Actualizamos las transacciones también
+    // Porque si antes era null y ahora ya cargó, txProv necesita saberlo.
+    // txProv.initSubscription(user);
   }
 
   Future<void> _verificarConexionYMostrarAlerta() async {
@@ -137,6 +160,14 @@ class _MainScreenState extends State<MainScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // ⚠️ MUY IMPORTANTE: Quitar el puente al cerrar la pantalla
+    // Si no haces esto, tendrás errores cuando cierres sesión o salgas.
+    _userProv.removeListener(_onUserChange);
+    super.dispose();
   }
 
   // Lista de pantallas

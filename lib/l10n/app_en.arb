@@ -182,5 +182,6 @@
     "exitSharedSpaceDescriptionText": "By exiting the shared space, your account will return to personal and you will no longer have access to joint finances. Your personal data will remain intact.",
     "areYouSureExitText": "Are you sure you want to exit?",
     "leftSharedSpaceSuccessText": "You have successfully left the shared space! 🎉",
-    "exitText": "Exit"
+    "exitText": "Exit",
+    "loadingFinancesText": "Loading your finances..."
 }

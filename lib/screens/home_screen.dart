@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/screens/loading_screen.dart';
 import 'package:money_move/widgets/add_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/charts/category_pie_chart.dart';
@@ -18,6 +19,9 @@ class HomeScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final tProvider = Provider.of<TransactionProvider>(context);
 
+    if (tProvider.isLoading) {
+      return const LoadingScreen();
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -50,7 +54,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CategoryPieChart(transactions: tProvider.transactions),
-            )
+            ),
           ],
         ),
       ),

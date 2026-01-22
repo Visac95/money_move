@@ -181,6 +181,7 @@
     "exitSharedSpaceText": "Salir del espacio compartido",
     "exitSharedSpaceDescriptionText": "Al salir del espacio compartido, tu cuenta volverá a ser personal y ya no tendrás acceso a las finanzas conjuntas. Tus datos personales permanecerán intactos.",
     "areYouSureExitText": "¿Estás seguro de que quieres salir?",
-    "leftSharedSpaceSuccessText": "¡Has salido exitosamente del espacio compartido! 🎉",
-    "exitText": "Salir"
+    "leftSharedSpaceSuccessText": "Has salido exitosamente del espacio compartido",
+    "exitText": "Salir",
+    "loadingFinancesText": "Cargando tus finanzas..."
 }

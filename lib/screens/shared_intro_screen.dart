@@ -153,9 +153,7 @@ class SharedIntroScreen extends StatelessWidget {
             return;
           }
 
-          final exitSpaceStatus = await spaceProv.exitSpace(
-            userProv.usuarioActual!.spaceId.toString(),
-          );
+          final exitSpaceStatus = await spaceProv.exitSpace();
           if (!context.mounted) return;
           if (exitSpaceStatus) {
             UiUtils.scaffoldMessengerSnackBar(
