@@ -5,6 +5,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
@@ -23,7 +24,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
   final involucradoController = TextEditingController();
-  
+
   // 1. Controlador para el texto de la fecha y variable para la fecha real
   final dateLimitController = TextEditingController();
   DateTime _selectedDate = DateTime.now(); // Por defecto hoy
@@ -61,13 +62,17 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000), // Permitir fechas pasadas si es un registro antiguo
+      firstDate: DateTime(
+        2000,
+      ), // Permitir fechas pasadas si es un registro antiguo
       lastDate: DateTime(2100),
       // Opcional: Personalizar colores del calendario si quieres
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme, // Usa los colores de tu app
+            colorScheme: Theme.of(
+              context,
+            ).colorScheme, // Usa los colores de tu app
           ),
           child: child!,
         );
@@ -77,7 +82,9 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        dateLimitController.text = _formatDate(picked); // Actualiza el texto visual
+        dateLimitController.text = _formatDate(
+          picked,
+        ); // Actualiza el texto visual
       });
     }
   }
@@ -106,10 +113,14 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     }
 
     final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
-    final transProvider = Provider.of<TransactionProvider>(context, listen: false);
+    final transProvider = Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    );
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
-    
-    String finalCategory = aiProvider.manualCategory ?? aiProvider.suggestedCategory;
+
+    String finalCategory =
+        aiProvider.manualCategory ?? aiProvider.suggestedCategory;
 
     if (finalCategory.isEmpty || finalCategory == 'manual_category') {
       if (!mounted) return;
@@ -135,14 +146,22 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       involucrado: involucradoController.text,
       abono: 0.0,
       fechaInicio: DateTime.now(),
-      fechaLimite: _selectedDate, 
+      fechaLimite: _selectedDate,
       categoria: finalCategory,
       debo: debo,
       pagada: false,
     );
 
     if (!mounted) return;
-    deudaProvider.addDeuda(nuevaDeuda, transProvider, context, AppLocalizations.of(context)!, generateAutoTransaction);
+    final spaceProvi = Provider.of<SpaceProvider>(context, listen: false);
+    deudaProvider.addDeuda(
+      nuevaDeuda,
+      transProvider,
+      context,
+      AppLocalizations.of(context)!,
+      generateAutoTransaction,
+      spaceProvi.isInSpace,
+    );
 
     if (mounted) Navigator.of(context).pop();
     aiProvider.resetCategory();
@@ -158,7 +177,10 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       appBar: AppBar(
         title: Text(
           l10n.addDeuda,
-          style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.onSurface),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -170,10 +192,10 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
         descriptionController: descriptionController,
         amountController: amountController,
         involucradoController: involucradoController,
-        
+
         // Estos son los nuevos parámetros que debes recibir en DeudaForm:
-        dateController: dateLimitController, 
-        onDateTap: () => _selectDate(context), 
+        dateController: dateLimitController,
+        onDateTap: () => _selectDate(context),
 
         debo: debo,
         onTypeChanged: (bool value) {

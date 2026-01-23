@@ -3,6 +3,7 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -301,7 +302,11 @@ class VerDeuda extends StatelessWidget {
                         context,
                         deuda,
                       );
-
+                      if (!context.mounted) return;
+                      final spaceProvi = Provider.of<SpaceProvider>(
+                        context,
+                        listen: false,
+                      );
                       if (monto != null && context.mounted) {
                         final status =
                             await Provider.of<DeudaProvider>(
@@ -315,6 +320,7 @@ class VerDeuda extends StatelessWidget {
                                 listen: false,
                               ),
                               context,
+                              spaceProvi.isInSpace,
                             );
 
                         if (!context.mounted) return;
@@ -568,7 +574,6 @@ class VerDeuda extends StatelessWidget {
             value,
             textAlign: TextAlign.right,
             style: TextStyle(
-              
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
@@ -599,6 +604,11 @@ class VerDeuda extends StatelessWidget {
               Navigator.of(ctx).pop();
 
               try {
+                if (!context.mounted) return;
+                final spaceProvi = Provider.of<SpaceProvider>(
+                  context,
+                  listen: false,
+                );
                 await Provider.of<DeudaProvider>(
                   context,
                   listen: false,
@@ -606,6 +616,7 @@ class VerDeuda extends StatelessWidget {
                   deuda,
                   Provider.of<TransactionProvider>(context, listen: false),
                   context,
+                  spaceProvi.isInSpace,
                 );
 
                 if (context.mounted) {

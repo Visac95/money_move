@@ -9,12 +9,19 @@ import 'package:provider/provider.dart';
 
 Drawer drawerUser(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
-  final user = FirebaseAuth.instance.currentUser!;
+  
+  // 1. Usamos '?' para que no explote si por un milisegundo el usuario de Firebase es null
+  final fbUser = FirebaseAuth.instance.currentUser; 
+  
   final userProv = Provider.of<UserProvider>(context);
   final tProv = Provider.of<TransactionProvider>(context);
   final strings = AppLocalizations.of(context)!;
-  bool modoSpace =
-      (tProv.isSpaceMode && userProv.usuarioActual!.linkedAccountId != null);
+  
+  // 2. Extraemos el usuario de tu base de datos de forma segura
+  final appUser = userProv.usuarioActual; 
+
+  // 3. Lógica SEGURA: Si appUser es null, appUser?.linkedAccountId devuelve null, y la condición es false. No explota.
+  bool modoSpace = (tProv.isSpaceMode && appUser?.linkedAccountId != null);
 
   return Drawer(
     child: Column(
@@ -22,13 +29,14 @@ Drawer drawerUser(BuildContext context) {
       children: [
         // A. CABECERA CON DATOS DE GOOGLE
         UserAccountsDrawerHeader(
-          accountName: Text(user.displayName ?? strings.userText),
-          accountEmail: Text(user.email ?? strings.noEmailText),
+          // Usamos '??' para poner texto por defecto si fbUser es null
+          accountName: Text(fbUser?.displayName ?? strings.userText),
+          accountEmail: Text(fbUser?.email ?? strings.noEmailText),
           currentAccountPicture: CircleAvatar(
-            backgroundImage: user.photoURL != null
-                ? NetworkImage(user.photoURL!)
+            backgroundImage: fbUser?.photoURL != null
+                ? NetworkImage(fbUser!.photoURL!)
                 : null,
-            child: user.photoURL == null
+            child: fbUser?.photoURL == null
                 ? const Icon(Icons.person, size: 40)
                 : null,
           ),
@@ -37,8 +45,10 @@ Drawer drawerUser(BuildContext context) {
           ),
         ),
 
-        userProv.usuarioActual!.linkedAccountId == null
-            ? SizedBox()
+        // 4. Verificación SEGURA para mostrar el toggle
+        // Si appUser es null O linkedAccountId es null, mostramos SizedBox
+        (appUser?.linkedAccountId == null)
+            ? const SizedBox()
             : Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -46,16 +56,16 @@ Drawer drawerUser(BuildContext context) {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.people_alt_outlined),
-                        SizedBox(width: 5),
+                        const Icon(Icons.people_alt_outlined),
+                        const SizedBox(width: 5),
                         Text(
                           "${strings.actualSpaceText}:",
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
-                    ModeToggle(),
+                    const SizedBox(height: 5),
+                    const ModeToggle(),
                   ],
                 ),
               ),
@@ -66,7 +76,7 @@ Drawer drawerUser(BuildContext context) {
         // C. BOTÓN DE SALIDA (LOGOUT)
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
-          title: Text(strings.logoutText, style: TextStyle(color: Colors.red)),
+          title: Text(strings.logoutText, style: const TextStyle(color: Colors.red)),
           onTap: () async {
             // 1. Llamamos al servicio para desconectar Google y Firebase
             await AuthService().logout();
@@ -83,15 +93,14 @@ class LeadingDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+    // Protección extra aquí también
+    final user = FirebaseAuth.instance.currentUser;
+    
     return Builder(
       builder: (context) {
-        // Supongamos que tienes tu usuario aquí
-        // (Ojo: accede a tu Provider o variable donde tengas el user)
-        final String? fotoUrl = user.photoURL;
+        final String? fotoUrl = user?.photoURL;
 
         return IconButton(
-          // Al tocar la foto, abrimos el Drawer
           onPressed: () => Scaffold.of(context).openDrawer(),
           padding: EdgeInsets.zero,
           icon: CircleAvatar(

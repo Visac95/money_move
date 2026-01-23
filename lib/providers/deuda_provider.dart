@@ -38,6 +38,7 @@ class DeudaProvider extends ChangeNotifier {
     BuildContext ctx,
     dynamic stgs, // Settings
     bool generateAutoTransaction,
+    bool? isInSpace
   ) async {
     // A. Guardar en Firebase
     await _dbService.addDeuda(d);
@@ -54,12 +55,14 @@ class DeudaProvider extends ChangeNotifier {
           title: d.title,
           description: descriptionString,
           monto: d.monto,
-          saldo: tProvdr.saldoActual, // Nota: El saldo se recalculará solo al bajar de Firebase
+          saldo: tProvdr
+              .saldoActual, // Nota: El saldo se recalculará solo al bajar de Firebase
           fecha: d.fechaInicio,
           categoria: d.categoria,
           isExpense: !d.debo, // Si me deben (Ingreso), Si debo (Gasto)
           deudaAsociada: d.id,
         ),
+        isInSpace
       );
     }
   }
@@ -79,6 +82,7 @@ class DeudaProvider extends ChangeNotifier {
     Deuda d,
     TransactionProvider transProvider,
     BuildContext context,
+    bool isInSpace,
   ) async {
     try {
       // Calculamos cuánto faltaba
@@ -96,6 +100,7 @@ class DeudaProvider extends ChangeNotifier {
           categoria: AppConstants.catDebt,
           isExpense: d.debo, // Si yo debía, pagar es un Gasto.
         ),
+        isInSpace,
       );
 
       // Actualizamos la deuda a PAGADA
@@ -104,7 +109,6 @@ class DeudaProvider extends ChangeNotifier {
 
       // Guardamos en Firebase
       await updateDeuda(d);
-      
     } catch (_) {
       //print("Error al pagar deuda: $e");
     }
@@ -116,9 +120,10 @@ class DeudaProvider extends ChangeNotifier {
     double monto,
     TransactionProvider provider,
     BuildContext context,
+    bool? isInSpace
   ) async {
     if (monto <= 0) return AbonoStatus.montoInvalido;
-    
+
     // Pequeño margen de error para comparaciones de punto flotante
     if (monto > (d.monto - d.abono + 0.01)) return AbonoStatus.excedeDeuda;
 
@@ -144,6 +149,7 @@ class DeudaProvider extends ChangeNotifier {
           isExpense: d.debo,
           deudaAsociada: d.id,
         ),
+        isInSpace
       );
 
       // Actualizamos en Firebase
@@ -174,9 +180,4 @@ class DeudaProvider extends ChangeNotifier {
   }
 }
 
-enum AbonoStatus {
-  exito,
-  montoInvalido,
-  excedeDeuda,
-  error,
-}
+enum AbonoStatus { exito, montoInvalido, excedeDeuda, error }

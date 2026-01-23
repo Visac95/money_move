@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
 import 'package:provider/provider.dart';
@@ -113,8 +115,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     } else {
       nuevoSaldoCalculado = saldoActualDelProvider;
     }
+    if (!context.mounted) return;
+    final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+    final isInSpace = spaceProv.isInSpace;
     final nuevaTransaccion = Transaction(
-      userId: FirebaseAuth.instance.currentUser!.uid,
+      userId: isInSpace && transactionProvider.isSpaceMode
+          ? FirebaseAuth.instance.currentUser!.uid
+          : userProv.usuarioActual!.spaceId!,
       title: titleController.text,
       description: descriptionController.text,
       monto: enteredAmount,
@@ -126,7 +134,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     // 6. GUARDAR
 
     try {
-      transactionProvider.addTransaction(nuevaTransaccion);
+      transactionProvider.addTransaction(
+        nuevaTransaccion,
+        transactionProvider.isSpaceMode,
+      );
       final connectivityResult = await Connectivity().checkConnectivity();
       bool sinInternet = connectivityResult.contains(ConnectivityResult.none);
 

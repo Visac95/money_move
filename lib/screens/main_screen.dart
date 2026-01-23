@@ -37,9 +37,10 @@ class _MainScreenState extends State<MainScreen> {
       _userProv = Provider.of<UserProvider>(context, listen: false);
       _userProv.initSubscription();
       _userProv.addListener(_onUserChange);
-      final txProv = Provider.of<TransactionProvider>(context, listen: false);
+      //final txProv = Provider.of<TransactionProvider>(context, listen: false);
       final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
-      txProv.initSubscription(_userProv.usuarioActual, spaceProv);
+      final user = _userProv.usuarioActual;
+      spaceProv.initSpaceSubscription(user?.spaceId);
       // 2. Encendemos Deudas (de paso)
       final deudaProv = Provider.of<DeudaProvider>(context, listen: false);
       deudaProv.initSubscription(_userProv.usuarioActual);
