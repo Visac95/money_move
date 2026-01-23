@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ModeToggle extends StatelessWidget {
@@ -9,14 +11,17 @@ class ModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modeProv = Provider.of<SpaceProvider>(context);
-    final isShared = modeProv.isSharedMode;
+    final spaceProv = Provider.of<SpaceProvider>(context);
+    final tProvider = Provider.of<TransactionProvider>(context);
+    final userProv = Provider.of<UserProvider>(context);
+    final isShared = tProvider.isSpaceMode;
     final strings = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () {
-        modeProv.toogleMode();
+        tProvider.toggleTransactionMode(!isShared);
+        //tProvider.initSubscription(userProv.usuarioActual, spaceProv);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),

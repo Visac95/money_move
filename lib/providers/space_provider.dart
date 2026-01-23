@@ -13,20 +13,6 @@ import 'package:uuid/uuid.dart';
 class SpaceProvider extends ChangeNotifier {
   final DatabaseService _dbService = DatabaseService();
 
-  bool _isSharedMode = false;
-
-  bool get isSharedMode => _isSharedMode;
-
-  void toogleMode() {
-    _isSharedMode = !_isSharedMode;
-    notifyListeners();
-  }
-
-  void setSharedMode(bool value) {
-    _isSharedMode = value;
-    notifyListeners();
-  }
-
   //----------------------------------
   //-------📨 INVITACIONES ------------
   //----------------------------------

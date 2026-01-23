@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/user_model.dart';
+import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/services/database_service.dart';
 import '../models/transaction.dart';
 
@@ -12,7 +16,6 @@ class TransactionProvider extends ChangeNotifier {
   bool _isLoading = true; // 1. Empieza cargando
   bool get isLoading => _isLoading;
 
-
   set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();
@@ -20,18 +23,85 @@ class TransactionProvider extends ChangeNotifier {
 
   List<Transaction> get transactions => _transactions;
 
+  // Suscripción
+  StreamSubscription? _subscription;
+
+  bool _isSpaceMode = false;
+  bool get isSpaceMode => _isSpaceMode;
+
+  User? _currentUser;
+  String? _currentSpaceId;
+
+  // 1. INICIALIZAR (Se llama al inicio)
+  void init(User? user, String? spaceId) {
+    _currentUser = user;
+    _currentSpaceId = spaceId;
+    _escucharTransacciones(); // Llama a la función interna
+  }
+
+  // 2. CAMBIAR MODO (Esto lo llama tu botón Switcher)
+  void toggleTransactionMode(bool value) {
+    _isSpaceMode = value;
+    notifyListeners(); // Actualiza el UI del botón visualmente
+    _escucharTransacciones(); // <--- IMPORTANTE: REINICIA EL STREAM
+  }
+
+  // 3. LÓGICA INTERNA (Rompe tubería vieja, crea nueva)
+  void _escucharTransacciones() {
+    if (_currentUser == null) return;
+
+    // A. Ponemos cargando
+    _isLoading = true;
+    notifyListeners();
+
+    // B. CANCELAMOS LA SUSCRIPCIÓN ANTERIOR (Vital)
+    _subscription?.cancel();
+
+    // C. CREAMOS LA NUEVA CONEXIÓN SEGÚN EL MODO
+    final stream = _dbService.getTransactionsStream(
+      _currentUser!.uid,
+      _currentSpaceId,
+      _isSpaceMode, // <--- Aquí pasamos el valor actual del switch
+    );
+
+    // D. ESCUCHAMOS
+    _subscription = stream.listen(
+      (nuevasTransacciones) {
+        _transactions = nuevasTransacciones;
+        _isLoading = false;
+        notifyListeners();
+      },
+      onError: (e) {
+        print("Error: $e");
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
+  }
+
   // TU FUNCION ACTUAL (Déjala igual, es correcta)
-  void initSubscription(UserModel? userData) {
+  void initSubscription(UserModel? userData, SpaceProvider? spaceProv) {
     _isLoading = true; // Empieza carga
     notifyListeners(); // Avisa a la UI
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // IMPORTANTE: Cancelar suscripciones viejas si fuera necesario,
-    // pero por ahora esto funcionará bien.
+    if (spaceProv!.isInSpace) {
+      // Si hay cuenta vinculada, escuchamos esa
+      _transactions = [];
+      _dbService
+          .getTransactionsStream(user.uid, userData!.linkedAccountId, true)
+          .listen((event) {
+            _transactions = event;
+            _transactions.sort((b, a) => a.fecha.compareTo(b.fecha));
+            notifyListeners();
+          });
+      _isLoading = true;
+      return;
+    }
     _dbService
-        .getTransactionsStream(user.uid, userData?.linkedAccountId)
+        .getTransactionsStream(user.uid, userData?.linkedAccountId, false)
         .listen((event) {
           _transactions = event;
           _transactions.sort((b, a) => a.fecha.compareTo(b.fecha));
@@ -206,5 +276,11 @@ class TransactionProvider extends ChangeNotifier {
           .toList();
     }
     return list;
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 }

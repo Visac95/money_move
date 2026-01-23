@@ -4,6 +4,7 @@ import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/transaction.dart';
 import 'package:money_move/models/user_model.dart';
+import 'package:money_move/providers/space_provider.dart';
 
 class DatabaseService {
   final CollectionReference _userRef = FirebaseFirestore.instance.collection(
@@ -11,6 +12,9 @@ class DatabaseService {
   );
   final CollectionReference _invitacionRef = FirebaseFirestore.instance
       .collection('invitations');
+  final CollectionReference _spaceRef = FirebaseFirestore.instance.collection(
+    'spaces',
+  );
 
   // ==========================================
   // 👤 SECCIÓN DE USERS
@@ -45,21 +49,24 @@ class DatabaseService {
   }
 
   // --- LEER ---
+  // En tu TransactionService o donde tengas esta lógica
   Stream<List<Transaction>> getTransactionsStream(
     String userId,
     String? spaceId,
+    bool isInSpace,
   ) {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final CollectionReference _transactionsRef = _userRef
-        .doc(userId)
-        .collection("transactions");
-    // 1. Tu lista (Stream A)
-    Stream<List<Transaction>> myList = _transactionsRef.snapshots().map(
-      _mapSnapshotToTransactions,
-    );
-    return myList.map((lista) {
-      return lista;
-    });
+    Query query; // <--- USAMOS QUERY PARA EVITAR ERRORES DE TIPO
+
+    if (isInSpace && spaceId != null) {
+      // Referencia al grupo
+      query = _spaceRef.doc(spaceId).collection("transactions");
+    } else {
+      // Referencia personal
+      query = _userRef.doc(userId).collection("transactions");
+    }
+
+    // Ordenamos y mapeamos (Asegúrate de tener el índice en Firebase si usas orderBy)
+    return query.snapshots().map(_mapSnapshotToTransactions);
   }
 
   // --- ACTUALIZAR ---

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/services/auth_service.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
@@ -11,11 +11,10 @@ Drawer drawerUser(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
   final user = FirebaseAuth.instance.currentUser!;
   final userProv = Provider.of<UserProvider>(context);
-  final spaceProv = Provider.of<SpaceProvider>(context);
+  final tProv = Provider.of<TransactionProvider>(context);
   final strings = AppLocalizations.of(context)!;
   bool modoSpace =
-      (spaceProv.isSharedMode &&
-      userProv.usuarioActual!.linkedAccountId != null);
+      (tProv.isSpaceMode && userProv.usuarioActual!.linkedAccountId != null);
 
   return Drawer(
     child: Column(
@@ -34,9 +33,7 @@ Drawer drawerUser(BuildContext context) {
                 : null,
           ),
           decoration: BoxDecoration(
-            color: modoSpace
-                ? colorScheme.inversePrimary
-                : colorScheme.primary,
+            color: modoSpace ? colorScheme.inversePrimary : colorScheme.primary,
           ),
         ),
 
