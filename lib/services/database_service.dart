@@ -19,13 +19,13 @@ class DatabaseService {
   // 🛠️ HELPER PRIVADO (Para no repetir código)
   // ==========================================
   // Esta función decide automáticamente dónde buscar según si le pasas un spaceId o no.
-  CollectionReference _getTxCollection(String userId, String? spaceId) {
-    if (spaceId != null) {
+  CollectionReference _getTxCollection(String id, bool? space) {
+    if (space ?? false) {
       // 🚀 RUTA SPACE: spaces/{spaceId}/transactions
-      return _spaceRef.doc(spaceId).collection("transactions");
+      return _spaceRef.doc(id).collection("transactions");
     } else {
       // 👤 RUTA PERSONAL: users/{userId}/transactions
-      return _userRef.doc(userId).collection("transactions");
+      return _userRef.doc(id).collection("transactions");
     }
   }
 
@@ -48,9 +48,9 @@ class DatabaseService {
 
   // --- AGREGAR ---
   // AHORA RECIBE spaceId para saber dónde guardar
-  Future<void> addTransaction(Transaction t, String? spaceId) async {
+  Future<void> addTransaction(Transaction t, bool? space) async {
     try {
-      final ref = _getTxCollection(t.userId, spaceId);
+      final ref = _getTxCollection(t.userId, space);
       // Usamos .set para asegurar que el ID sea el que generamos en la app
       await ref.doc(t.id).set(t.toMap());
     } catch (e) {
@@ -66,23 +66,17 @@ class DatabaseService {
     bool isSpaceMode, // Usamos esto para decidir qué path tomar
   ) {
     // Si estamos en modo space y hay ID, usamos el ID del space. Si no, null (personal).
-    final targetSpaceId = (isSpaceMode && spaceId != null) ? spaceId : null;
+    final targetId = (isSpaceMode && spaceId != null) ? spaceId : userId;
 
-    final ref = _getTxCollection(userId, targetSpaceId);
+    final ref = _getTxCollection(targetId, (isSpaceMode && spaceId != null));
 
-    return ref
-        .orderBy(
-          'date',
-          descending: true,
-        ) // Ordenamos aquí para que venga listo de Firebase
-        .snapshots()
-        .map(_mapSnapshotToTransactions);
+    return ref.snapshots().map(_mapSnapshotToTransactions);
   }
 
   // --- ACTUALIZAR ---
-  Future<void> updateTransaction(Transaction t, String? spaceId) async {
+  Future<void> updateTransaction(Transaction t, bool? space) async {
     try {
-      final ref = _getTxCollection(t.userId, spaceId);
+      final ref = _getTxCollection(t.userId, space);
       await ref.doc(t.id).update(t.toMap());
     } catch (e) {
       print("❌ Error al actualizar: $e");
@@ -91,13 +85,9 @@ class DatabaseService {
   }
 
   // --- BORRAR ---
-  Future<void> deleteTransaction(
-    String id,
-    String userId,
-    String? spaceId,
-  ) async {
+  Future<void> deleteTransaction(String id, bool space) async {
     try {
-      final ref = _getTxCollection(userId, spaceId);
+      final ref = _getTxCollection(id, space);
       await ref.doc(id).delete();
     } catch (e) {
       print("❌ Error al borrar: $e");

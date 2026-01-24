@@ -10,7 +10,6 @@ class TransactionProvider extends ChangeNotifier {
   final DatabaseService _dbService = DatabaseService();
 
   User? _currentUser; // <--- Para saber quién es el usuario
-  String? _currentSpaceId; // <--- Para saber el ID del espacio actual
 
   // 1. DOS LISTAS SEPARADAS (Tu nueva estrategia)
   List<Transaction> _personalTransactions = [];
@@ -33,10 +32,11 @@ class TransactionProvider extends ChangeNotifier {
   StreamSubscription? _spaceSub;
 
   // --------------------------------------------------------
-  // 1. INICIALIZAR (Carga TODO lo necesario al principio)
+  // 1. INICIALIZAR (Carga TODo lo necesario al principio)
   // --------------------------------------------------------
   void init(User? user, String? linkedSpaceId) {
     if (user == null) return;
+    print("🐈‍⬛11111");
 
     _isLoading = true;
     notifyListeners();
@@ -46,6 +46,7 @@ class TransactionProvider extends ChangeNotifier {
     _spaceSub?.cancel();
 
     // B. Escuchar Transacciones PERSONALES (Siempre)
+    print("🐈‍⬛2222222");
     _personalSub = _dbService
         .getTransactionsStream(user.uid, null, false) // false = no es space
         .listen((data) {
@@ -53,12 +54,14 @@ class TransactionProvider extends ChangeNotifier {
           _personalTransactions.sort(
             (a, b) => b.fecha.compareTo(a.fecha),
           ); // Ordenar por fecha
+          print("🐈‍⬛333333333");
 
           // Solo quitamos el loading si estamos en modo personal o si no tiene space
           if (!_isSpaceMode) _isLoading = false;
           notifyListeners();
+          print("🐈‍⬛4444444444444");
         });
-
+    print("🐈‍⬛5555555555555");
     // C. Escuchar Transacciones SPACE (Solo si tiene ID vinculado)
     if (linkedSpaceId != null) {
       _spaceSub = _dbService
@@ -72,14 +75,17 @@ class TransactionProvider extends ChangeNotifier {
             _spaceTransactions.sort((a, b) => b.fecha.compareTo(a.fecha));
 
             // Si arrancamos en modo space, quitamos el loading aquí
-            if (_isSpaceMode) _isLoading = false;
+            _isLoading = false;
             notifyListeners();
+            print("🐈‍⬛66666666666666");
           });
     } else {
       // Si no tiene space, aseguramos que la lista esté vacía
       _spaceTransactions = [];
-      if (_isSpaceMode) _isLoading = false; // Por si acaso
+      _isLoading = false; // Por si acaso
+      print("🐈‍⬛777777777777");
     }
+    print("🐈‍⬛888888888888888");
   }
 
   // --------------------------------------------------------
@@ -96,30 +102,19 @@ class TransactionProvider extends ChangeNotifier {
   // --------------------------------------------------------
   // 3. CRUD (Agregar, Borrar, Editar)
   // --------------------------------------------------------
-  // 3. CRUD (Actualizado para el nuevo DatabaseService)
 
-  Future<void> addTransaction(Transaction tx, bool? forceSpace) async {
-    // Determinamos si va al space o personal
-    bool useSpace = forceSpace ?? _isSpaceMode;
-    // Si es space, mandamos el ID, si no, null
-    String? targetSpaceId = useSpace ? _currentSpaceId : null;
-
-    await _dbService.addTransaction(tx, targetSpaceId);
+  Future<void> addTransaction(Transaction tx, bool spaceMode) async {
+    await _dbService.addTransaction(tx, spaceMode);
   }
 
   Future<void> deleteTransaction(String id) async {
     if (_currentUser == null) return;
-    // Borramos del lugar donde estamos parados actualmente (_isSpaceMode)
-    String? targetSpaceId = _isSpaceMode ? _currentSpaceId : null;
 
-    await _dbService.deleteTransaction(id, _currentUser!.uid, targetSpaceId);
+    await _dbService.deleteTransaction(id, !_isSpaceMode);
   }
 
   Future<void> updateTransaction(Transaction tx) async {
-    // Asumimos que editamos en el modo actual
-    String? targetSpaceId = _isSpaceMode ? _currentSpaceId : null;
-
-    await _dbService.updateTransaction(tx, targetSpaceId);
+    await _dbService.updateTransaction(tx, _isSpaceMode);
     notifyListeners();
   }
 

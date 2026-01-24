@@ -177,7 +177,7 @@ class SpaceProvider extends ChangeNotifier {
       final inviteSnapshot = await inviteRef.get();
 
       if (!inviteSnapshot.exists) {
-        print("Código inválido o expirado");
+        print("Código inválido o expirado🤐🫤☹️");
         return (null, InvitacionStatus.expired);
       }
 

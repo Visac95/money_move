@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +56,31 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => DeudaProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
+        ChangeNotifierProxyProvider<UserProvider, TransactionProvider>(
+          // 1. Crea el provider vacío inicial
+          create: (_) => TransactionProvider(),
+
+          // 2. Cada vez que UserProvider cambie, se ejecuta esto:
+          update: (context, userProv, transProv) {
+            // Obtenemos el usuario de Firebase (puedes usar auth directly o userProv si lo tiene)
+            final fbUser = FirebaseAuth.instance.currentUser;
+
+            // Obtenemos el ID del space desde tu UserProvider (UserModel)
+            // Asegúrate de que 'usuarioActual' sea accesible
+            final spaceId = userProv.usuarioActual?.spaceId;
+
+            // ¡Aquí ocurre la magia! Se llama solo.
+            transProv!.init(fbUser, spaceId);
+
+            return transProv;
+          },
+        ),
       ],
       child: const MyApp(),
     ),

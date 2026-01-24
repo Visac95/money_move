@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
-import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
@@ -115,12 +114,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     } else {
       nuevoSaldoCalculado = saldoActualDelProvider;
     }
-    if (!context.mounted) return;
-    final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+    if (!mounted) return;
     final userProv = Provider.of<UserProvider>(context, listen: false);
-    final isInSpace = spaceProv.isInSpace;
     final nuevaTransaccion = Transaction(
-      userId: isInSpace && transactionProvider.isSpaceMode
+      userId: !transactionProvider.isSpaceMode
           ? FirebaseAuth.instance.currentUser!.uid
           : userProv.usuarioActual!.spaceId!,
       title: titleController.text,
@@ -131,6 +128,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       categoria: finalCategory,
       isExpense: isExpense,
     );
+    print("🐈‍⬛💀datos de la trasaccion: ${nuevaTransaccion.toMap()}");
     // 6. GUARDAR
 
     try {

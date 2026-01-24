@@ -38,7 +38,7 @@ class DeudaProvider extends ChangeNotifier {
     BuildContext ctx,
     dynamic stgs, // Settings
     bool generateAutoTransaction,
-    bool? isInSpace
+    bool isInSpace,
   ) async {
     // A. Guardar en Firebase
     await _dbService.addDeuda(d);
@@ -62,7 +62,7 @@ class DeudaProvider extends ChangeNotifier {
           isExpense: !d.debo, // Si me deben (Ingreso), Si debo (Gasto)
           deudaAsociada: d.id,
         ),
-        isInSpace
+        isInSpace,
       );
     }
   }
@@ -120,7 +120,7 @@ class DeudaProvider extends ChangeNotifier {
     double monto,
     TransactionProvider provider,
     BuildContext context,
-    bool? isInSpace
+    bool isInSpace,
   ) async {
     if (monto <= 0) return AbonoStatus.montoInvalido;
 
@@ -149,7 +149,7 @@ class DeudaProvider extends ChangeNotifier {
           isExpense: d.debo,
           deudaAsociada: d.id,
         ),
-        isInSpace
+        isInSpace,
       );
 
       // Actualizamos en Firebase
