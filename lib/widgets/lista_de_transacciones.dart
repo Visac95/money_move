@@ -254,13 +254,14 @@ class _TransactionCard extends StatelessWidget {
       ),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      onSelected: (value) {
+      onSelected: (value) async {
         if (value == "borrar") {
-          UiUtils.showDeleteConfirmation(context, () {
-            Provider.of<TransactionProvider>(
+          UiUtils.showDeleteConfirmation(context, () async {
+            await Provider.of<TransactionProvider>(
               context,
               listen: false,
-            ).deleteTransaction(tx.id);
+            ).deleteTransaction(tx);
+            print("💀✅💀✅💀✅💀transacción borrada ${tx.id}");
           });
         }
         if (value == "editar") {

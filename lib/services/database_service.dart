@@ -85,12 +85,14 @@ class DatabaseService {
   }
 
   // --- BORRAR ---
-  Future<void> deleteTransaction(String id, bool space) async {
+  Future<void> deleteTransaction(Transaction t, bool space) async {
     try {
-      final ref = _getTxCollection(id, space);
-      await ref.doc(id).delete();
+      print("🤐🫤☹️inicio borrado");
+      final ref = _getTxCollection(t.userId, space);
+      await ref.doc(t.id).delete();
+      print("🗑️ Transacción borrada en DB: ${t.id}");
     } catch (e) {
-      print("❌ Error al borrar: $e");
+      print("❌❌❌❌ Error al borrar: $e");
     }
   }
 

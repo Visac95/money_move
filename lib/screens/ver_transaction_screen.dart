@@ -167,7 +167,7 @@ class VerTransactionScreen extends StatelessWidget {
                       Provider.of<TransactionProvider>(
                         context,
                         listen: false,
-                      ).deleteTransaction(transaction.id);
+                      ).deleteTransaction(transaction);
                       Navigator.pop(context);
                     });
                   },

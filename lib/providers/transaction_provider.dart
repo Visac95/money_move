@@ -107,10 +107,16 @@ class TransactionProvider extends ChangeNotifier {
     await _dbService.addTransaction(tx, spaceMode);
   }
 
-  Future<void> deleteTransaction(String id) async {
-    if (_currentUser == null) return;
+  Future<void> deleteTransaction(Transaction t) async {
+    try {
+      print("🗑️🗑️🗑️🗑️🗑️ Transacción borrada: $t.id");
+      //if (_currentUser == null) return;
 
-    await _dbService.deleteTransaction(id, !_isSpaceMode);
+      await _dbService.deleteTransaction(t, _isSpaceMode);
+      print("🗑️ Transacción borrada: ${t.id}");
+    } catch (e) {
+      print("❌ Error al borrar transacción: $e");
+    }
   }
 
   Future<void> updateTransaction(Transaction tx) async {
