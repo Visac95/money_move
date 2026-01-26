@@ -133,16 +133,14 @@ class DatabaseService {
     return ref.snapshots().map(_mapSnapshotToDeudas);
   }
 
-  Future<void> updateDeuda(Deuda deuda) async {
-    await _userRef
-        .doc(deuda.userId)
-        .collection("deudas")
-        .doc(deuda.id)
-        .update(deuda.toMap());
+  Future<void> updateDeuda(Deuda deuda, bool space) async {
+    final ref = _getCollection(deuda.userId, space, "deudas");
+    await ref.doc(deuda.id).update(deuda.toMap());
   }
 
-  Future<void> deleteDeuda(String id, String userId) async {
-    await _userRef.doc(userId).collection("deudas").doc(id).delete();
+  Future<void> deleteDeuda(Deuda d, bool space) async {
+    final ref = _getCollection(d.userId, space, "deudas");
+    await ref.doc(d.userId).collection("deudas").doc(d.id).delete();
   }
 
   // ==========================================

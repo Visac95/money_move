@@ -100,11 +100,10 @@ class DeudaProvider extends ChangeNotifier {
     BuildContext ctx,
     dynamic stgs, // Settings
     bool generateAutoTransaction,
-    bool isInSpace,
   ) async {
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
     // A. Guardar en Firebase
-    await _dbService.addDeuda(d, isInSpace);
+    await _dbService.addDeuda(d, _isSpaceMode);
 
     // B. Generar Transacción Automática (Si el usuario quiere)
     if (generateAutoTransaction) {
@@ -131,13 +130,13 @@ class DeudaProvider extends ChangeNotifier {
   }
 
   // 3. BORRAR
-  Future<void> deleteDeuda(String id, String userId) async {
-    await _dbService.deleteDeuda(id, userId);
+  Future<void> deleteDeuda(Deuda d) async {
+    await _dbService.deleteDeuda(d, _isSpaceMode);
   }
 
   // 4. ACTUALIZAR (Básico)
   Future<void> updateDeuda(Deuda updatedDeuda) async {
-    await _dbService.updateDeuda(updatedDeuda);
+    await _dbService.updateDeuda(updatedDeuda, _isSpaceMode);
   }
 
   // 5. PAGAR DEUDA COMPLETA
@@ -145,7 +144,6 @@ class DeudaProvider extends ChangeNotifier {
     Deuda d,
     TransactionProvider transProvider,
     BuildContext context,
-    bool isInSpace,
   ) async {
     try {
       // Calculamos cuánto faltaba

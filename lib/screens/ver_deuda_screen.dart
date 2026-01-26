@@ -3,7 +3,6 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
-import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -194,7 +193,7 @@ class VerDeuda extends StatelessWidget {
                       Provider.of<DeudaProvider>(
                         context,
                         listen: false,
-                      ).deleteDeuda(deuda.id, deuda.userId);
+                      ).deleteDeuda(deuda);
                       Navigator.pop(context);
                     });
                   },
@@ -571,10 +570,6 @@ class VerDeuda extends StatelessWidget {
 
               try {
                 if (!context.mounted) return;
-                final spaceProvi = Provider.of<SpaceProvider>(
-                  context,
-                  listen: false,
-                );
                 await Provider.of<DeudaProvider>(
                   context,
                   listen: false,
@@ -582,7 +577,6 @@ class VerDeuda extends StatelessWidget {
                   deuda,
                   Provider.of<TransactionProvider>(context, listen: false),
                   context,
-                  spaceProvi.isInSpace,
                 );
 
                 if (context.mounted) {
