@@ -182,7 +182,6 @@ class DeudaProvider extends ChangeNotifier {
     double monto,
     TransactionProvider provider,
     BuildContext context,
-    bool isInSpace,
   ) async {
     if (monto <= 0) return AbonoStatus.montoInvalido;
 
@@ -200,7 +199,7 @@ class DeudaProvider extends ChangeNotifier {
       // Generamos la transacción del abono
       await provider.addTransaction(
         Transaction(
-          userId: FirebaseAuth.instance.currentUser!.uid,
+          userId: d.userId,
           title:
               "${(d.pagada ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${d.title}",
           description: d.description,

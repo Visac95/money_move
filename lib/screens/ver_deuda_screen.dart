@@ -274,10 +274,6 @@ class VerDeuda extends StatelessWidget {
                         deuda,
                       );
                       if (!context.mounted) return;
-                      final spaceProvi = Provider.of<SpaceProvider>(
-                        context,
-                        listen: false,
-                      );
                       if (monto != null && context.mounted) {
                         final status =
                             await Provider.of<DeudaProvider>(
@@ -291,7 +287,6 @@ class VerDeuda extends StatelessWidget {
                                 listen: false,
                               ),
                               context,
-                              spaceProvi.isInSpace,
                             );
 
                         if (!context.mounted) return;
