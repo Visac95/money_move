@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/screens/ver_deuda_screen.dart';
@@ -293,14 +294,14 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
         ),
         onTap: () => Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (context) => VerDeuda(deuda: deuda))),
+        ).push(MaterialPageRoute(builder: (context) => VerDeuda(deudaId: deuda.id,))),
       ),
     );
   }
 
   Widget _buildPopupMenu(
     BuildContext context,
-    dynamic deuda,
+    Deuda deuda,
     DeudaProvider provider,
     ColorScheme colorScheme,
   ) {
@@ -323,7 +324,7 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
               Provider.of<DeudaProvider>(
                 context,
                 listen: false,
-              ).deleteDeuda(deuda.id, deuda.userId);
+              ).deleteDeuda(deuda);
             });
           }
           if (value == "editar") {

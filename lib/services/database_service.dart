@@ -140,7 +140,7 @@ class DatabaseService {
 
   Future<void> deleteDeuda(Deuda d, bool space) async {
     final ref = _getCollection(d.userId, space, "deudas");
-    await ref.doc(d.userId).collection("deudas").doc(d.id).delete();
+    await ref.doc(d.id).delete();
   }
 
   // ==========================================

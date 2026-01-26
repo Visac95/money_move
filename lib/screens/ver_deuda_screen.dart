@@ -13,8 +13,8 @@ import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';
 
 class VerDeuda extends StatelessWidget {
-  final Deuda deuda;
-  const VerDeuda({super.key, required this.deuda});
+  final String deudaId;
+  const VerDeuda({super.key, required this.deudaId});
 
   // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
   Future<double?> _mostrarDialogoAbono(
@@ -37,6 +37,7 @@ class VerDeuda extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final strings = AppLocalizations.of(context)!;
+    final deuda = Provider.of<DeudaProvider>(context).getDeudaById(deudaId)!;
     final Color mainColor = deuda.debo ? AppColors.accent : AppColors.income;
 
     final double restante = deuda.monto - deuda.abono;

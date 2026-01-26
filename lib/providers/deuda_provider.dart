@@ -10,7 +10,6 @@ import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/services/database_service.dart';
 
 class DeudaProvider extends ChangeNotifier {
-  List<Deuda> _deudas = [];
   final DatabaseService _dbService = DatabaseService();
 
   User? _currentUser;
@@ -222,16 +221,16 @@ class DeudaProvider extends ChangeNotifier {
   // --- FILTROS (Ahora síncronos porque los datos ya están en memoria) ---
 
   List<Deuda> getDeudasDebo() {
-    return _deudas.where((deuda) => deuda.debo).toList();
+    return deudas.where((deuda) => deuda.debo).toList();
   }
 
   List<Deuda> getDeudasMeDeben() {
-    return _deudas.where((deuda) => !deuda.debo).toList();
+    return deudas.where((deuda) => !deuda.debo).toList();
   }
 
   Deuda? getDeudaById(String id) {
     try {
-      return _deudas.firstWhere((d) => d.id == id);
+      return deudas.firstWhere((d) => d.id == id);
     } catch (e) {
       return null;
     }

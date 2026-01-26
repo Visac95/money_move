@@ -5,7 +5,6 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
-import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/widgets/deuda_form.dart';
@@ -170,14 +169,12 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
 
     if (!mounted) return;
-    final spaceProvi = Provider.of<SpaceProvider>(context, listen: false);
     deudaProvider.addDeuda(
       nuevaDeuda,
       transProvider,
       context,
       AppLocalizations.of(context)!,
       generateAutoTransaction,
-      spaceProvi.isInSpace,
     );
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
