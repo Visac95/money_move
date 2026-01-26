@@ -321,17 +321,7 @@ class VerTransactionScreen extends StatelessWidget {
                     if (deuda != null) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => VerDeuda(
-                            id: deuda.id,
-                            title: deuda.title,
-                            description: deuda.description,
-                            monto: deuda.monto,
-                            abono: deuda.abono,
-                            involucrado: deuda.involucrado,
-                            fechaLimite: deuda.fechaLimite,
-                            categoria: deuda.categoria,
-                            debo: deuda.debo,
-                          ),
+                          builder: (context) => VerDeuda(deuda: deuda),
                         ),
                       );
                     }

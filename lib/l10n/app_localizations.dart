@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'Transaction Details'**
   String get transactionDetailsTitle;
 
+  /// No description provided for @deudaDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Details'**
+  String get deudaDetailsTitle;
+
   /// No description provided for @expenseMade.
   ///
   /// In en, this message translates to:

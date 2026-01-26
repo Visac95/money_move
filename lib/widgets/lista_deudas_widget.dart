@@ -291,21 +291,9 @@ class _ListaDeudasWidget extends State<ListaDeudasWidget> {
             ],
           ),
         ),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => VerDeuda(
-              id: deuda.id,
-              title: deuda.title,
-              description: deuda.description,
-              monto: deuda.monto,
-              abono: deuda.abono,
-              involucrado: deuda.involucrado,
-              fechaLimite: deuda.fechaLimite,
-              categoria: deuda.categoria,
-              debo: deuda.debo,
-            ),
-          ),
-        ),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => VerDeuda(deuda: deuda))),
       ),
     );
   }

@@ -136,6 +136,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transactionDetailsTitle => 'Transaction Details';
 
   @override
+  String get deudaDetailsTitle => 'Debt Details';
+
+  @override
   String get expenseMade => 'Expense Made';
 
   @override

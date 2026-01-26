@@ -42,6 +42,7 @@
     "seeAllDeudasText": "See all debts",
     "transactionNotExist": "The transaction does not exist",
     "transactionDetailsTitle": "Transaction Details",
+    "deudaDetailsTitle": "Debt Details",
     "expenseMade": "Expense Made",
     "incomeReceived": "Income Received",
     "inputTitleTransactionText": "Transaction Title",

@@ -14,28 +14,8 @@ import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';
 
 class VerDeuda extends StatelessWidget {
-  final String id;
-  final String title;
-  final String description;
-  final double monto;
-  final double abono;
-  final String involucrado;
-  final DateTime fechaLimite;
-  final String categoria;
-  final bool debo;
-
-  const VerDeuda({
-    super.key,
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.monto,
-    required this.abono,
-    required this.involucrado,
-    required this.fechaLimite,
-    required this.categoria,
-    required this.debo,
-  });
+  final Deuda deuda;
+  const VerDeuda({super.key, required this.deuda});
 
   // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
   Future<double?> _mostrarDialogoAbono(
@@ -55,18 +35,9 @@ class VerDeuda extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Obtener la deuda actualizada del Provider
-    final provider = Provider.of<DeudaProvider>(context);
-    Deuda? deuda = provider.getDeudaById(id);
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final strings = AppLocalizations.of(context)!;
-
-    if (deuda == null) {
-      return Scaffold(body: Center(child: Text(strings.transactionNotExist)));
-    }
-
     final Color mainColor = deuda.debo ? AppColors.accent : AppColors.income;
 
     final double restante = deuda.monto - deuda.abono;
@@ -117,7 +88,7 @@ class VerDeuda extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.transactionDetailsTitle,
+          AppLocalizations.of(context)!.deudaDetailsTitle,
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,

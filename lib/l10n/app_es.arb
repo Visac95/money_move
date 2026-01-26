@@ -42,6 +42,7 @@
     "seeAllDeudasText": "Ver todas las deudas",
     "transactionNotExist": "La transacción no existe",
     "transactionDetailsTitle": "Detalle del Movimiento",
+    "deudaDetailsTitle": "Detalle de la Deuda",
     "expenseMade": "Gasto Realizado",
     "incomeReceived": "Ingreso Recibido",
     "inputTitleTransactionText": "Título del movimiento",
