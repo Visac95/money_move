@@ -19,13 +19,13 @@ class DatabaseService {
   // 🛠️ HELPER PRIVADO (Para no repetir código)
   // ==========================================
   // Esta función decide automáticamente dónde buscar según si le pasas un spaceId o no.
-  CollectionReference _getTxCollection(String id, bool? space) {
+  CollectionReference _getCollection(String id, bool? space, String colletion) {
     if (space ?? false) {
       // 🚀 RUTA SPACE: spaces/{spaceId}/transactions
-      return _spaceRef.doc(id).collection("transactions");
+      return _spaceRef.doc(id).collection(colletion);
     } else {
       // 👤 RUTA PERSONAL: users/{userId}/transactions
-      return _userRef.doc(id).collection("transactions");
+      return _userRef.doc(id).collection(colletion);
     }
   }
 
@@ -50,7 +50,7 @@ class DatabaseService {
   // AHORA RECIBE spaceId para saber dónde guardar
   Future<void> addTransaction(Transaction t, bool? space) async {
     try {
-      final ref = _getTxCollection(t.userId, space);
+      final ref = _getCollection(t.userId, space, "transactions");
       // Usamos .set para asegurar que el ID sea el que generamos en la app
       await ref.doc(t.id).set(t.toMap());
     } catch (e) {
@@ -68,7 +68,11 @@ class DatabaseService {
     // Si estamos en modo space y hay ID, usamos el ID del space. Si no, null (personal).
     final targetId = (isSpaceMode && spaceId != null) ? spaceId : userId;
 
-    final ref = _getTxCollection(targetId, (isSpaceMode && spaceId != null));
+    final ref = _getCollection(
+      targetId,
+      (isSpaceMode && spaceId != null),
+      "transactions",
+    );
 
     return ref.snapshots().map(_mapSnapshotToTransactions);
   }
@@ -76,7 +80,7 @@ class DatabaseService {
   // --- ACTUALIZAR ---
   Future<void> updateTransaction(Transaction t, bool? space) async {
     try {
-      final ref = _getTxCollection(t.userId, space);
+      final ref = _getCollection(t.userId, space, "transactions");
       await ref.doc(t.id).update(t.toMap());
     } catch (e) {
       print("❌ Error al actualizar: $e");
@@ -88,7 +92,7 @@ class DatabaseService {
   Future<void> deleteTransaction(Transaction t, bool space) async {
     try {
       print("🤐🫤☹️inicio borrado");
-      final ref = _getTxCollection(t.userId, space);
+      final ref = _getCollection(t.userId, space, "transactions");
       await ref.doc(t.id).delete();
       print("🗑️ Transacción borrada en DB: ${t.id}");
     } catch (e) {
@@ -100,28 +104,33 @@ class DatabaseService {
   // 💸 SECCIÓN DE DEUDAS (Sin cambios mayores)
   // ==========================================
 
-  Future<void> addDeuda(Deuda deuda) async {
+  Future<void> addDeuda(Deuda d, bool space) async {
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
     try {
-      await _userRef
-          .doc(deuda.userId)
-          .collection("deudas")
-          .doc(deuda.id)
-          .set(deuda.toMap());
+      final ref = _getCollection(d.userId, space, "deudas");
+      // Usamos .set para asegurar que el ID sea el que generamos en la app
+      await ref.doc(d.id).set(d.toMap());
     } catch (e) {
+      print("❌ Error al guardar deuda: $e");
       rethrow;
     }
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${d.userId}");
   }
 
-  Stream<List<Deuda>> getDeudasStream(String userId) {
-    return _userRef.doc(userId).collection("deudas").snapshots().map((
-      snapshot,
-    ) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return Deuda.fromMap(data);
-      }).toList();
-    });
+  Stream<List<Deuda>> getDeudasStream(
+    String userId,
+    String? spaceId,
+    bool isSpaceMode,
+  ) {
+    // Si estamos en modo space y hay ID, usamos el ID del space. Si no, null (personal).
+    final targetId = (isSpaceMode && spaceId != null) ? spaceId : userId;
+
+    final ref = _getCollection(
+      targetId,
+      (isSpaceMode && spaceId != null),
+      "deudas",
+    );
+    return ref.snapshots().map(_mapSnapshotToDeudas);
   }
 
   Future<void> updateDeuda(Deuda deuda) async {
@@ -172,6 +181,14 @@ class DatabaseService {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
       return Transaction.fromMap(data);
+    }).toList();
+  }
+
+  List<Deuda> _mapSnapshotToDeudas(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return Deuda.fromMap(data);
     }).toList();
   }
 }

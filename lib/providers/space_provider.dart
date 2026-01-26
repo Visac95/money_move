@@ -26,7 +26,6 @@ class SpaceProvider extends ChangeNotifier {
 
     // 1. Seguridad: Si no hay usuario, no hacemos nada.
     if (user == null) {
-      //print("Error: No hay usuario logueado");
       return null;
     }
 
@@ -37,7 +36,6 @@ class SpaceProvider extends ChangeNotifier {
       if (invitacionExistente != null) {
         if (invitacionExistente.creationDate.sigueVigente) {
           _invitacion = invitacionExistente;
-          //print("♻️ Reutilizando invitación activa");
           return _invitacion;
         }
 
@@ -46,7 +44,7 @@ class SpaceProvider extends ChangeNotifier {
 
       String shortCode = generarCodigoCorto();
       String spaceId = const Uuid().v4();
-      // Tip: Usa Uri.encodeComponent por si acaso, aunque con tu generador no hace falta.
+      
       String linkInvitacion =
           "https://moneymove.visacstudio.online/invite?code=$shortCode";
 
@@ -54,7 +52,7 @@ class SpaceProvider extends ChangeNotifier {
         codeInvitacion: shortCode,
         linkInvitacion: linkInvitacion,
         creationDate: DateTime.now(),
-        creatorId: user.uid, // Ya validamos arriba que user no es null
+        creatorId: user.uid,
         spaceId: spaceId,
       );
 
@@ -84,7 +82,6 @@ class SpaceProvider extends ChangeNotifier {
       print("No hay usuario logueado💀💀💀");
       return InvitacionStatus.noUser;
     }
-    ;
 
     try {
       final inviteRef = firestore.collection('invitations').doc(codeInput);
@@ -110,9 +107,7 @@ class SpaceProvider extends ChangeNotifier {
         try {
           await deleteInvitacion(i.codeInvitacion);
         } catch (_) {
-          print(
-            "No se pudo borrar la invitación expirada (probablemente permisos)",
-          );
+          print("No se pudo borrar la invitación expirada (probablemente permisos)");
         }
         return InvitacionStatus.expired;
       }
@@ -139,11 +134,11 @@ class SpaceProvider extends ChangeNotifier {
         'members': [hostUid, guestUser.uid],
       });
 
-      print("📨✅📨✅📨✅ ${firestore.collection("spaces").doc(spaceId).get()}");
+      print("📨✅ Space Creado Exitosamente");
 
       notifyListeners();
 
-      return InvitacionStatus.success; // Éxito total
+      return InvitacionStatus.success;
     } catch (e) {
       print("💀💀💀💀💀Error al unirse: $e");
       return InvitacionStatus.error;
@@ -220,8 +215,8 @@ class SpaceProvider extends ChangeNotifier {
 
       final guestUser = UserModel.fromFirestore(userSnapshot);
 
-      final String? partnerUid = guestUser.linkedAccountId; // ID de tu amigo
-      final String? spaceId = guestUser.spaceId; // ID del nuevo grupo
+      final String? partnerUid = guestUser.linkedAccountId;
+      final String? spaceId = guestUser.spaceId;
 
       if (partnerUid == null) return false;
       if (spaceId == null) {
@@ -237,11 +232,11 @@ class SpaceProvider extends ChangeNotifier {
       final guestRef = firestore.collection('users').doc(guestUser.uid);
       batch.update(guestRef, {'linkedAccountId': null, 'spaceId': null});
 
-      //batch.delete(inviteRef);
-
       await batch.commit();
+      
+      // Intentamos borrar el space (si las reglas lo permiten)
       await firestore.collection("spaces").doc(spaceId).delete();
-      print("📨✅📨✅📨✅ ${firestore.collection("spaces").doc(spaceId).get()}");
+      print("📨✅ Space eliminado y usuarios desvinculados");
 
       clearSpace();
       notifyListeners();
@@ -258,28 +253,44 @@ class SpaceProvider extends ChangeNotifier {
   //----------------------------------------
 
   Space? _currentSpace;
-  StreamSubscription<DocumentSnapshot>?
-  _spaceSubscription; // Variable para controlar el grifo
+  StreamSubscription<DocumentSnapshot>? _spaceSubscription;
 
   Space? get currentSpace => _currentSpace;
   bool get isInSpace => _currentSpace != null;
 
-  // 1. Recibimos el ID directamente. No lo buscamos.
+  // 🔥 NUEVO: VARIABLES PARA EL MODO DE VISTA (Personal vs Space)
+  // ------------------------------------------------------------
+  bool _isSpaceMode = false;
+  bool get isSpaceMode => _isSpaceMode;
+
+  // 🔥 NUEVO: Función para cambiar el modo desde el Switch
+  void setSpaceMode(bool value) {
+    // Seguridad: No puedes activar modo space si no tienes space
+    if (value == true && _currentSpace == null) {
+      _isSpaceMode = false;
+    } else {
+      _isSpaceMode = value;
+    }
+    notifyListeners();
+  }
+  // ------------------------------------------------------------
+
   void initSpaceSubscription(String? spaceId) {
     _spaceSubscription?.cancel();
     _spaceSubscription = null;
 
-    // B. VALIDACIÓN:
-    // Si el usuario no tiene spaceId (es null), limpiamos el modelo y nos vamos.
+    // VALIDACIÓN:
+    // Si el usuario no tiene spaceId (es null), limpiamos todo.
     if (spaceId == null || spaceId.isEmpty) {
       _currentSpace = null;
+      _isSpaceMode = false; // 🔥 Aseguramos que vuelva a modo personal
       notifyListeners();
       return;
     }
 
     print("🛰️✅✅ SpaceProvider: Conectando al espacio $spaceId...");
 
-    // C. SUSCRIPCIÓN:
+    // SUSCRIPCIÓN:
     _spaceSubscription = FirebaseFirestore.instance
         .collection("spaces")
         .doc(spaceId)
@@ -292,8 +303,9 @@ class SpaceProvider extends ChangeNotifier {
             } else {
               print("⚠️ El documento del espacio no existe (¿Fue borrado?)");
               _currentSpace = null;
+              _isSpaceMode = false; // 🔥 Si borran el grupo, volvemos a personal
             }
-            notifyListeners(); // Avisamos a la UI para que redibuje
+            notifyListeners();
           },
           onError: (error) {
             print("🚨 Error escuchando el space: $error");
@@ -301,12 +313,13 @@ class SpaceProvider extends ChangeNotifier {
         );
   }
 
-  // 2. Método para limpiar todo (Logout o Salir del grupo)
+  // Método para limpiar todo (Logout o Salir del grupo)
   void clearSpace() {
     print("🧹 SpaceProvider: Limpiando espacio local");
-    _spaceSubscription?.cancel(); // IMPORTANTE: Cortar la conexión
+    _spaceSubscription?.cancel();
     _spaceSubscription = null;
     _currentSpace = null;
+    _isSpaceMode = false; // 🔥 Apagamos el modo Space al salir
     notifyListeners();
   }
 }

@@ -2,117 +2,132 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-// import 'package:money_move/providers/space_provider.dart'; // Ya no es estrictamente necesario aquí si pasamos el ID directo
 import 'package:money_move/services/database_service.dart';
 import '../models/transaction.dart';
 
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService _dbService = DatabaseService();
 
-  User? _currentUser; // <--- Para saber quién es el usuario
+  // 1. VARIABLES DE ESTADO (Ahora inyectadas desde fuera)
+  User? _currentUser;
+  String? _currentSpaceId;
 
-  // 1. DOS LISTAS SEPARADAS (Tu nueva estrategia)
+  // Esta variable ya no la cambiamos nosotros, nos la pasan desde SpaceProvider
+  bool _isSpaceMode = false;
+
+  // 2. LISTAS DE DATOS
   List<Transaction> _personalTransactions = [];
   List<Transaction> _spaceTransactions = [];
 
-  // 2. ESTADO
   bool _isLoading = true;
-  bool get isLoading => _isLoading;
 
-  bool _isSpaceMode = false;
+  // GETTERS PÚBLICOS
+  bool get isLoading => _isLoading;
   bool get isSpaceMode => _isSpaceMode;
 
-  // 3. EL GETTER MÁGICO
-  // Aquí ocurre la magia: dependiendo del switch, devolvemos una lista u otra.
+  // EL GETTER MÁGICO 🪄
+  // Decide qué lista mostrar basado en lo que diga SpaceProvider
   List<Transaction> get transactions =>
       _isSpaceMode ? _spaceTransactions : _personalTransactions;
 
-  // Suscripciones independientes
+  // Suscripciones
   StreamSubscription? _personalSub;
   StreamSubscription? _spaceSub;
 
   // --------------------------------------------------------
-  // 1. INICIALIZAR (Carga TODo lo necesario al principio)
+  // 🔥 1. MÉTODO DE CONEXIÓN (El Corazón del Proxy)
   // --------------------------------------------------------
-  void init(User? user, String? linkedSpaceId) {
-    if (user == null) return;
-    print("🐈‍⬛11111");
+  // Este método se llamará automáticamente desde main.dart cuando algo cambie
+  void updateFromExternal(User? user, String? spaceId, bool isSpaceModeInput) {
+    // ignore: unused_local_variable
+    bool dataChanged = false;
+
+    // A. Actualizamos el modo visual (Switch)
+    if (_isSpaceMode != isSpaceModeInput) {
+      _isSpaceMode = isSpaceModeInput;
+      print(
+        "🔄 TransactionProvider: Modo actualizado a ${_isSpaceMode ? 'SPACE' : 'PERSONAL'}",
+      );
+      notifyListeners(); // Avisamos rápido para que la UI cambie la lista
+    }
+
+    // B. Detectamos si cambió el Usuario o el Grupo (Para recargar los Streams)
+    if (_currentUser?.uid != user?.uid || _currentSpaceId != spaceId) {
+      _currentUser = user;
+      _currentSpaceId = spaceId;
+      _initStreams(); // Recargamos las conexiones a Firebase
+      dataChanged = true;
+    }
+
+    // Si solo cambió el modo, ya notificamos arriba.
+    // Si cambiaron los datos (streams), _initStreams notificará cuando lleguen datos.
+  }
+
+  // --------------------------------------------------------
+  // 2. INICIALIZAR STREAMS (Privado)
+  // --------------------------------------------------------
+  void _initStreams() {
+    if (_currentUser == null) return;
 
     _isLoading = true;
     notifyListeners();
 
-    // A. Cancelar suscripciones viejas por si acaso
+    print("🐈‍⬛ Iniciando Streams de Transacciones...");
+
+    // A. Cancelar suscripciones viejas
     _personalSub?.cancel();
     _spaceSub?.cancel();
 
     // B. Escuchar Transacciones PERSONALES (Siempre)
-    print("🐈‍⬛2222222");
     _personalSub = _dbService
-        .getTransactionsStream(user.uid, null, false) // false = no es space
+        .getTransactionsStream(_currentUser!.uid, null, false)
         .listen((data) {
           _personalTransactions = data;
-          _personalTransactions.sort(
-            (a, b) => b.fecha.compareTo(a.fecha),
-          ); // Ordenar por fecha
-          print("🐈‍⬛333333333");
+          _personalTransactions.sort((a, b) => b.fecha.compareTo(a.fecha));
 
-          // Solo quitamos el loading si estamos en modo personal o si no tiene space
+          // Solo quitamos loading si estamos viendo personal
           if (!_isSpaceMode) _isLoading = false;
           notifyListeners();
-          print("🐈‍⬛4444444444444");
+          print("🐈‍⬛ Datos Personales recibidos: ${data.length}");
         });
-    print("🐈‍⬛5555555555555");
-    // C. Escuchar Transacciones SPACE (Solo si tiene ID vinculado)
-    if (linkedSpaceId != null) {
+
+    // C. Escuchar Transacciones SPACE (Solo si hay ID vinculado)
+    if (_currentSpaceId != null && _currentSpaceId!.isNotEmpty) {
       _spaceSub = _dbService
-          .getTransactionsStream(
-            user.uid,
-            linkedSpaceId,
-            true,
-          ) // true = es space
+          .getTransactionsStream(_currentUser!.uid, _currentSpaceId, true)
           .listen((data) {
             _spaceTransactions = data;
             _spaceTransactions.sort((a, b) => b.fecha.compareTo(a.fecha));
 
-            // Si arrancamos en modo space, quitamos el loading aquí
+            // Si estamos en modo space, quitamos loading
             _isLoading = false;
             notifyListeners();
-            print("🐈‍⬛66666666666666");
+            print("🐈‍⬛ Datos Space recibidos: ${data.length}");
           });
     } else {
-      // Si no tiene space, aseguramos que la lista esté vacía
       _spaceTransactions = [];
-      _isLoading = false; // Por si acaso
-      print("🐈‍⬛777777777777");
+      if (_isSpaceMode) _isLoading = false;
     }
-    print("🐈‍⬛888888888888888");
-  }
-
-  // --------------------------------------------------------
-  // 2. EL SWITCHER (Ahora es súper sencillo)
-  // --------------------------------------------------------
-  void toggleTransactionMode(bool value) {
-    _isSpaceMode = value;
-    // Como los datos YA están en memoria en las variables _personal o _space,
-    // solo avisamos a la UI que se redibuje. ¡Instantáneo! ⚡
-    notifyListeners();
-    print("🔄 Modo cambiado a: ${_isSpaceMode ? 'SPACE' : 'PERSONAL'}");
   }
 
   // --------------------------------------------------------
   // 3. CRUD (Agregar, Borrar, Editar)
   // --------------------------------------------------------
 
-  Future<void> addTransaction(Transaction tx, bool spaceMode) async {
-    await _dbService.addTransaction(tx, spaceMode);
+  Future<void> addTransaction(Transaction tx) async {
+    // Usamos la variable _isSpaceMode que recibimos del SpaceProvider
+    // para saber dónde guardar.
+    await _dbService.addTransaction(tx, _isSpaceMode);
   }
 
   Future<void> deleteTransaction(Transaction t) async {
     try {
-      print("🗑️🗑️🗑️🗑️🗑️ Transacción borrada: $t.id");
-      //if (_currentUser == null) return;
+      if (_currentUser == null) return;
+      await _dbService.deleteTransaction(
+        t,
+        (_isSpaceMode && _currentSpaceId != null),
+      );
 
-      await _dbService.deleteTransaction(t, _isSpaceMode);
       print("🗑️ Transacción borrada: ${t.id}");
     } catch (e) {
       print("❌ Error al borrar transacción: $e");
@@ -125,11 +140,8 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   // --------------------------------------------------------
-  // 4. CÁLCULOS Y FILTROS (Simplificados usando el getter 'transactions')
+  // 4. CÁLCULOS Y FILTROS
   // --------------------------------------------------------
-
-  // Nota: Al usar 'this.transactions' aquí, automáticamente usa la lista
-  // correcta según el modo activo. No hay que cambiar nada de lógica.
 
   double get totalIngresos => transactions
       .where((t) => !t.isExpense)
@@ -141,8 +153,6 @@ class TransactionProvider extends ChangeNotifier {
 
   double get saldoActual => totalIngresos - totalEgresos;
 
-  // ... (Tus otras funciones auxiliares getSaldoTransaction, getTransactionById) ...
-  // Solo asegúrate de usar 'transactions' (el getter) en lugar de '_transactions'.
   double getSaldoTransaction(Transaction t) {
     if (t.isExpense) return t.saldo - t.monto;
     if (!t.isExpense) return t.saldo + t.monto;
@@ -157,14 +167,11 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
-  // ... (Tus filtros de fecha y categoría se mantienen igual, solo usa 'transactions') ...
-
-  // EJEMPLO RAPIDO DE ADAPTACIÓN DE TUS FILTROS:
+  // FILTROS DE FECHA Y CATEGORÍA
   String _filtroActual = "all";
   String _catFiltroActual = "all";
 
-  // Getters para UI
-  String get filtroActual => _filtroActual; // Agregué getter
+  String get filtroActual => _filtroActual;
   String get catFiltroActual => _catFiltroActual;
 
   void cambiarFiltro(String nuevo) {
@@ -179,15 +186,14 @@ class TransactionProvider extends ChangeNotifier {
 
   List<Transaction> get transacionesParaMostrar {
     DateTime now = DateTime.now();
-    // 1. Usamos el getter transactions (que ya tiene la lista correcta según el modo)
     List<Transaction> base = transactions;
 
-    // 2. Filtro Categoría
+    // Filtro Categoría
     if (_catFiltroActual != "all") {
       base = base.where((t) => t.categoria == _catFiltroActual).toList();
     }
 
-    // 3. Filtro Fecha (Tu lógica original)
+    // Filtro Fecha
     if (_filtroActual == "today") {
       return base
           .where(
@@ -198,9 +204,34 @@ class TransactionProvider extends ChangeNotifier {
           )
           .toList();
     }
-    // ... (Resto de tus filtros week, month, year) ...
+    if (_filtroActual == "week") {
+      // Lógica simplificada de semana (puedes ajustar si tienes utils)
+      DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+      startOfWeek = DateTime(
+        startOfWeek.year,
+        startOfWeek.month,
+        startOfWeek.day,
+      ); // medianoche
+      return base
+          .where(
+            (tx) => tx.fecha.isAfter(
+              startOfWeek.subtract(const Duration(seconds: 1)),
+            ),
+          )
+          .toList();
+    }
+    if (_filtroActual == "month") {
+      return base
+          .where(
+            (tx) => tx.fecha.year == now.year && tx.fecha.month == now.month,
+          )
+          .toList();
+    }
+    if (_filtroActual == "year") {
+      return base.where((tx) => tx.fecha.year == now.year).toList();
+    }
 
-    return base;
+    return base; // "all"
   }
 
   String getActualFilterString(BuildContext ctx) {
@@ -214,33 +245,22 @@ class TransactionProvider extends ChangeNotifier {
 
   //____GETTERS FILTROS________
   double get filteredIngresos {
-    Iterable<Transaction> listaFiltradaIngresos = transacionesParaMostrar.where(
-      (t) => t.isExpense == false,
-    );
-    return listaFiltradaIngresos.fold(
-      0.0,
-      (sumaAcumulada, item) => sumaAcumulada + item.monto,
-    );
+    return transacionesParaMostrar
+        .where((t) => !t.isExpense)
+        .fold(0.0, (sum, item) => sum + item.monto);
   }
 
   double get filteredEgresos {
-    Iterable<Transaction> listaFiltradaEgresos = transacionesParaMostrar.where(
-      (t) => t.isExpense == true,
-    );
-    return listaFiltradaEgresos.fold(
-      0.0,
-      (sumaAcumulada, item) => sumaAcumulada + item.monto,
-    );
+    return transacionesParaMostrar
+        .where((t) => t.isExpense)
+        .fold(0.0, (sum, item) => sum + item.monto);
   }
 
   double get filteredsaldoActual => filteredIngresos - filteredEgresos;
 
-  //---------Filtro de categorias-----------
   List<Transaction> catFiltered(List<Transaction> list) {
     if (_catFiltroActual != "all") {
-      return list // Corregido: filtrar sobre la lista que recibes, no siempre _transactions
-          .where((t) => t.categoria == _catFiltroActual)
-          .toList();
+      return list.where((t) => t.categoria == _catFiltroActual).toList();
     }
     return list;
   }

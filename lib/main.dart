@@ -46,8 +46,7 @@ void main() async {
   // Esto fuerza a Firestore a guardar datos en el disco del celular
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
-    cacheSizeBytes:
-        Settings.CACHE_SIZE_UNLIMITED, // Opcional: Para guardar mucha data
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
   await DeepLinkService().initDeepLinks();
@@ -59,26 +58,54 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider(create: (_) => AiCategoryProvider()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
-        ChangeNotifierProvider(create: (_) => DeudaProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
-        ChangeNotifierProxyProvider<UserProvider, TransactionProvider>(
-          // 1. Crea el provider vacío inicial
+
+        // -----------------------------------------------------------
+        // 🔥 1. TRANSACTION PROVIDER (Conectado a User y Space)
+        // -----------------------------------------------------------
+        ChangeNotifierProxyProvider2<
+          UserProvider,
+          SpaceProvider,
+          TransactionProvider
+        >(
           create: (_) => TransactionProvider(),
-
-          // 2. Cada vez que UserProvider cambie, se ejecuta esto:
-          update: (context, userProv, transProv) {
-            // Obtenemos el usuario de Firebase (puedes usar auth directly o userProv si lo tiene)
+          update: (context, userProv, spaceProv, transProv) {
             final fbUser = FirebaseAuth.instance.currentUser;
-
-            // Obtenemos el ID del space desde tu UserProvider (UserModel)
-            // Asegúrate de que 'usuarioActual' sea accesible
             final spaceId = userProv.usuarioActual?.spaceId;
 
-            // ¡Aquí ocurre la magia! Se llama solo.
-            transProv!.init(fbUser, spaceId);
+            // Aquí le pasamos el 'isSpaceMode' que vive en SpaceProvider
+            transProv!.updateFromExternal(
+              fbUser,
+              spaceId,
+              spaceProv.isSpaceMode,
+            );
 
             return transProv;
+          },
+        ),
+
+        // -----------------------------------------------------------
+        // 🔥 2. DEUDA PROVIDER (Conectado a User y Space)
+        // -----------------------------------------------------------
+        ChangeNotifierProxyProvider2<
+          UserProvider,
+          SpaceProvider,
+          DeudaProvider
+        >(
+          create: (_) => DeudaProvider(),
+          update: (context, userProv, spaceProv, deudaProv) {
+            final fbUser = FirebaseAuth.instance.currentUser;
+            final spaceId = userProv.usuarioActual?.spaceId;
+
+            // Deudas también obedece al SpaceProvider
+            deudaProv!.updateFromExternal(
+              fbUser,
+              spaceId,
+              spaceProv.isSpaceMode,
+            );
+
+            return deudaProv;
           },
         ),
       ],
@@ -115,7 +142,6 @@ class MyApp extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
 
           // 4. AQUÍ CONECTAMOS EL CAMBIO DE TEMA
-          // Si settingsProv.isDarkMode es true, fuerza el tema oscuro.
           themeMode: settingsProv.isDarkMode ? ThemeMode.dark : ThemeMode.light,
 
           // TEMA CLARO

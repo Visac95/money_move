@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 // import 'package:money_move/config/app_colors.dart'; // Ya no se necesita
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/ui_provider.dart';
@@ -42,8 +41,6 @@ class _MainScreenState extends State<MainScreen> {
       final user = _userProv.usuarioActual;
       spaceProv.initSpaceSubscription(user?.spaceId);
       // 2. Encendemos Deudas (de paso)
-      final deudaProv = Provider.of<DeudaProvider>(context, listen: false);
-      deudaProv.initSubscription(_userProv.usuarioActual);
     });
   }
 

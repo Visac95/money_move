@@ -132,10 +132,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     // 6. GUARDAR
 
     try {
-      transactionProvider.addTransaction(
-        nuevaTransaccion,
-        transactionProvider.isSpaceMode,
-      );
+      transactionProvider.addTransaction(nuevaTransaccion);
       final connectivityResult = await Connectivity().checkConnectivity();
       bool sinInternet = connectivityResult.contains(ConnectivityResult.none);
 

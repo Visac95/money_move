@@ -7,6 +7,7 @@ import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
@@ -135,10 +136,24 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
         return;
       }
     }
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 1");
+
+    if (!mounted) {
+      return;
+    }
+
+    final userProv = Provider.of<UserProvider>(context, listen: false);
+    final transactionProvider = Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    );
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
 
     const uuid = Uuid();
     final nuevaDeuda = Deuda(
-      userId: FirebaseAuth.instance.currentUser!.uid,
+      userId: !transactionProvider.isSpaceMode
+          ? FirebaseAuth.instance.currentUser!.uid
+          : userProv.usuarioActual!.spaceId!,
       id: uuid.v4(),
       title: titleController.text,
       description: descriptionController.text,
@@ -152,6 +167,8 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       pagada: false,
     );
 
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
+
     if (!mounted) return;
     final spaceProvi = Provider.of<SpaceProvider>(context, listen: false);
     deudaProvider.addDeuda(
@@ -162,6 +179,8 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       generateAutoTransaction,
       spaceProvi.isInSpace,
     );
+
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
 
     if (mounted) Navigator.of(context).pop();
     aiProvider.resetCategory();

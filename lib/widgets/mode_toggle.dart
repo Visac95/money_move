@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/space_provider.dart'; // <--- CAMBIO IMPORTANTE
 import 'package:provider/provider.dart';
 
 class ModeToggle extends StatelessWidget {
@@ -9,24 +9,36 @@ class ModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tProvider = Provider.of<TransactionProvider>(context);
-    final isShared = tProvider.isSpaceMode;
+    // 1. Ahora escuchamos al SpaceProvider (el dueño de la verdad)
+    final spaceProv = Provider.of<SpaceProvider>(context);
+    final isShared = spaceProv.isSpaceMode;
+
     final strings = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () {
-        tProvider.toggleTransactionMode(!isShared);
-        //tProvider.initSubscription(userProv.usuarioActual, spaceProv);
+        // 2. VALIDACIÓN UX:
+        // Si intenta activar el modo compartido pero no está en un grupo...
+        if (!isShared && !spaceProv.isInSpace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("No perteneces a ningún grupo"),
+              backgroundColor: AppColors.expense,
+            ),
+          );
+          return;
+        }
+
+        // 3. Ejecutamos el cambio en SpaceProvider
+        spaceProv.setSpaceMode(!isShared);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: isShared
-              ? colorScheme.inversePrimary
-              : colorScheme.primary, // Fondo suave
+          color: isShared ? colorScheme.inversePrimary : colorScheme.primary,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: isShared ? Colors.indigo.shade200 : Colors.teal.shade200,
@@ -78,7 +90,7 @@ class ModeToggle extends StatelessWidget {
             icon,
             color: isActive ? colorScheme.onSurface : Colors.grey.shade600,
           ),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
           Text(
             title,
             style: TextStyle(

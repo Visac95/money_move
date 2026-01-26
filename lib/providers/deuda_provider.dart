@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/transaction.dart';
-import 'package:money_move/models/user_model.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/services/database_service.dart';
 
@@ -12,23 +13,84 @@ class DeudaProvider extends ChangeNotifier {
   List<Deuda> _deudas = [];
   final DatabaseService _dbService = DatabaseService();
 
-  List<Deuda> get deudas => _deudas;
+  User? _currentUser;
+  String? _currentSpaceId;
+  bool _isSpaceMode = false;
 
-  // 1. ESCUCHAR CAMBIOS (El corazón del sistema)
-  void initSubscription(UserModel? userData) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      _deudas = [];
-      notifyListeners();
+  List<Deuda> _personalDeudas = [];
+  List<Deuda> _spaceDeudas = [];
+  bool _isLoading = true;
+
+  List<Deuda> get deudas => _isSpaceMode ? _spaceDeudas : _personalDeudas;
+  bool get isLoading => _isLoading;
+
+  StreamSubscription? _personalSub;
+  StreamSubscription? _spaceSub;
+
+  void updateFromExternal(User? user, String? spaceId, bool isSpaceMode) {
+    // 1. Si nada importante cambió, no hacemos nada (Evita loops infinitos)
+    if (_currentUser?.uid == user?.uid &&
+        _currentSpaceId == spaceId &&
+        _isSpaceMode == isSpaceMode) {
       return;
     }
 
-    _dbService.getDeudasStream(user.uid).listen((event) {
-      _deudas = event;
-      // Ordenamos siempre por fecha límite (más urgente primero)
-      _deudas.sort((a, b) => a.fechaLimite.compareTo(b.fechaLimite));
+    // 2. Actualizamos variables
+    _currentUser = user;
+    _currentSpaceId = spaceId;
+    _isSpaceMode =
+        isSpaceMode; // <--- Aquí recibimos el modo desde TransactionProvider
+
+    // 3. Recargamos datos (Lógica simplificada tipo Eager Loading)
+    _initDeudas(user, spaceId);
+    print("💀🤐🫤☹️✅🐈‍⬛ $spaceId, ${user?.uid}");
+  }
+
+  void _initDeudas(User? user, String? linkedSpaceId) {
+    if (user == null) return;
+    print("🐈‍⬛11111DDDDDDD");
+    _isLoading = true;
+    notifyListeners();
+
+    // A. Cancelar suscripciones viejas por si acaso
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+
+    // B. Escuchar Transacciones PERSONALES (Siempre)
+    print("🐈‍⬛2222222DDDDDD");
+    _personalSub = _dbService.getDeudasStream(user.uid, null, false).listen((
+      data,
+    ) {
+      _personalDeudas = data;
+      _personalDeudas.sort(
+        (a, b) => b.fechaLimite.compareTo(a.fechaLimite),
+      ); // Ordenar por fecha
+      print("🐈‍⬛333333333DDDDDDD");
+
+      if (!_isSpaceMode) _isLoading = false;
       notifyListeners();
+      print("🐈‍⬛4444444444444DDDDDDD");
     });
+    print("🐈‍⬛5555555555555DDDDD");
+    if (linkedSpaceId != null) {
+      _spaceSub = _dbService
+          .getDeudasStream(user.uid, linkedSpaceId, true) // true = es space
+          .listen((data) {
+            _spaceDeudas = data;
+            _spaceDeudas.sort((a, b) => b.fechaLimite.compareTo(a.fechaLimite));
+
+            // Si arrancamos en modo space, quitamos el loading aquí
+            _isLoading = false;
+            notifyListeners();
+            print("🐈‍⬛66666666666666DDDDD");
+          });
+    } else {
+      // Si no tiene space, aseguramos que la lista esté vacía
+      _spaceDeudas = [];
+      _isLoading = false; // Por si acaso
+      print("🐈‍⬛777777777777DDDDDD");
+    }
+    print("🐈‍⬛888888888888888DDD");
   }
 
   // 2. AGREGAR DEUDA
@@ -40,18 +102,20 @@ class DeudaProvider extends ChangeNotifier {
     bool generateAutoTransaction,
     bool isInSpace,
   ) async {
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
     // A. Guardar en Firebase
-    await _dbService.addDeuda(d);
+    await _dbService.addDeuda(d, isInSpace);
 
     // B. Generar Transacción Automática (Si el usuario quiere)
     if (generateAutoTransaction) {
       String descriptionString =
           "${(d.debo ? stgs.lentFromText : stgs.lentToText)} ${d.involucrado} \n${stgs.descriptionText}: ${d.description}";
 
+      print("😶‍🌫️😶‍🌫️😶‍🌫️ 9");
       // Usamos el provider de transacciones que ya está conectado a Firebase
       await tProvdr.addTransaction(
         Transaction(
-          userId: FirebaseAuth.instance.currentUser!.uid,
+          userId: d.userId,
           title: d.title,
           description: descriptionString,
           monto: d.monto,
@@ -62,7 +126,6 @@ class DeudaProvider extends ChangeNotifier {
           isExpense: !d.debo, // Si me deben (Ingreso), Si debo (Gasto)
           deudaAsociada: d.id,
         ),
-        isInSpace,
       );
     }
   }
@@ -100,7 +163,6 @@ class DeudaProvider extends ChangeNotifier {
           categoria: AppConstants.catDebt,
           isExpense: d.debo, // Si yo debía, pagar es un Gasto.
         ),
-        isInSpace,
       );
 
       // Actualizamos la deuda a PAGADA
@@ -149,7 +211,6 @@ class DeudaProvider extends ChangeNotifier {
           isExpense: d.debo,
           deudaAsociada: d.id,
         ),
-        isInSpace,
       );
 
       // Actualizamos en Firebase
