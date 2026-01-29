@@ -184,5 +184,8 @@
     "areYouSureExitText": "¿Estás seguro de que quieres salir?",
     "leftSharedSpaceSuccessText": "Has salido exitosamente del espacio compartido",
     "exitText": "Salir",
-    "loadingFinancesText": "Cargando tus finanzas..."
+    "loadingFinancesText": "Cargando tus finanzas...",
+    "titleAhorrosScreen": "Ahorros",
+    "noAhorrosYet": "Aún no hay ahorros 😴",
+    "seeSettledAhorrosText": "Ver ahorros liquidados"
 }

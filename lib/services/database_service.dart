@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/models/deuda.dart';
 import 'package:money_move/models/invitacion.dart';
 import 'package:money_move/models/transaction.dart';
@@ -144,6 +145,49 @@ class DatabaseService {
   }
 
   // ==========================================
+  // 💸 SECCIÓN DE Ahorros ===================
+  // ==========================================
+
+  Future<void> addAhorro(Ahorro a, bool space) async {
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
+    try {
+      final ref = _getCollection(a.userId, space, "ahorros");
+      // Usamos .set para asegurar que el ID sea el que generamos en la app
+      await ref.doc(a.id).set(a.toMap());
+    } catch (e) {
+      print("❌ Error al guardar ahorro: $e");
+      rethrow;
+    }
+    print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${a.userId}");
+  }
+
+  Stream<List<Ahorro>> getAhorrosStream(
+    String userId,
+    String? spaceId,
+    bool isSpaceMode,
+  ) {
+    // Si estamos en modo space y hay ID, usamos el ID del space. Si no, null (personal).
+    final targetId = (isSpaceMode && spaceId != null) ? spaceId : userId;
+
+    final ref = _getCollection(
+      targetId,
+      (isSpaceMode && spaceId != null),
+      "ahorros",
+    );
+    return ref.snapshots().map(_mapSnapshotToAhorros);
+  }
+
+  Future<void> updateAhorro(Ahorro a, bool space) async {
+    final ref = _getCollection(a.userId, space, "ahorro");
+    await ref.doc(a.id).update(a.toMap());
+  }
+
+  Future<void> deleteAhorro(Ahorro a, bool space) async {
+    final ref = _getCollection(a.userId, space, "ahorro");
+    await ref.doc(a.id).delete();
+  }
+
+  // ==========================================
   // 📩 SECCIÓN DE INVITACIONES
   // ==========================================
 
@@ -187,6 +231,14 @@ class DatabaseService {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
       return Deuda.fromMap(data);
+    }).toList();
+  }
+
+  List<Ahorro> _mapSnapshotToAhorros(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return Ahorro.fromMap(data);
     }).toList();
   }
 }

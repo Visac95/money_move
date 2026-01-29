@@ -576,4 +576,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingFinancesText => 'Loading your finances...';
+
+  @override
+  String get titleAhorrosScreen => 'Savings';
+
+  @override
+  String get noAhorrosYet => 'No savings yet 😴';
+
+  @override
+  String get seeSettledAhorrosText => 'See settled savings';
 }

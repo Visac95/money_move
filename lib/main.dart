@@ -7,6 +7,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_move/firebase_options.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/services/auth_gate.dart';
@@ -106,6 +107,28 @@ void main() async {
             );
 
             return deudaProv;
+          },
+        ),
+        // -----------------------------------------------------------
+        // 🔥 2. DEUDA PROVIDER (Conectado a User y Space)
+        // -----------------------------------------------------------
+        ChangeNotifierProxyProvider2<
+          UserProvider,
+          SpaceProvider,
+          AhorroProvider
+        >(
+          create: (_) => AhorroProvider(),
+          update: (context, userProv, spaceProv, ahorroProv) {
+            final fbUser = FirebaseAuth.instance.currentUser;
+            final spaceId = userProv.usuarioActual?.spaceId;
+
+            // Deudas también obedece al SpaceProvider
+            ahorroProv!.updateFromExternal(
+              fbUser,
+              spaceId,
+              spaceProv.isSpaceMode,
+            );
+            return ahorroProv;
           },
         ),
       ],

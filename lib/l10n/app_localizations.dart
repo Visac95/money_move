@@ -1207,6 +1207,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading your finances...'**
   String get loadingFinancesText;
+
+  /// No description provided for @titleAhorrosScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get titleAhorrosScreen;
+
+  /// No description provided for @noAhorrosYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No savings yet 😴'**
+  String get noAhorrosYet;
+
+  /// No description provided for @seeSettledAhorrosText.
+  ///
+  /// In en, this message translates to:
+  /// **'See settled savings'**
+  String get seeSettledAhorrosText;
 }
 
 class _AppLocalizationsDelegate
