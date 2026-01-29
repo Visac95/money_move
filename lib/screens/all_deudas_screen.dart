@@ -24,7 +24,7 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         title: Row(
           children: [
             Icon(Icons.receipt_long),

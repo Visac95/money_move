@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         elevation: 0,
 
         title: Text(

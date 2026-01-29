@@ -30,7 +30,7 @@ class StadisticScreen extends StatelessWidget {
             Text(strings.stadisticText),
           ],
         ),
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         actions: [
           smallBoxSaldo(context, colorScheme),
           SizedBox(width: 5,),

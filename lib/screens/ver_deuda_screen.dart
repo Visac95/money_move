@@ -93,7 +93,7 @@ class VerDeuda extends StatelessWidget {
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: colorScheme.onSurface),

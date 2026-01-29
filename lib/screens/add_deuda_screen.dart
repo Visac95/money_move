@@ -200,7 +200,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
             color: colorScheme.onSurface,
           ),
         ),
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
         actions: [ModeToggle(bigWidget: false), SizedBox(width: 10)],

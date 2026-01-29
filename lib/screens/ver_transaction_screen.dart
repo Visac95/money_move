@@ -74,7 +74,7 @@ class VerTransactionScreen extends StatelessWidget {
           style: TextStyle(color: colorScheme.onSurface), // Texto se adapta
         ),
         centerTitle: true,
-        backgroundColor: modeColorAppbar(context),
+        backgroundColor: modeColorAppbar(context, 0.4),
         elevation: 0,
         leading: IconButton(
           // El icono será negro en día, blanco en noche
