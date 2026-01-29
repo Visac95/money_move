@@ -9,16 +9,16 @@ import 'package:provider/provider.dart';
 
 Drawer drawerUser(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
-  
+
   // 1. Usamos '?' para que no explote si por un milisegundo el usuario de Firebase es null
-  final fbUser = FirebaseAuth.instance.currentUser; 
-  
+  final fbUser = FirebaseAuth.instance.currentUser;
+
   final userProv = Provider.of<UserProvider>(context);
   final tProv = Provider.of<TransactionProvider>(context);
   final strings = AppLocalizations.of(context)!;
-  
+
   // 2. Extraemos el usuario de tu base de datos de forma segura
-  final appUser = userProv.usuarioActual; 
+  final appUser = userProv.usuarioActual;
 
   // 3. Lógica SEGURA: Si appUser es null, appUser?.linkedAccountId devuelve null, y la condición es false. No explota.
   bool modoSpace = (tProv.isSpaceMode && appUser?.linkedAccountId != null);
@@ -65,7 +65,7 @@ Drawer drawerUser(BuildContext context) {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    const ModeToggle(),
+                    const ModeToggle(bigWidget: true),
                   ],
                 ),
               ),
@@ -76,7 +76,10 @@ Drawer drawerUser(BuildContext context) {
         // C. BOTÓN DE SALIDA (LOGOUT)
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
-          title: Text(strings.logoutText, style: const TextStyle(color: Colors.red)),
+          title: Text(
+            strings.logoutText,
+            style: const TextStyle(color: Colors.red),
+          ),
           onTap: () async {
             // 1. Llamamos al servicio para desconectar Google y Firebase
             await AuthService().logout();
@@ -95,7 +98,7 @@ class LeadingDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     // Protección extra aquí también
     final user = FirebaseAuth.instance.currentUser;
-    
+
     return Builder(
       builder: (context) {
         final String? fotoUrl = user?.photoURL;

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
+import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:money_move/widgets/transaction_form.dart';
 import 'package:provider/provider.dart';
@@ -179,9 +181,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             color: colorScheme.onSurface,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: modeColorAppbar(context),
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: [ModeToggle(bigWidget: false), SizedBox(width: 10)],
       ),
       body: TransactionForm(
         titleController: titleController,

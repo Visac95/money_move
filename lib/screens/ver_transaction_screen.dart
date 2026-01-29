@@ -7,6 +7,7 @@ import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
 import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/category_translater.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import '../models/transaction.dart';
@@ -73,7 +74,7 @@ class VerTransactionScreen extends StatelessWidget {
           style: TextStyle(color: colorScheme.onSurface), // Texto se adapta
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: modeColorAppbar(context),
         elevation: 0,
         leading: IconButton(
           // El icono será negro en día, blanco en noche

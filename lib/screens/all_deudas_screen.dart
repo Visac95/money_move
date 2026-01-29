@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:money_move/l10n/app_localizations.dart'; // <--- TU IMPORT CORRECTO
-import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/add_deuda_button.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
+import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/settings_button.dart';
-import 'package:provider/provider.dart';
+import 'package:money_move/widgets/small_box_saldo.dart';
 
 class AllDeudasScreen extends StatefulWidget {
   const AllDeudasScreen({super.key});
@@ -18,12 +19,12 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
   Widget build(BuildContext context) {
     // Inicializamos la variable de localización
     final strings = AppLocalizations.of(context)!;
-    final saldo = Provider.of<TransactionProvider>(context).saldoActual;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: modeColorAppbar(context),
         title: Row(
           children: [
             Icon(Icons.receipt_long),
@@ -35,40 +36,9 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
           ],
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 0.0, top: 8, bottom: 8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                // Fondo suave basado en tu color primario
-                color: colorScheme.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: colorScheme.primary.withValues(alpha: 0.2),
-                ),
-              ),
-              child: Row(
-                children: [
-                  // Icono opcional para dar contexto
-                  Icon(
-                    Icons.account_balance_wallet_outlined,
-                    size: 16,
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    "\$${saldo.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+          smallBoxSaldo(context, colorScheme),
+          SizedBox(width: 5),
+          ModeToggle(bigWidget: false),
           settingsButton(context),
         ],
       ),

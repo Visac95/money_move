@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/loading_screen.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/add_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/charts/category_pie_chart.dart';
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: modeColorAppbar(context),
         elevation: 0,
 
         title: Text(

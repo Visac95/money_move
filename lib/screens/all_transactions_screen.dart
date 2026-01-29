@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/add_transaction_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/category_filter_button.dart';
 import 'package:money_move/widgets/lista_de_transacciones.dart';
+import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart'; // Descomenta si usas Provider para el saldo
@@ -29,7 +31,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: modeColorAppbar(context),
               pinned: true,
               floating: true,
               elevation: 0,
@@ -45,7 +47,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                   ),
                 ],
               ),
-              actions: [settingsButton(context)],
+              actions: [ModeToggle(bigWidget: false), settingsButton(context)],
 
               // 3. AQUÍ VA EL BALANCE (Propiedad 'bottom')
               // Usamos 'bottom' y 'PreferredSize' para anclar el balance a la barra.

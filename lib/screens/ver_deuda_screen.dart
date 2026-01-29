@@ -7,6 +7,7 @@ import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/utils/category_translater.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:money_move/widgets/add_abono_window.dart';
 import '../utils/date_formater.dart';
@@ -92,7 +93,7 @@ class VerDeuda extends StatelessWidget {
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: modeColorAppbar(context),
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: colorScheme.onSurface),

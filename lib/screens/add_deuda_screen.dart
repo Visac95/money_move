@@ -7,7 +7,9 @@ import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/deuda_form.dart';
+import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -198,9 +200,10 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
             color: colorScheme.onSurface,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: modeColorAppbar(context),
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: [ModeToggle(bigWidget: false), SizedBox(width: 10)],
       ),
       // Pasamos los nuevos argumentos al DeudaForm
       body: DeudaForm(
