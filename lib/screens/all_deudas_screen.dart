@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
-import 'package:money_move/widgets/add_deuda_button.dart';
+import 'package:money_move/widgets/add_dynamic_button_widget.dart';
 import 'package:money_move/widgets/lista_deudas_widget.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/settings_button.dart';
@@ -64,7 +65,7 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
           ],
         ),
       ),
-      floatingActionButton: const AddDeudaButton(),
+      floatingActionButton: AddDynamicButtonWidget(screen: AddDeudaScreen()),
     );
   }
 

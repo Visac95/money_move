@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class AddButton extends StatelessWidget {
   const AddButton({super.key});
@@ -9,16 +12,19 @@ class AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final provider = Provider.of<SpaceProvider>(context);
 
     return Container(
-      height: 56, 
+      height: 56,
       width: 56,
       decoration: BoxDecoration(
-        color: colorScheme.primary, 
+        color: provider.isInSpace
+            ? modeColorAppbar(context, 1)
+            : colorScheme.primary,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -28,15 +34,16 @@ class AddButton extends StatelessWidget {
         // El icono "+" debe contrastar con el fondo primario.
         // Usamos onPrimary (generalmente blanco).
         icon: Icon(Icons.add, color: colorScheme.onPrimary, size: 28),
-        
+
         offset: const Offset(0, -120),
-        
+
         // El color del fondo del menú emergente
         color: colorScheme.surface,
-        surfaceTintColor: colorScheme.surfaceTint, // Pequeño tinte en Material 3
+        surfaceTintColor:
+            colorScheme.surfaceTint, // Pequeño tinte en Material 3
 
         shape: RoundedRectangleBorder(),
-        
+
         onSelected: (value) {
           _handleMenuSelection(context, value);
         },
@@ -81,9 +88,9 @@ class AddButton extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
       );
     } else if (value == "deuda") {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const AddDeudaScreen()),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const AddDeudaScreen()));
     }
   }
 }

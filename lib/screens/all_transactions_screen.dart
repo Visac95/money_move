@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/screens/add_transaction_screen.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
-import 'package:money_move/widgets/add_transaction_button.dart';
+import 'package:money_move/widgets/add_dynamic_button_widget.dart';
 import 'package:money_move/widgets/balance_card.dart';
 import 'package:money_move/widgets/category_filter_button.dart';
 import 'package:money_move/widgets/lista_de_transacciones.dart';
@@ -140,7 +141,9 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
           ],
         ),
       ),
-      floatingActionButton: const AddTransactionButton(),
+      floatingActionButton: AddDynamicButtonWidget(
+        screen: AddTransactionScreen(),
+      ),
     );
   }
 
