@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+2
 
 environment:
-  sdk: ""
+  sdk: ^3.9.2
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -32,37 +32,36 @@ dependencies:
     sdk: flutter
   provider: ^6.0.0
   uuid: ^4.0.0
-  google_generative_ai: ^0.1.0
+  google_generative_ai: ^0.4.7
   cupertino_icons: ^1.0.8
   sqflite: ^2.3.0
   path: ^1.9.0
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
-  shared_preferences: ^2.5.4
-  fl_chart: ^0.69.0
-  firebase_core: ^3.0.0  # El núcleo
-  firebase_auth: ^5.0.0  # Autenticación
-  google_sign_in: ^6.2.0 # La UI nativa de Google
-  cloud_firestore: ^5.6.12
+  shared_preferences: ^2.4.20
+  fl_chart: ^1.1.1
+  firebase_core: ^4.4.0  # El núcleo
+  firebase_auth: ^6.1.4  # Autenticación
+  google_sign_in: ^7.2.0 # La UI nativa de Google
+  cloud_firestore: ^6.1.2
   connectivity_plus: ^7.0.0
-  firebase_crashlytics: ^4.3.10
+  firebase_crashlytics: ^5.0.7
   rxdart: ^0.28.0
-  app_links: ^6.4.1
-  dependencies:
-  emoji_picker_flutter: ^3.0.0 # O la versión más reciente
+  app_links: ^7.0.0
+  emoji_picker_flutter: ^4.4.0 # O la versión más reciente
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -5,6 +5,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/utils/category_translater.dart';
+import 'package:money_move/widgets/emoji_selector.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
@@ -88,6 +89,8 @@ class _AhorroFormState extends State<AhorroForm> {
       chipIcon = Icons.category_outlined;
       chipLabel = strings.category;
     }
+
+    String _emojiSeleccionado = "💰";
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -219,6 +222,20 @@ class _AhorroFormState extends State<AhorroForm> {
                 contentPadding: EdgeInsets.zero,
               ),
             ),
+            Text(
+              "Elige un icono para tu meta",
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 10),
+
+            EmojiSelector(
+              selectedEmoji: _emojiSeleccionado,
+              onEmojiSelected: (nuevoEmoji) {
+                setState(() {
+                  _emojiSeleccionado = nuevoEmoji;
+                });
+              },
+            ),
 
             const SizedBox(height: 8),
 
@@ -321,59 +338,6 @@ class _AhorroFormState extends State<AhorroForm> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  String _involucradoText(BuildContext context) {
-    if (!widget.debo) {
-      return AppLocalizations.of(context)!.quienMeDebeText;
-    } else {
-      return AppLocalizations.of(context)!.quienLeDeboText;
-    }
-  }
-
-  Widget _buildToggleOption(
-    BuildContext context,
-    String label,
-    bool deboButton,
-  ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-
-    bool isActive = widget.debo == deboButton;
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => widget.onTypeChanged(deboButton),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isActive ? colorScheme.surface : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: (isActive && !isDark)
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [],
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: isActive
-                  ? (deboButton ? AppColors.accent : AppColors.income)
-                  : colorScheme.onSurfaceVariant,
-            ),
-          ),
         ),
       ),
     );
