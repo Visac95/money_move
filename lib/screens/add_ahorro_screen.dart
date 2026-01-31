@@ -3,15 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart';
-import 'package:money_move/models/deuda.dart';
 import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
-import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/ahorro_form.dart';
-import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
@@ -118,10 +115,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
     }
 
     final ahorroProv = Provider.of<AhorroProvider>(context, listen: false);
-    final transProvider = Provider.of<TransactionProvider>(
-      context,
-      listen: false,
-    );
+    //final transProvider = Provider.of<TransactionProvider>(context, listen: false,);
     final aiProvider = Provider.of<AiCategoryProvider>(context, listen: false);
 
     String finalCategory =

@@ -71,7 +71,7 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
     // Fondo del chip con opacidad
     final Color chipBgColor = mainColor.withValues(alpha: isDark ? 0.15 : 0.1);
 
-    final strings = AppLocalizations.of(context)!;
+    //final strings = AppLocalizations.of(context)!;
 
     // Cálculos matemáticos
     final double porcentaje = (ahorro.monto > 0)
@@ -366,7 +366,7 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
   }
 
   Widget _buildEmptyState(ColorScheme colorScheme) {
-    final strings = AppLocalizations.of(context)!;
+    //final strings = AppLocalizations.of(context)!;
 
     final String titulo = widget.completado
         ? "Sin metas cumplidas"
