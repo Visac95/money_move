@@ -167,14 +167,13 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       fechaMeta: _selectedDate,
       categoria: finalCategory,
       ahorrado: false,
+      emoji: "👻",
     );
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
 
     if (!mounted) return;
-    ahorroProv.addAhorro(
-      nuevaAhorro,
-    );
+    ahorroProv.addAhorro(nuevaAhorro);
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
 
@@ -221,7 +220,6 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         },
         onSave: _saveDeuda,
         isEditMode: false,
-        
       ),
     );
   }

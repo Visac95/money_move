@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+2
 
 environment:
-  sdk: ^3.9.2
+  sdk: ""
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -49,6 +49,8 @@ dependencies:
   firebase_crashlytics: ^4.3.10
   rxdart: ^0.28.0
   app_links: ^6.4.1
+  dependencies:
+  emoji_picker_flutter: ^3.0.0 # O la versión más reciente
 
 dev_dependencies:
   flutter_test:

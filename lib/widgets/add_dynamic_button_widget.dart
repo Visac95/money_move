@@ -12,6 +12,7 @@ class AddDynamicButtonWidget extends StatelessWidget {
     final provider = Provider.of<SpaceProvider>(context);
     final colorScheme = Theme.of(context).colorScheme;
     return FloatingActionButton(
+      heroTag: "addDynamicButton",
       backgroundColor: provider.isInSpace
           ? modeColorAppbar(context, 1)
           : colorScheme.primary,
