@@ -587,4 +587,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get seeSettledAhorrosText => 'Ver ahorros liquidados';
+
+  @override
+  String get addAhorroText => 'Añadir Ahorro';
+
+  @override
+  String get editAhorroText => 'Editar Ahorro';
+
+  @override
+  String get ahorroTitleText => 'Título del Ahorro';
+
+  @override
+  String get ahorroEjTitleText => 'Ej. Ahorro para terreno';
+
+  @override
+  String get saveahorroText => 'Guardar Ahorro';
+
+  @override
+  String get ahorroDescriptionText => 'Descripción del Ahorro';
+
+  @override
+  String get metaDateText => 'Fecha Meta';
 }

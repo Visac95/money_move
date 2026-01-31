@@ -187,5 +187,12 @@
     "loadingFinancesText": "Loading your finances...",
     "titleAhorrosScreen": "Savings",
     "noAhorrosYet": "No savings yet 😴",
-    "seeSettledAhorrosText": "See settled savings"
+    "seeSettledAhorrosText": "See settled savings",
+    "addAhorroText": "Add Saving",
+    "editAhorroText": "Edit Saving",
+    "ahorroTitleText": "Saving Title",
+    "ahorroEjTitleText": "Ex. Saving for land",
+    "saveahorroText": "Save Saving",
+    "ahorroDescriptionText": "Saving Description",
+    "metaDateText": "Goal Date"
 }

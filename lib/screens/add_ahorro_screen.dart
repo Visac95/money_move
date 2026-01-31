@@ -2,12 +2,15 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/models/deuda.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
+import 'package:money_move/widgets/ahorro_form.dart';
 import 'package:money_move/widgets/deuda_form.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/select_category_window.dart';
@@ -114,7 +117,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       return;
     }
 
-    final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
+    final ahorroProv = Provider.of<AhorroProvider>(context, listen: false);
     final transProvider = Provider.of<TransactionProvider>(
       context,
       listen: false,
@@ -151,7 +154,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
 
     const uuid = Uuid();
-    final nuevaDeuda = Deuda(
+    final nuevaAhorro = Ahorro(
       userId: !transactionProvider.isSpaceMode
           ? FirebaseAuth.instance.currentUser!.uid
           : userProv.usuarioActual!.spaceId!,
@@ -159,24 +162,18 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       title: titleController.text,
       description: descriptionController.text,
       monto: enteredAmount,
-      involucrado: involucradoController.text,
       abono: 0.0,
       fechaInicio: DateTime.now(),
-      fechaLimite: _selectedDate,
+      fechaMeta: _selectedDate,
       categoria: finalCategory,
-      debo: debo,
-      pagada: false,
+      ahorrado: false,
     );
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
 
     if (!mounted) return;
-    deudaProvider.addDeuda(
-      nuevaDeuda,
-      transProvider,
-      context,
-      AppLocalizations.of(context)!,
-      generateAutoTransaction,
+    ahorroProv.addAhorro(
+      nuevaAhorro,
     );
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
@@ -194,7 +191,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l10n.addDeuda,
+          l10n.addAhorroText,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -206,7 +203,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         actions: [ModeToggle(bigWidget: false), SizedBox(width: 10)],
       ),
       // Pasamos los nuevos argumentos al DeudaForm
-      body: DeudaForm(
+      body: AhorroForm(
         titleController: titleController,
         descriptionController: descriptionController,
         amountController: amountController,
@@ -224,12 +221,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         },
         onSave: _saveDeuda,
         isEditMode: false,
-        autoTransaction: generateAutoTransaction,
-        autoTranxCheck: (bool value) {
-          setState(() {
-            generateAutoTransaction = value;
-          });
-        },
+        
       ),
     );
   }

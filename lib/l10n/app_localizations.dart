@@ -1225,6 +1225,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See settled savings'**
   String get seeSettledAhorrosText;
+
+  /// No description provided for @addAhorroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Saving'**
+  String get addAhorroText;
+
+  /// No description provided for @editAhorroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Saving'**
+  String get editAhorroText;
+
+  /// No description provided for @ahorroTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving Title'**
+  String get ahorroTitleText;
+
+  /// No description provided for @ahorroEjTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Ex. Saving for land'**
+  String get ahorroEjTitleText;
+
+  /// No description provided for @saveahorroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Saving'**
+  String get saveahorroText;
+
+  /// No description provided for @ahorroDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving Description'**
+  String get ahorroDescriptionText;
+
+  /// No description provided for @metaDateText.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Date'**
+  String get metaDateText;
 }
 
 class _AppLocalizationsDelegate

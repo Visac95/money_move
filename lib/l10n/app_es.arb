@@ -187,5 +187,12 @@
     "loadingFinancesText": "Cargando tus finanzas...",
     "titleAhorrosScreen": "Ahorros",
     "noAhorrosYet": "Aún no hay ahorros 😴",
-    "seeSettledAhorrosText": "Ver ahorros liquidados"
+    "seeSettledAhorrosText": "Ver ahorros liquidados",
+    "addAhorroText": "Añadir Ahorro",
+    "editAhorroText": "Editar Ahorro",
+    "ahorroTitleText": "Título del Ahorro",
+    "ahorroEjTitleText": "Ej. Ahorro para terreno",
+    "saveahorroText": "Guardar Ahorro",
+    "ahorroDescriptionText": "Descripción del Ahorro",
+    "metaDateText": "Fecha Meta"
 }

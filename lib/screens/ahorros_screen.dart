@@ -3,7 +3,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/screens/add_ahorro_screen.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/add_dynamic_button_widget.dart';
-import 'package:money_move/widgets/lista_deudas_widget.dart';
+import 'package:money_move/widgets/lista_ahorros_widget.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:money_move/widgets/settings_button.dart';
 import 'package:money_move/widgets/small_box_saldo.dart';
@@ -48,13 +48,14 @@ class _AhorrosScreenState extends State<AhorrosScreen> {
         child: Column(
           children: [
             _ahorroTitle(strings.deudasPorPagarText, false),
+            ListaAhorrosWidget(completado: false),
             ExpansionTile(
               title: Text(
                 strings.seeSettledAhorrosText,
               ), // Texto que siempre se ve
               children: [
                 _ahorroTitle(strings.paidDeudasText, true),
-                ListaDeudasWidget(deboList: true, pagada: true),
+                ListaAhorrosWidget(completado: true),
               ],
             ),
           ],

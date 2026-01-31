@@ -22,7 +22,7 @@ class ListaAhorrosWidget extends StatefulWidget {
 class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
   @override
   Widget build(BuildContext context) {
-    // Asumimos que tienes un AhorroProvider similar al DeudaProvider
+    // Asumimos que tienes un AhorroProvider similar al ahorroProvider
     final provider = Provider.of<AhorroProvider>(context);
 
     final lista = provider.ahorros
