@@ -5,7 +5,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/utils/category_translater.dart';
-import 'package:money_move/widgets/emoji_selector.dart';
+//import 'package:money_move/widgets/emoji_selector.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
@@ -228,14 +228,14 @@ class _AhorroFormState extends State<AhorroForm> {
             ),
             const SizedBox(height: 10),
 
-            EmojiSelector(
-              selectedEmoji: _emojiSeleccionado,
-              onEmojiSelected: (nuevoEmoji) {
-                setState(() {
-                  _emojiSeleccionado = nuevoEmoji;
-                });
-              },
-            ),
+            // EmojiSelector(
+            //   selectedEmoji: _emojiSeleccionado,
+            //   onEmojiSelected: (nuevoEmoji) {
+            //     setState(() {
+            //       _emojiSeleccionado = nuevoEmoji;
+            //     });
+            //   },
+            // ),
 
             const SizedBox(height: 8),
 
