@@ -104,7 +104,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
     });
   }
 
-  Future<void> _saveDeuda() async {
+  Future<void> _saveDeuda(String emojiSeleccionado) async {
     if (titleController.text.isEmpty || amountController.text.isEmpty) return;
 
     double enteredAmount;
@@ -161,7 +161,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       fechaMeta: _selectedDate,
       categoria: finalCategory,
       ahorrado: false,
-      emoji: "👻",
+      emoji: emojiSeleccionado,
     );
 
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");

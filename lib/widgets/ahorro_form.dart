@@ -5,6 +5,7 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/utils/category_translater.dart';
+import 'package:money_move/widgets/emoji_selector.dart';
 //import 'package:money_move/widgets/emoji_selector.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class AhorroForm extends StatefulWidget {
   final TextEditingController involucradoController;
   bool debo;
   final Function(bool) onTypeChanged;
-  final VoidCallback onSave;
+  final Function(String) onSave;
   final Ahorro? ahorro;
   final bool? isEditMode;
   final TextEditingController dateController;
@@ -43,6 +44,17 @@ class AhorroForm extends StatefulWidget {
 }
 
 class _AhorroFormState extends State<AhorroForm> {
+  String _emojiSeleccionado = "🐷"; // Valor por defecto
+
+  @override
+  void initState() {
+    super.initState();
+    // CAMBIO 2: Si estamos editando, cargamos el emoji existente
+    if (widget.ahorro != null && widget.ahorro!.emoji.isNotEmpty) {
+      _emojiSeleccionado = widget.ahorro!.emoji;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Usamos watch para reconstruir si cambia el estado del provider (IA o Manual)
@@ -89,8 +101,6 @@ class _AhorroFormState extends State<AhorroForm> {
       chipIcon = Icons.category_outlined;
       chipLabel = strings.category;
     }
-
-    String _emojiSeleccionado = "💰";
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -228,14 +238,14 @@ class _AhorroFormState extends State<AhorroForm> {
             ),
             const SizedBox(height: 10),
 
-            // EmojiSelector(
-            //   selectedEmoji: _emojiSeleccionado,
-            //   onEmojiSelected: (nuevoEmoji) {
-            //     setState(() {
-            //       _emojiSeleccionado = nuevoEmoji;
-            //     });
-            //   },
-            // ),
+            EmojiSelector(
+              selectedEmoji: _emojiSeleccionado,
+              onEmojiSelected: (nuevoEmoji) {
+                setState(() {
+                  _emojiSeleccionado = nuevoEmoji;
+                });
+              },
+            ),
 
             const SizedBox(height: 8),
 
@@ -319,7 +329,9 @@ class _AhorroFormState extends State<AhorroForm> {
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: widget.onSave,
+                onPressed: () {
+                  widget.onSave(_emojiSeleccionado);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.primary,
                   foregroundColor: colorScheme.onPrimary,
