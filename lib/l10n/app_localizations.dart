@@ -1267,6 +1267,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Goal Date'**
   String get metaDateText;
+
+  /// No description provided for @sinMetasText.
+  ///
+  /// In en, this message translates to:
+  /// **'No achieved goals'**
+  String get sinMetasText;
+
+  /// No description provided for @yourFinancySuccessWillApearHereText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial successes will appear here!'**
+  String get yourFinancySuccessWillApearHereText;
+
+  /// No description provided for @startSavingNowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Start saving for your dreams today.'**
+  String get startSavingNowText;
+
+  /// No description provided for @goalText.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goalText;
+
+  /// No description provided for @goalAchievedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal achieved!'**
+  String get goalAchievedText;
+
+  /// No description provided for @settledAhorrosText.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled savings'**
+  String get settledAhorrosText;
 }
 
 class _AppLocalizationsDelegate

@@ -194,5 +194,11 @@
     "ahorroEjTitleText": "Ej. Ahorro para terreno",
     "saveahorroText": "Guardar Ahorro",
     "ahorroDescriptionText": "Descripción del Ahorro",
-    "metaDateText": "Fecha Meta"
+    "metaDateText": "Fecha Meta",
+    "sinMetasText": "Sin metas cumplidas",
+    "yourFinancySuccessWillApearHereText":"¡Tus éxitos financieros aparecerán aquí!",
+    "startSavingNowText":"Comienza a guardar para tus sueños hoy.",
+    "goalText":"Meta",
+    "goalAchievedText":"¡Meta alcanzada!",
+    "settledAhorrosText": "Ahorros liquidados"
 }

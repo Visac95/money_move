@@ -194,5 +194,11 @@
     "ahorroEjTitleText": "Ex. Saving for land",
     "saveahorroText": "Save Saving",
     "ahorroDescriptionText": "Saving Description",
-    "metaDateText": "Goal Date"
+    "metaDateText": "Goal Date",
+    "sinMetasText": "No achieved goals",
+    "yourFinancySuccessWillApearHereText":"Your financial successes will appear here!",
+    "startSavingNowText":"Start saving for your dreams today.",
+    "goalText":"Goal",
+    "goalAchievedText":"Goal achieved!",
+    "settledAhorrosText": "Settled savings"
 }

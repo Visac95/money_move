@@ -28,7 +28,7 @@ class _AhorrosScreenState extends State<AhorrosScreen> {
         backgroundColor: modeColorAppbar(context, 0.4),
         title: Row(
           children: [
-            Icon(Icons.receipt_long),
+            Icon(Icons.savings),
             SizedBox(width: 5),
             Text(
               strings.titleAhorrosScreen,
@@ -47,14 +47,14 @@ class _AhorrosScreenState extends State<AhorrosScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            _ahorroTitle(strings.deudasPorPagarText, false),
+            _ahorroTitle(strings.titleAhorrosScreen, false),
             ListaAhorrosWidget(completado: false),
             ExpansionTile(
               title: Text(
                 strings.seeSettledAhorrosText,
               ), // Texto que siempre se ve
               children: [
-                _ahorroTitle(strings.paidDeudasText, true),
+                _ahorroTitle(strings.settledAhorrosText, true),
                 ListaAhorrosWidget(completado: true),
               ],
             ),

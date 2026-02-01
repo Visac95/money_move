@@ -606,4 +606,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metaDateText => 'Goal Date';
+
+  @override
+  String get sinMetasText => 'No achieved goals';
+
+  @override
+  String get yourFinancySuccessWillApearHereText =>
+      'Your financial successes will appear here!';
+
+  @override
+  String get startSavingNowText => 'Start saving for your dreams today.';
+
+  @override
+  String get goalText => 'Goal';
+
+  @override
+  String get goalAchievedText => 'Goal achieved!';
+
+  @override
+  String get settledAhorrosText => 'Settled savings';
 }

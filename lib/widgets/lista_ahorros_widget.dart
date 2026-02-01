@@ -3,6 +3,8 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart'; // Asegúrate de tener este archivo
 import 'package:money_move/providers/ahorro_provider.dart'; // Asegúrate de crear este provider
+import 'package:money_move/screens/ver_ahorro_screen.dart';
+import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/date_formater.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,7 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
   @override
   Widget build(BuildContext context) {
     // Asumimos que tienes un AhorroProvider similar al ahorroProvider
+    final strings = AppLocalizations.of(context)!;
     final provider = Provider.of<AhorroProvider>(context);
 
     final lista = provider.ahorros
@@ -34,7 +37,7 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
     if (lista.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 30),
-        child: _buildEmptyState(colorScheme),
+        child: _buildEmptyState(colorScheme, strings),
       );
     }
 
@@ -78,12 +81,12 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
         ? (ahorro.abono / ahorro.monto).clamp(0.0, 1.0)
         : 0.0;
 
-    final int porcentajeTexto = (porcentaje * 100).toInt();
+    final strings = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadiusGeometry.only(topRight: Radius.circular(16)),
         boxShadow: isDark
             ? []
             : [
@@ -95,13 +98,15 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
               ],
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: () {
           // Navegación a ver detalle
-          // Navigator.of(context).push(MaterialPageRoute(builder: (_) => VerAhorro(ahorroId: ahorro.id)));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => VerAhorroScreen(deudaId: ahorro.id),
+            ),
+          );
         },
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
           child: Column(
             children: [
               IntrinsicHeight(
@@ -132,7 +137,10 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    ahorro.categoria.toUpperCase(),
+                                    getCategoryName(
+                                      context,
+                                      ahorro.categoria,
+                                    ).toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -204,8 +212,8 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
                                           const SizedBox(width: 4),
                                           Text(
                                             widget.completado
-                                                ? "¡Meta alcanzada!"
-                                                : "Meta: ${formatDate(ahorro.fechaMeta)}",
+                                                ? strings.goalAchievedText
+                                                : "${strings.goalText}: ${formatDate(ahorro.fechaMeta)}",
                                             style: TextStyle(
                                               color:
                                                   colorScheme.onSurfaceVariant,
@@ -252,54 +260,30 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
               ),
 
               // BARRA DE PROGRESO INFERIOR
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 6,
-                ), // Offset por la franja lateral
-                child: Stack(
-                  children: [
-                    // Fondo de la barra
-                    Container(
+              Stack(
+                children: [
+                  // Fondo de la barra
+                  Container(
+                    height: 6,
+                    width: double.infinity,
+                    color: colorScheme.surfaceContainerHighest,
+                  ),
+                  // Progreso
+                  FractionallySizedBox(
+                    widthFactor: porcentaje,
+                    child: Container(
                       height: 6,
-                      width: double.infinity,
-                      color: colorScheme.surfaceContainerHighest,
-                    ),
-                    // Progreso
-                    FractionallySizedBox(
-                      widthFactor: porcentaje,
-                      child: Container(
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: mainColor,
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(6),
-                            bottomRight: Radius.circular(6),
-                          ),
+                      decoration: BoxDecoration(
+                        color: mainColor,
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(6),
+                          bottomRight: Radius.circular(6),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              // Texto de porcentaje pequeño debajo de la barra (Opcional, estilo "badge")
-              if (!widget.completado)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 4, 16, 8),
-                    child: Text(
-                      "$porcentajeTexto%",
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: mainColor,
-                      ),
-                    ),
                   ),
-                )
-              else
-                const SizedBox(height: 8),
+                ],
+              ),
             ],
           ),
         ),
@@ -365,16 +349,16 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
     );
   }
 
-  Widget _buildEmptyState(ColorScheme colorScheme) {
+  Widget _buildEmptyState(ColorScheme colorScheme, AppLocalizations strings) {
     //final strings = AppLocalizations.of(context)!;
 
     final String titulo = widget.completado
-        ? "Sin metas cumplidas"
-        : "No tienes ahorros";
+        ? strings.sinMetasText
+        : strings.noAhorrosYet;
 
     final String subtitulo = widget.completado
-        ? "¡Tus éxitos financieros aparecerán aquí!"
-        : "Comienza a guardar para tus sueños hoy.";
+        ? strings.yourFinancySuccessWillApearHereText
+        : strings.startSavingNowText;
 
     final IconData icono = widget.completado
         ? Icons.emoji_events_outlined
