@@ -28,6 +28,7 @@ class VerDeuda extends StatelessWidget {
         debo: deudaActual.debo, // Usamos datos frescos
         monto: deudaActual.monto, // Usamos datos frescos
         abono: deudaActual.abono, // Usamos datos frescos
+        esDeuda: true,
       ),
     );
     return montoIngresado;

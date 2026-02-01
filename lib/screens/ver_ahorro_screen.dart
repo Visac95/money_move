@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
-import 'package:money_move/models/deuda.dart';
+import 'package:money_move/models/ahorro.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/screens/edit_ahorro_screen.dart';
 import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/utils/category_translater.dart';
@@ -14,20 +16,20 @@ import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';
 
 class VerAhorroScreen extends StatelessWidget {
-  final String deudaId;
-  const VerAhorroScreen({super.key, required this.deudaId});
+  final String ahorroId;
+  const VerAhorroScreen({super.key, required this.ahorroId});
 
   // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
   Future<double?> _mostrarDialogoAbono(
     BuildContext context,
-    Deuda deudaActual,
+    Ahorro ahorro,
   ) async {
     final double? montoIngresado = await showDialog<double>(
       context: context,
       builder: (context) => AddAbonoWindow(
-        debo: deudaActual.debo, // Usamos datos frescos
-        monto: deudaActual.monto, // Usamos datos frescos
-        abono: deudaActual.abono, // Usamos datos frescos
+        monto: ahorro.monto, // Usamos datos frescos
+        abono: ahorro.abono, // Usamos datos frescos
+        esDeuda: false,
       ),
     );
     return montoIngresado;
@@ -38,12 +40,14 @@ class VerAhorroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final strings = AppLocalizations.of(context)!;
-    final deuda = Provider.of<DeudaProvider>(context).getDeudaById(deudaId)!;
-    final Color mainColor = deuda.debo ? AppColors.accent : AppColors.income;
+    final ahorro = Provider.of<AhorroProvider>(
+      context,
+    ).getAhorroById(ahorroId)!;
+    final Color mainColor = AppColors.accent;
 
-    final double restante = deuda.monto - deuda.abono;
-    final double porcentajePagado = (deuda.monto > 0)
-        ? (deuda.abono / deuda.monto)
+    final double restante = ahorro.monto - ahorro.abono;
+    final double porcentajePagado = (ahorro.monto > 0)
+        ? (ahorro.abono / ahorro.monto)
         : 0.0;
     final isDark = theme.brightness == Brightness.dark;
 
@@ -110,9 +114,9 @@ class VerAhorroScreen extends StatelessWidget {
 
               // --- 1. EL HÉROE ---
               Hero(
-                tag: deuda.id,
+                tag: ahorro.id,
                 child: Text(
-                  "\$${deuda.monto.toStringAsFixed(2)}",
+                  "\$${ahorro.monto.toStringAsFixed(2)}",
                   style: TextStyle(
                     color: mainColor,
                     fontSize: 48,
@@ -127,17 +131,13 @@ class VerAhorroScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    deuda.debo
-                        ? Icons.arrow_outward_rounded
-                        : Icons.arrow_downward_rounded,
+                    Icons.arrow_outward_rounded,
                     size: 16,
                     color: colorScheme.outline,
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    deuda.debo
-                        ? "${strings.payableText} ${strings.toText}"
-                        : "${strings.receivableText} ${strings.fromText}",
+                    "${strings.receivableText} ${strings.fromText}",
                     style: TextStyle(
                       color: colorScheme.outline,
                       fontSize: 16,
@@ -147,16 +147,6 @@ class VerAhorroScreen extends StatelessWidget {
                 ],
               ),
 
-              // Nombre del Involucrado
-              Text(
-                deuda.involucrado,
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
               const SizedBox(height: 30),
 
               // --- 2. TARJETA DE PROGRESO ---
@@ -164,7 +154,7 @@ class VerAhorroScreen extends StatelessWidget {
                 colorScheme,
                 isDark,
                 mainColor,
-                deuda,
+                ahorro,
                 context,
                 strings,
                 porcentajePagado,
@@ -174,12 +164,12 @@ class VerAhorroScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // --- 3. BOTONES DE ACCIÓN ---
-              deuda.pagada
+              ahorro.ahorrado
                   ? const SizedBox(height: 1)
                   : _actionButtons(
                       strings,
                       context,
-                      deuda,
+                      ahorro,
                       colorScheme,
                       caseNotiAbono,
                     ),
@@ -192,10 +182,10 @@ class VerAhorroScreen extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: () {
                     UiUtils.showDeleteConfirmation(context, () {
-                      Provider.of<DeudaProvider>(
+                      Provider.of<AhorroProvider>(
                         context,
                         listen: false,
-                      ).deleteDeuda(deuda);
+                      ).deleteAhorro(ahorro);
                       Navigator.pop(context);
                     });
                   },
@@ -222,7 +212,7 @@ class VerAhorroScreen extends StatelessWidget {
   Column _actionButtons(
     AppLocalizations strings,
     BuildContext context,
-    Deuda deuda, // <--- Esta es la deuda actualizada que viene del build
+    Ahorro ahorro, // <--- Esta es la deuda actualizada que viene del build
     ColorScheme colorScheme,
     void Function(AbonoStatus status) caseNotiAbono,
   ) {
@@ -239,7 +229,7 @@ class VerAhorroScreen extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      _pagarDeudaTotalmente(context, deuda);
+                      _pagarAhorroTotalmente(context, ahorro);
                     },
                     icon: Icon(
                       Icons.check_circle_outline,
@@ -272,16 +262,16 @@ class VerAhorroScreen extends StatelessWidget {
                       // --- CORRECCIÓN 2: Pasamos la 'deuda' actualizada a la función ---
                       final double? monto = await _mostrarDialogoAbono(
                         context,
-                        deuda,
+                        ahorro,
                       );
                       if (!context.mounted) return;
                       if (monto != null && context.mounted) {
                         final status =
-                            await Provider.of<DeudaProvider>(
+                            await Provider.of<AhorroProvider>(
                               context,
                               listen: false,
-                            ).abonarDeuda(
-                              deuda,
+                            ).abonarAhorro(
+                              ahorro,
                               monto,
                               Provider.of<TransactionProvider>(
                                 context,
@@ -322,7 +312,7 @@ class VerAhorroScreen extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => EditDeudaScreen(deuda: deuda),
+                builder: (context) => EditAhorroScreen(ahorro: ahorro),
               ),
             ),
             icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
@@ -347,7 +337,7 @@ class VerAhorroScreen extends StatelessWidget {
     ColorScheme colorScheme,
     bool isDark,
     Color mainColor,
-    Deuda deuda,
+    Ahorro ahorro,
     BuildContext context,
     AppLocalizations strings,
     double porcentajePagado,
@@ -380,7 +370,7 @@ class VerAhorroScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
-                  AppConstants.getIconForCategory(deuda.categoria),
+                  AppConstants.getIconForCategory(ahorro.categoria),
                   size: 30,
                   color: mainColor,
                 ),
@@ -394,7 +384,7 @@ class VerAhorroScreen extends StatelessWidget {
                     style: TextStyle(color: colorScheme.outline, fontSize: 12),
                   ),
                   Text(
-                    getCategoryName(context, deuda.categoria),
+                    getCategoryName(context, ahorro.categoria),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -405,7 +395,7 @@ class VerAhorroScreen extends StatelessWidget {
               ),
               const Spacer(),
               // Chip de estado (Pagada o Pendiente)
-              if (deuda.pagada)
+              if (ahorro.ahorrado)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -466,7 +456,7 @@ class VerAhorroScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${strings.abonadoText} \$${deuda.abono.toStringAsFixed(2)}",
+                    "${strings.abonadoText} \$${ahorro.abono.toStringAsFixed(2)}",
                     style: TextStyle(
                       fontSize: 12,
                       color: colorScheme.onSurfaceVariant,
@@ -490,14 +480,14 @@ class VerAhorroScreen extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Detalles de texto
-          _buildDetailRow(context, strings.titleText, deuda.title),
+          _buildDetailRow(context, strings.titleText, ahorro.title),
           const SizedBox(height: 15),
 
           // Fecha Límite
           _buildDetailRow(
             context,
             strings.venceText,
-            formatDate(deuda.fechaLimite),
+            formatDate(ahorro.fechaMeta),
           ),
 
           const SizedBox(height: 15),
@@ -514,9 +504,9 @@ class VerAhorroScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  deuda.description.isEmpty
+                  ahorro.description.isEmpty
                       ? AppLocalizations.of(context)!.noDescription
-                      : deuda.description,
+                      : ahorro.description,
                   style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
                 ),
               ],
@@ -551,7 +541,7 @@ class VerAhorroScreen extends StatelessWidget {
     );
   }
 
-  void _pagarDeudaTotalmente(BuildContext context, Deuda deuda) {
+  void _pagarAhorroTotalmente(BuildContext context, Ahorro ahorro) {
     final strings = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -572,11 +562,11 @@ class VerAhorroScreen extends StatelessWidget {
 
               try {
                 if (!context.mounted) return;
-                await Provider.of<DeudaProvider>(
+                await Provider.of<AhorroProvider>(
                   context,
                   listen: false,
-                ).pagarDeuda(
-                  deuda,
+                ).terminarAhorro(
+                  ahorro,
                   Provider.of<TransactionProvider>(context, listen: false),
                   context,
                 );

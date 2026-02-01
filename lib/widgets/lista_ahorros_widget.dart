@@ -102,7 +102,7 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
           // Navegación a ver detalle
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => VerAhorroScreen(deudaId: ahorro.id),
+              builder: (_) => VerAhorroScreen(ahorroId: ahorro.id),
             ),
           );
         },

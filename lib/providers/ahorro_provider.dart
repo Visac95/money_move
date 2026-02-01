@@ -194,7 +194,7 @@ class AhorroProvider extends ChangeNotifier {
 
   // --- FILTROS (Ahora síncronos porque los datos ya están en memoria) ---
 
-  Ahorro? getDeudaById(String id) {
+  Ahorro? getAhorroById(String id) {
     try {
       return ahorros.firstWhere((a) => a.id == id);
     } catch (e) {

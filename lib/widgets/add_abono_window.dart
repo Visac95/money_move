@@ -7,8 +7,15 @@ import 'package:money_move/l10n/app_localizations.dart';
 class AddAbonoWindow extends StatefulWidget {
   double monto;
   double abono;
-  final bool debo;
-  AddAbonoWindow({super.key, required this.monto, required this.abono, required this.debo});
+  final bool? debo;
+  bool esDeuda;
+  AddAbonoWindow({
+    super.key,
+    required this.monto,
+    required this.abono,
+    this.debo,
+    required this.esDeuda,
+  });
 
   @override
   State<AddAbonoWindow> createState() => _AddAbonoWindowState();
@@ -47,7 +54,9 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
             ),
             decoration: InputDecoration(
               hintText: "0.00",
-              hintStyle: TextStyle(color: colorScheme.outline.withValues(alpha:0.3)),
+              hintStyle: TextStyle(
+                color: colorScheme.outline.withValues(alpha: 0.3),
+              ),
               prefixText: "\$ ",
               prefixStyle: TextStyle(
                 fontSize: 40,
@@ -58,10 +67,16 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
               contentPadding: EdgeInsets.zero,
             ),
           ),
-          Text(
-            "${(widget.debo ? strings.totalPorPagarText : strings.totalPorCobrarText)}: ${widget.monto - widget.abono}",
-            style: TextStyle(color: colorScheme.outline),
-          ),
+
+          widget.esDeuda
+              ? Text(
+                  "${(widget.debo! ? strings.totalPorPagarText : strings.totalPorCobrarText)}: ${widget.monto - widget.abono}",
+                  style: TextStyle(color: colorScheme.outline),
+                )
+              : Text(
+                  "${(strings.totalPorPagarText)}: ${widget.monto - widget.abono}",
+                  style: TextStyle(color: colorScheme.outline),
+                ),
           SizedBox(height: 15),
           Row(
             children: [
