@@ -178,12 +178,13 @@ class DatabaseService {
   }
 
   Future<void> updateAhorro(Ahorro a, bool space) async {
-    final ref = _getCollection(a.userId, space, "ahorro");
+    final ref = _getCollection(a.userId, space, "ahorros");
     await ref.doc(a.id).update(a.toMap());
   }
 
   Future<void> deleteAhorro(Ahorro a, bool space) async {
-    final ref = _getCollection(a.userId, space, "ahorro");
+    final ref = _getCollection(a.userId, space, "ahorros");
+    print("💰💰💰 ${a.id}, $space, ahorros");
     await ref.doc(a.id).delete();
   }
 
