@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
-
-  // 1. Estas son las LLAVES INTERNAS. 
+  // 1. Estas son las LLAVES INTERNAS.
   // Esto es lo que se guarda en la Base de Datos (Firebase/SQLite).
   static const String catFood = 'cat_food';
   static const String catTransport = 'cat_transport';
@@ -16,6 +15,9 @@ class AppConstants {
   static const String catServices = 'cat_services';
   static const String catDebt = 'cat_debt';
   static const String catOthers = 'cat_others';
+  static const String catTechnology = "catTechnology";
+  static const String catSavings = "catSavings";
+  static const String catGift = "catGift";
 
   // Lista de claves para iterar
   static const List<String> categories = [
@@ -31,6 +33,9 @@ class AppConstants {
     catServices,
     catDebt,
     catOthers,
+    catSavings,
+    catTechnology,
+    catGift,
   ];
 
   // Mapa de íconos usando las CLAVES
@@ -46,7 +51,10 @@ class AppConstants {
     catJob: Icons.work,
     catOthers: Icons.category,
     catPet: Icons.pets,
-    catDebt : Icons.receipt_long,
+    catDebt: Icons.receipt_long,
+    catTechnology: Icons.devices_other_rounded,
+    catSavings: Icons.savings_rounded,
+    catGift: Icons.card_giftcard_rounded,
   };
 
   static IconData getIconForCategory(String categoryKey) {

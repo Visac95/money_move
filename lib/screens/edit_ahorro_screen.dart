@@ -2,10 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart';
-import 'package:money_move/models/deuda.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
-import 'package:money_move/providers/deuda_provider.dart';
-import 'package:money_move/widgets/deuda_form.dart';
+import 'package:money_move/widgets/ahorro_form.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
@@ -34,16 +33,13 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
   @override
   void initState() {
     super.initState();
-    // 2. Carga de datos existentes
-    debo = widget.deuda.debo;
-    titleController.text = widget.deuda.title;
+    titleController.text = widget.ahorro.title;
     descriptionController.text =
-        widget.deuda.description; // No olvides cargar la descripción también
-    amountController.text = widget.deuda.monto.toStringAsFixed(2);
-    involucradoController.text = widget.deuda.involucrado;
+        widget.ahorro.description; // No olvides cargar la descripción también
+    amountController.text = widget.ahorro.monto.toStringAsFixed(2);
 
     // 3. Cargar la fecha que ya tiene la deuda
-    _selectedDate = widget.deuda.fechaLimite;
+    _selectedDate = widget.ahorro.fechaMeta;
     dateLimitController.text = _formatDate(_selectedDate);
 
     // Listener para IA
@@ -56,7 +52,7 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
           context,
           listen: false,
         );
-        aiProvider.manualCategory = widget.deuda.categoria;
+        aiProvider.manualCategory = widget.ahorro.categoria;
       }
     });
   }
@@ -116,7 +112,7 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
     });
   }
 
-  Future<void> _saveDeuda() async {
+  Future<void> _saveDeuda(String emoji) async {
     if (titleController.text.isEmpty || amountController.text.isEmpty) return;
 
     double enteredAmount;
@@ -149,19 +145,17 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
     }
 
     // 5. Actualizar Objeto con la nueva fecha
-    final Deuda deudaActualizada = widget.deuda.update(
+    final Ahorro ahorroActualizado = widget.ahorro.update(
       title: titleController.text,
       description:
           descriptionController.text, // Asegúrate de guardar la descripción
       monto: enteredAmount,
-      involucrado: involucradoController.text,
-      fechaLimite: _selectedDate, // <--- AQUÍ GUARDAMOS LA NUEVA FECHA
+      fechaMeta: _selectedDate, // <--- AQUÍ GUARDAMOS LA NUEVA FECHA
       categoria: finalCategory,
-      debo: debo,
     );
 
     if (!mounted) return;
-    context.read<DeudaProvider>().updateDeuda(deudaActualizada);
+    context.read<AhorroProvider>().updateAhorro(ahorroActualizado);
 
     Navigator.of(context).pop();
 
@@ -195,11 +189,10 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
           iconTheme: IconThemeData(color: colorScheme.onSurface),
         ),
 
-        body: DeudaForm(
+        body: AhorroForm(
           titleController: titleController,
           descriptionController: descriptionController,
           amountController: amountController,
-          involucradoController: involucradoController,
 
           // 6. Pasamos los controles de fecha al formulario
           dateController: dateLimitController,
@@ -212,8 +205,8 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
             });
           },
           onSave: _saveDeuda,
-          deuda: widget
-              .deuda, // Opcional, dependiendo de cómo uses esto en DeudaForm
+          ahorro: widget
+              .ahorro, // Opcional, dependiendo de cómo uses esto en DeudaForm
           isEditMode: true,
         ),
       ),

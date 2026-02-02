@@ -15,7 +15,6 @@ class AhorroForm extends StatefulWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController amountController;
-  final TextEditingController involucradoController;
   bool debo;
   final Function(bool) onTypeChanged;
   final Function(String) onSave;
@@ -29,7 +28,6 @@ class AhorroForm extends StatefulWidget {
     required this.titleController,
     required this.descriptionController,
     required this.amountController,
-    required this.involucradoController,
     required this.debo,
     required this.onTypeChanged,
     required this.onSave,

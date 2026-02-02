@@ -6,7 +6,6 @@ import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_ahorro_screen.dart';
-import 'package:money_move/screens/edit_deuda_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
@@ -19,7 +18,6 @@ class VerAhorroScreen extends StatelessWidget {
   final String ahorroId;
   const VerAhorroScreen({super.key, required this.ahorroId});
 
-  // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
   Future<double?> _mostrarDialogoAbono(
     BuildContext context,
     Ahorro ahorro,
@@ -27,8 +25,8 @@ class VerAhorroScreen extends StatelessWidget {
     final double? montoIngresado = await showDialog<double>(
       context: context,
       builder: (context) => AddAbonoWindow(
-        monto: ahorro.monto, // Usamos datos frescos
-        abono: ahorro.abono, // Usamos datos frescos
+        monto: ahorro.monto,
+        abono: ahorro.abono,
         esDeuda: false,
       ),
     );
@@ -40,11 +38,15 @@ class VerAhorroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final strings = AppLocalizations.of(context)!;
-    final ahorro = Provider.of<AhorroProvider>(
-      context,
-    ).getAhorroById(ahorroId)!;
-    final Color mainColor = AppColors.accent;
 
+    // Obtener el ahorro actualizado
+    final ahorro = Provider.of<AhorroProvider>(context).getAhorroById(ahorroId);
+
+    // Manejo de seguridad por si se borra y el widget sigue montado
+    if (ahorro == null) return const SizedBox.shrink();
+
+    final Color mainColor =
+        AppColors.income; // Color verde/positivo para ahorros
     final double restante = ahorro.monto - ahorro.abono;
     final double porcentajePagado = (ahorro.monto > 0)
         ? (ahorro.abono / ahorro.monto)
@@ -52,48 +54,39 @@ class VerAhorroScreen extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     void caseNotiAbono(AbonoStatus status) {
+      // (Misma lógica de notificaciones que tenías)
       final strings = AppLocalizations.of(context)!;
+      Color color;
+      String text;
+
       switch (status) {
         case AbonoStatus.exito:
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(strings.abonoSucessText),
-              backgroundColor: Colors.green,
-            ),
-          );
+          text = strings.abonoSucessText;
+          color = Colors.green;
           break;
         case AbonoStatus.montoInvalido:
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(strings.putAmountHigherZeroText),
-              backgroundColor: Colors.red,
-            ),
-          );
+          text = strings.putAmountHigherZeroText;
+          color = Colors.red;
           break;
         case AbonoStatus.excedeDeuda:
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(strings.putAmountLowerText),
-              backgroundColor: Colors.orange,
-            ),
-          );
+          text = strings.putAmountLowerText;
+          color = Colors.orange;
           break;
         case AbonoStatus.error:
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(strings.errorHasOccurredText),
-              backgroundColor: Colors.red,
-            ),
-          );
+          text = strings.errorHasOccurredText;
+          color = Colors.red;
           break;
       }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(text), backgroundColor: color));
     }
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.deudaDetailsTitle,
+          ahorro.title,
           style: TextStyle(color: colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -103,54 +96,63 @@ class VerAhorroScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios_new, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          // Opción de editar movida arriba para limpiar la parte inferior
+          IconButton(
+            icon: Icon(Icons.edit_rounded, color: colorScheme.onSurface),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditAhorroScreen(ahorro: ahorro),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 10),
-
-              // --- 1. EL HÉROE ---
-              Hero(
-                tag: ahorro.id,
-                child: Text(
-                  "\$${ahorro.monto.toStringAsFixed(2)}",
-                  style: TextStyle(
-                    color: mainColor,
-                    fontSize: 48,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -1.5,
+              // --- 1. EL ENFOQUE EN LA META (EMOJI + TÍTULO) ---
+              // Esto diferencia visualmente la deuda (dinero) del ahorro (meta)
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: mainColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: mainColor.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    ahorro.emoji.isEmpty ? "💰" : ahorro.emoji,
+                    style: const TextStyle(fontSize: 45),
                   ),
                 ),
               ),
 
-              // Estado / Subtítulo
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.arrow_outward_rounded,
-                    size: 16,
-                    color: colorScheme.outline,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    "${strings.receivableText} ${strings.fromText}",
-                    style: TextStyle(
-                      color: colorScheme.outline,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 15),
+
+              const SizedBox(height: 5),
+
+              // El monto total aparece más sutil debajo del título
+              Text(
+                "${strings.goalText}: \$${ahorro.monto.toStringAsFixed(2)}",
+                style: TextStyle(
+                  color: colorScheme.outline,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
 
               const SizedBox(height: 30),
 
-              // --- 2. TARJETA DE PROGRESO ---
-              _cardConteiner(
+              // --- 2. TARJETA DE PROGRESO REDISEÑADA ---
+              _cardSavingsProgress(
                 colorScheme,
                 isDark,
                 mainColor,
@@ -161,11 +163,11 @@ class VerAhorroScreen extends StatelessWidget {
                 restante,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
               // --- 3. BOTONES DE ACCIÓN ---
               ahorro.ahorrado
-                  ? const SizedBox(height: 1)
+                  ? _buildCompletedBadge(strings, colorScheme)
                   : _actionButtons(
                       strings,
                       context,
@@ -174,31 +176,27 @@ class VerAhorroScreen extends StatelessWidget {
                       caseNotiAbono,
                     ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
 
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: TextButton.icon(
-                  onPressed: () {
-                    UiUtils.showDeleteConfirmation(context, () {
-                      Provider.of<AhorroProvider>(
-                        context,
-                        listen: false,
-                      ).deleteAhorro(ahorro);
-                      Navigator.pop(context);
-                    });
-                  },
-                  icon: Icon(Icons.delete_outline, color: colorScheme.error),
-                  label: Text(
-                    strings.deleteText,
-                    style: TextStyle(color: colorScheme.error, fontSize: 16),
-                  ),
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
+              // Botón eliminar (texto simple, menos intrusivo)
+              TextButton.icon(
+                onPressed: () {
+                  UiUtils.showDeleteConfirmation(context, () {
+                    Provider.of<AhorroProvider>(
+                      context,
+                      listen: false,
+                    ).deleteAhorro(ahorro);
+                    Navigator.pop(context);
+                  });
+                },
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: colorScheme.error,
+                  size: 20,
+                ),
+                label: Text(
+                  strings.deleteText,
+                  style: TextStyle(color: colorScheme.error),
                 ),
               ),
               const SizedBox(height: 20),
@@ -209,131 +207,38 @@ class VerAhorroScreen extends StatelessWidget {
     );
   }
 
-  Column _actionButtons(
+  // Badge visual cuando se completa
+  Widget _buildCompletedBadge(
     AppLocalizations strings,
-    BuildContext context,
-    Ahorro ahorro, // <--- Esta es la deuda actualizada que viene del build
     ColorScheme colorScheme,
-    void Function(AbonoStatus status) caseNotiAbono,
   ) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                //------Pagar--------
-                child: SizedBox(
-                  height: 55,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      _pagarAhorroTotalmente(context, ahorro);
-                    },
-                    icon: Icon(
-                      Icons.check_circle_outline,
-                      color: colorScheme.surface,
-                    ),
-                    label: Text(
-                      strings.pagadoText,
-                      style: TextStyle(
-                        color: colorScheme.surface,
-                        fontSize: 18,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.income,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 7),
-              //------Abonar--------
-              Expanded(
-                child: SizedBox(
-                  height: 55,
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      // --- CORRECCIÓN 2: Pasamos la 'deuda' actualizada a la función ---
-                      final double? monto = await _mostrarDialogoAbono(
-                        context,
-                        ahorro,
-                      );
-                      if (!context.mounted) return;
-                      if (monto != null && context.mounted) {
-                        final status =
-                            await Provider.of<AhorroProvider>(
-                              context,
-                              listen: false,
-                            ).abonarAhorro(
-                              ahorro,
-                              monto,
-                              Provider.of<TransactionProvider>(
-                                context,
-                                listen: false,
-                              ),
-                              context,
-                            );
-
-                        if (!context.mounted) return;
-                        caseNotiAbono(status);
-                      }
-                    },
-                    icon: Icon(Icons.add_box, color: colorScheme.surface),
-                    label: Text(
-                      strings.abonarText,
-                      style: TextStyle(
-                        color: colorScheme.surface,
-                        fontSize: 18,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        //------Edit Button---------
-        SizedBox(
-          width: double.infinity,
-          height: 55,
-          child: ElevatedButton.icon(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EditAhorroScreen(ahorro: ahorro),
-              ),
-            ),
-            icon: Icon(Icons.edit_rounded, color: colorScheme.surface),
-            label: Text(
-              strings.editText,
-              style: TextStyle(color: colorScheme.surface, fontSize: 16),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      decoration: BoxDecoration(
+        color: AppColors.income.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.income),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.verified, color: AppColors.income, size: 30),
+          const SizedBox(width: 10),
+          Text(
+            "¡Meta Alcanzada!", //strings.objectiveCompletedText ?? ,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Container _cardConteiner(
+  // --- NUEVA TARJETA: Más enfocada en "Llenar la barra" ---
+  Widget _cardSavingsProgress(
     ColorScheme colorScheme,
     bool isDark,
     Color mainColor,
@@ -347,193 +252,244 @@ class VerAhorroScreen extends StatelessWidget {
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30), // Más redondeado
         boxShadow: isDark
             ? []
             : [
                 BoxShadow(
-                  color: colorScheme.onSurface.withValues(alpha: 0.05),
-                  blurRadius: 20,
+                  color: colorScheme.shadow.withValues(alpha: 0.08),
+                  blurRadius: 25,
                   offset: const Offset(0, 10),
                 ),
               ],
       ),
       child: Column(
         children: [
-          // Categoría
+          // Fila superior: Categoría y Fecha
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Chip de Categoría
               Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: mainColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
                 ),
-                child: Icon(
-                  AppConstants.getIconForCategory(ahorro.categoria),
-                  size: 30,
-                  color: mainColor,
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      AppConstants.getIconForCategory(ahorro.categoria),
+                      size: 14,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      getCategoryName(context, ahorro.categoria),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Fecha Meta
+              Row(
                 children: [
-                  Text(
-                    AppLocalizations.of(context)!.category,
-                    style: TextStyle(color: colorScheme.outline, fontSize: 12),
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    size: 14,
+                    color: colorScheme.outline,
                   ),
+                  const SizedBox(width: 4),
                   Text(
-                    getCategoryName(context, ahorro.categoria),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
+                    formatDate(ahorro.fechaMeta),
+                    style: TextStyle(fontSize: 12, color: colorScheme.outline),
                   ),
                 ],
               ),
-              const Spacer(),
-              // Chip de estado (Pagada o Pendiente)
-              if (ahorro.ahorrado)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.green),
-                  ),
-                  child: Text(
-                    strings.pagadaText,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
             ],
           ),
 
           const SizedBox(height: 25),
 
-          // BARRA DE PROGRESO
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // --- EL NÚMERO GRANDE (LO AHORRADO) ---
+          Text(
+            "ahorrado", //strings.savedText,
+            style: TextStyle(color: colorScheme.outline, fontSize: 14),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            "\$${ahorro.abono.toStringAsFixed(2)}",
+            style: TextStyle(
+              color: mainColor,
+              fontSize: 40,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1.0,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // --- BARRA DE PROGRESO GRUESA ---
+          Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    strings.progressText,
-                    style: TextStyle(fontSize: 12, color: colorScheme.outline),
-                  ),
-                  Text(
-                    "${(porcentajePagado * 100).toStringAsFixed(0)}%",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: mainColor,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: porcentajePagado,
-                  minHeight: 10,
-                  backgroundColor: colorScheme.surfaceContainerHighest,
-                  valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+              Container(
+                height: 24,
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${strings.abonadoText} \$${ahorro.abono.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colorScheme.onSurfaceVariant,
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return Container(
+                    height: 24,
+                    width:
+                        constraints.maxWidth * porcentajePagado.clamp(0.0, 1.0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [mainColor.withValues(alpha: 0.7), mainColor],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  Text(
-                    "${strings.restanteText} \$${restante.toStringAsFixed(2)}",
+                  );
+                },
+              ),
+              // Texto dentro de la barra si hay espacio
+              Positioned.fill(
+                child: Center(
+                  child: Text(
+                    "${(porcentajePagado * 100).toStringAsFixed(0)}%",
                     style: TextStyle(
+                      color: porcentajePagado > 0.5
+                          ? Colors.white
+                          : colorScheme.onSurface,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 20),
-          const Divider(),
-          const SizedBox(height: 20),
-
-          // Detalles de texto
-          _buildDetailRow(context, strings.titleText, ahorro.title),
           const SizedBox(height: 15),
 
-          // Fecha Límite
-          _buildDetailRow(
-            context,
-            strings.venceText,
-            formatDate(ahorro.fechaMeta),
-          ),
-
-          const SizedBox(height: 15),
-
-          // Descripción
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.descriptionText,
-                  style: TextStyle(color: colorScheme.outline, fontSize: 12),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  ahorro.description.isEmpty
-                      ? AppLocalizations.of(context)!.noDescription
-                      : ahorro.description,
-                  style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
-                ),
-              ],
+          // --- Info Restante ---
+          if (restante > 0)
+            Text(
+              "${strings.restanteText} \$${restante.toStringAsFixed(2)}",
+              style: TextStyle(
+                fontSize: 13,
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
+
+          // Descripción (si existe)
+          if (ahorro.description.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            const Divider(),
+            const SizedBox(height: 10),
+            Text(
+              ahorro.description,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, String label, String value) {
-    final theme = Theme.of(context);
+  Widget _actionButtons(
+    AppLocalizations strings,
+    BuildContext context,
+    Ahorro ahorro,
+    ColorScheme colorScheme,
+    void Function(AbonoStatus status) caseNotiAbono,
+  ) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(color: theme.colorScheme.outline, fontSize: 14),
-        ),
+        // 1. Botón Grande: ABONAR (Es la acción principal en ahorros)
         Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface,
+          flex: 2,
+          child: SizedBox(
+            height: 60,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                final double? monto = await _mostrarDialogoAbono(
+                  context,
+                  ahorro,
+                );
+                if (!context.mounted) return;
+
+                if (monto != null) {
+                  final status =
+                      await Provider.of<AhorroProvider>(
+                        context,
+                        listen: false,
+                      ).abonarAhorro(
+                        ahorro,
+                        monto,
+                        Provider.of<TransactionProvider>(
+                          context,
+                          listen: false,
+                        ),
+                        context,
+                      );
+
+                  if (context.mounted) caseNotiAbono(status);
+                }
+              },
+              icon: const Icon(Icons.savings_outlined, color: Colors.white),
+              label: Text(
+                strings.abonarText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.income, // Verde fuerte
+                elevation: 4,
+                shadowColor: AppColors.income.withValues(alpha: 0.4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 15),
+
+        // 2. Botón Pequeño: COMPLETAR (Solo si ya casi está listo o manual)
+        Expanded(
+          flex: 1,
+          child: SizedBox(
+            height: 60,
+            child: OutlinedButton(
+              onPressed: () => _pagarAhorroTotalmente(context, ahorro),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: colorScheme.outline.withValues(alpha: 0.3),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Icon(Icons.check, color: colorScheme.onSurface),
             ),
           ),
         ),
@@ -542,6 +498,7 @@ class VerAhorroScreen extends StatelessWidget {
   }
 
   void _pagarAhorroTotalmente(BuildContext context, Ahorro ahorro) {
+    // (Tu lógica original de pagar totalmente se mantiene igual)
     final strings = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -549,17 +506,16 @@ class VerAhorroScreen extends StatelessWidget {
         title: Text(strings.paidDeudasText),
         content: Text(strings.markAsPaidConfirmText),
         actions: [
-          // Botón Cancelar
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(), // Cierra solo el diálogo
+            onPressed: () => Navigator.of(ctx).pop(),
             child: Text(strings.cancelText),
           ),
-
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.expense),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.income,
+            ), // Verde para confirmar
             onPressed: () async {
               Navigator.of(ctx).pop();
-
               try {
                 if (!context.mounted) return;
                 await Provider.of<AhorroProvider>(
@@ -570,8 +526,8 @@ class VerAhorroScreen extends StatelessWidget {
                   Provider.of<TransactionProvider>(context, listen: false),
                   context,
                 );
-
                 if (context.mounted) {
+                  Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(strings.deudaPaidSucessText),
@@ -579,11 +535,8 @@ class VerAhorroScreen extends StatelessWidget {
                     ),
                   );
                 }
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
               } catch (e) {
-                return;
+                // error handle
               }
             },
             child: Text(strings.markAsPaidText),

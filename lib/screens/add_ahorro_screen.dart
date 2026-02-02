@@ -25,7 +25,6 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
-  final involucradoController = TextEditingController();
 
   // 1. Controlador para el texto de la fecha y variable para la fecha real
   final dateLimitController = TextEditingController();
@@ -49,7 +48,6 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
     titleController.dispose();
     descriptionController.dispose();
     amountController.dispose();
-    involucradoController.dispose();
     dateLimitController.dispose(); // No olvidar liberar este controller
     super.dispose();
   }
@@ -200,7 +198,6 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         titleController: titleController,
         descriptionController: descriptionController,
         amountController: amountController,
-        involucradoController: involucradoController,
 
         // Estos son los nuevos parámetros que debes recibir en DeudaForm:
         dateController: dateLimitController,
