@@ -210,5 +210,8 @@
     "chooseIconText": "Choose an icon for your goal",
     "saveAhorroText": "Save Saving",
     "insertAmountContributeText": "Insert the amount to contribute",
-    "aporteSeccessText": "Contribution made successfully"
+    "aporteSeccessText": "Contribution made successfully",
+    "ahorroCompletedText": "Saving completed",
+    "ahorroCompletedAskText": "Do you want to mark this saving as completed?",
+    "markAsCompletedText": "Mark as completed"
 }

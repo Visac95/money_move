@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_move/config/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AddAporteWindow extends StatefulWidget {
+  final montoController = TextEditingController();
   double monto;
   double abono;
   AddAporteWindow({super.key, required this.monto, required this.abono});
@@ -17,10 +19,13 @@ class AddAporteWindow extends StatefulWidget {
 }
 
 class _AddAporteWindowState extends State<AddAporteWindow> {
+  // 1. State variable for the checkbox (default true usually makes sense)
+  bool _autoTransaction = false;
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final montoController = TextEditingController();
+    final montoController = widget.montoController;
     final strings = AppLocalizations.of(context)!;
     final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
     final mainColor = (spaceProv.isInSpace && spaceProv.isSpaceMode)
@@ -31,7 +36,6 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
       insetPadding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(1, 15, 1, 15),
@@ -71,7 +75,46 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
             "${(strings.restanteText)}: ${widget.monto - widget.abono}",
             style: TextStyle(color: colorScheme.outline),
           ),
+
           SizedBox(height: 15),
+
+          // 2. CHECKBOX ROW
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _autoTransaction = !_autoTransaction;
+              });
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Checkbox(
+                    value: _autoTransaction,
+                    activeColor: mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        _autoTransaction = val ?? true;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  // You might want to add this string to your Localizations
+                  "Create transaction automatically",
+                  style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 20),
+
           Row(
             children: [
               //----------Cancelar------------
@@ -101,10 +144,16 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
                 child: SizedBox(
                   height: 55,
                   child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(
-                      context,
-                      double.parse(montoController.text),
-                    ),
+                    onPressed: () {
+                      // Safety check for empty input
+                      if (montoController.text.isEmpty) return;
+
+                      final amount = double.tryParse(montoController.text);
+                      if (amount == null) return;
+
+                      // 3. RETURN THE RECORD (Double, Bool)
+                      Navigator.pop(context, (amount, _autoTransaction));
+                    },
                     icon: Icon(Icons.add_box, color: colorScheme.surface),
                     label: Text(
                       strings.contributeText,

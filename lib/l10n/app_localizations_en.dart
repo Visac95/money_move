@@ -655,4 +655,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aporteSeccessText => 'Contribution made successfully';
+
+  @override
+  String get ahorroCompletedText => 'Saving completed';
+
+  @override
+  String get ahorroCompletedAskText =>
+      'Do you want to mark this saving as completed?';
+
+  @override
+  String get markAsCompletedText => 'Mark as completed';
 }

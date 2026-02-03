@@ -657,4 +657,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get aporteSeccessText => 'Aporte realizado con éxito';
+
+  @override
+  String get ahorroCompletedText => 'Ahorro completado';
+
+  @override
+  String get ahorroCompletedAskText =>
+      '¿Deseas marcar este ahorro como completado?';
+
+  @override
+  String get markAsCompletedText => 'Marcar como completado';
 }

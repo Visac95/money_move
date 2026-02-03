@@ -4,6 +4,7 @@ import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_ahorro_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -18,18 +19,31 @@ class VerAhorroScreen extends StatelessWidget {
   final String ahorroId;
   const VerAhorroScreen({super.key, required this.ahorroId});
 
-  Future<double?> _mostrarDialogoAbono(
+  Future<(double?, bool?)> _mostrarDialogoAbono(
     BuildContext context,
     Ahorro ahorro,
   ) async {
-    final double? montoIngresado = await showDialog<double>(
+    // We expect the dialog to return a Record: (double, bool)
+    final result = await showDialog<(double?, bool?)>(
       context: context,
-      builder: (context) => AddAporteWindow(
-        monto: ahorro.monto,
-        abono: ahorro.abono,
-      ),
+      builder: (context) =>
+          AddAporteWindow(monto: ahorro.monto, abono: ahorro.abono),
     );
-    return montoIngresado;
+    print("🤑💀✅📨👻😍 abono $result");
+    return result ?? (null, null);
+  }
+
+  Future<(bool?, bool?)> _mostrarDialogoCompleted(
+    BuildContext context,
+    Ahorro ahorro,
+  ) async {
+    // We expect the dialog to return a Record: (double, bool)
+    final result = await showDialog<(bool?, bool?)>(
+      context: context,
+      builder: (context) => _markAsCompletedAhorro(ahorro: ahorro),
+    );
+    print("🤑💀✅📨👻😍 completado $result");
+    return result ?? (null, null);
   }
 
   @override
@@ -425,13 +439,17 @@ class VerAhorroScreen extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: ElevatedButton.icon(
+              // ... inside _actionButtons ...
               onPressed: () async {
-                final double? monto = await _mostrarDialogoAbono(
+                // Destructure the result: get amount and boolean
+                final (monto, autoTransaction) = await _mostrarDialogoAbono(
                   context,
                   ahorro,
                 );
+
                 if (!context.mounted) return;
 
+                // Check if monto is not null
                 if (monto != null) {
                   final status =
                       await Provider.of<AhorroProvider>(
@@ -445,11 +463,13 @@ class VerAhorroScreen extends StatelessWidget {
                           listen: false,
                         ),
                         context,
+                        autoTransaction!,
                       );
 
                   if (context.mounted) caseNotiAbono(status);
                 }
               },
+              // ...
               icon: const Icon(Icons.savings_outlined, color: Colors.white),
               label: Text(
                 strings.contributeText,
@@ -479,7 +499,14 @@ class VerAhorroScreen extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: OutlinedButton(
-              onPressed: () => _pagarAhorroTotalmente(context, ahorro),
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return _markAsCompletedAhorro(ahorro: ahorro);
+                  },
+                );
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
                   color: colorScheme.outline.withValues(alpha: 0.3),
@@ -495,53 +522,110 @@ class VerAhorroScreen extends StatelessWidget {
       ],
     );
   }
+}
 
-  void _pagarAhorroTotalmente(BuildContext context, Ahorro ahorro) {
+class _markAsCompletedAhorro extends StatefulWidget {
+  Ahorro ahorro;
+  _markAsCompletedAhorro({super.key, required this.ahorro});
+
+  @override
+  State<_markAsCompletedAhorro> createState() => __markAsCompletedAhorroState();
+}
+
+class __markAsCompletedAhorroState extends State<_markAsCompletedAhorro> {
+  bool _autoTransaction = false;
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final ahorro = widget.ahorro;
+    final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+    final mainColor = (spaceProv.isInSpace && spaceProv.isSpaceMode)
+        ? modeColorAppbar(context, 1)
+        : AppColors.income;
     // (Tu lógica original de pagar totalmente se mantiene igual)
     final strings = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(strings.paidDeudasText),
-        content: Text(strings.markAsPaidConfirmText),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(strings.cancelText),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.income,
-            ), // Verde para confirmar
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              try {
-                if (!context.mounted) return;
-                await Provider.of<AhorroProvider>(
-                  context,
-                  listen: false,
-                ).terminarAhorro(
-                  ahorro,
-                  Provider.of<TransactionProvider>(context, listen: false),
-                  context,
-                );
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(strings.deudaPaidSucessText),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-              } catch (e) {
-                // error handle
-              }
-            },
-            child: Text(strings.markAsPaidText),
-          ),
+    return AlertDialog(
+      title: Text(strings.ahorroCompletedText),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(strings.ahorroCompletedAskText),
+
+          
         ],
       ),
+      actions: [
+        // 2. CHECKBOX ROW
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _autoTransaction = !_autoTransaction;
+            });
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: Checkbox(
+                  value: _autoTransaction,
+                  activeColor: mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  onChanged: (val) {
+                    setState(() {
+                      _autoTransaction = val ?? true;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                // You might want to add this string to your Localizations
+                "Create transaction automatically",
+                style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+              ),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(strings.cancelText),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: mainColor,
+          ), // Verde para confirmar
+          onPressed: () async {
+            Navigator.of(context).pop();
+            try {
+              if (!context.mounted) return;
+              await Provider.of<AhorroProvider>(
+                context,
+                listen: false,
+              ).terminarAhorro(
+                ahorro,
+                Provider.of<TransactionProvider>(context, listen: false),
+                context,
+                _autoTransaction,
+              );
+              if (context.mounted) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(strings.deudaPaidSucessText),
+                    backgroundColor: mainColor,
+                  ),
+                );
+              }
+            } catch (e) {
+              // error handle
+            }
+          },
+          child: Text(strings.markAsCompletedText),
+        ),
+      ],
     );
   }
 }

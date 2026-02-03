@@ -94,9 +94,7 @@ class AhorroProvider extends ChangeNotifier {
   }
 
   // 2. AGREGAR DEUDA
-  Future<void> addAhorro(
-    Ahorro a,
-  ) async {
+  Future<void> addAhorro(Ahorro a) async {
     print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
     // A. Guardar en Firebase
     await _dbService.addAhorro(a, _isSpaceMode);
@@ -113,28 +111,30 @@ class AhorroProvider extends ChangeNotifier {
   }
 
   // 5. PAGAR DEUDA COMPLETA
-  Future<void> terminarAhorro(
+  Future<bool> terminarAhorro(
     Ahorro a,
     TransactionProvider transProvider,
     BuildContext context,
+    bool createAutoTrax,
   ) async {
     try {
       // Calculamos cuánto faltaba
       final montoRestante = a.monto - a.abono;
 
-      // Creamos la transacción de pago
-      await transProvider.addTransaction(
-        Transaction(
-          userId: FirebaseAuth.instance.currentUser!.uid,
-          title: "${AppLocalizations.of(context)!.pagoDeText} ${a.title}",
-          description: a.description,
-          monto: montoRestante,
-          saldo: transProvider.saldoActual,
-          fecha: DateTime.now(),
-          categoria: AppConstants.catSavings,
-          isExpense: true, // Si yo debía, pagar es un Gasto.
-        ),
-      );
+      if (createAutoTrax) {
+        await transProvider.addTransaction(
+          Transaction(
+            userId: FirebaseAuth.instance.currentUser!.uid,
+            title: "${AppLocalizations.of(context)!.pagoDeText} ${a.title}",
+            description: a.description,
+            monto: montoRestante,
+            saldo: transProvider.saldoActual,
+            fecha: DateTime.now(),
+            categoria: AppConstants.catSavings,
+            isExpense: false,
+          ),
+        );
+      }
 
       // Actualizamos la deuda a PAGADA
       a.ahorrado = true;
@@ -142,9 +142,11 @@ class AhorroProvider extends ChangeNotifier {
 
       // Guardamos en Firebase
       await updateAhorro(a);
+      return true;
     } catch (_) {
       //print("Error al pagar deuda: $e");
     }
+    return false;
   }
 
   // 6. ABONAR A DEUDA
@@ -153,6 +155,7 @@ class AhorroProvider extends ChangeNotifier {
     double monto,
     TransactionProvider provider,
     BuildContext context,
+    bool genAutoTrax,
   ) async {
     if (monto <= 0) return AbonoStatus.montoInvalido;
 
@@ -167,21 +170,22 @@ class AhorroProvider extends ChangeNotifier {
         a.ahorrado = true;
       }
 
-      // Generamos la transacción del abono
-      await provider.addTransaction(
-        Transaction(
-          userId: a.userId,
-          title:
-              "${(a.ahorrado ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${a.title}",
-          description: a.description,
-          monto: monto,
-          saldo: provider.saldoActual,
-          fecha: DateTime.now(),
-          categoria: AppConstants.catDebt,
-          isExpense: true,
-          deudaAsociada: a.id,
-        ),
-      );
+      if (genAutoTrax) {
+        await provider.addTransaction(
+          Transaction(
+            userId: a.userId,
+            title:
+                "${(a.ahorrado ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${a.title}",
+            description: a.description,
+            monto: monto,
+            saldo: provider.saldoActual,
+            fecha: DateTime.now(),
+            categoria: AppConstants.catSavings,
+            isExpense: true,
+            deudaAsociada: a.id,
+          ),
+        );
+      }
 
       // Actualizamos en Firebase
       await updateAhorro(a);

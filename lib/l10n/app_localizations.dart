@@ -1363,6 +1363,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contribution made successfully'**
   String get aporteSeccessText;
+
+  /// No description provided for @ahorroCompletedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving completed'**
+  String get ahorroCompletedText;
+
+  /// No description provided for @ahorroCompletedAskText.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to mark this saving as completed?'**
+  String get ahorroCompletedAskText;
+
+  /// No description provided for @markAsCompletedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as completed'**
+  String get markAsCompletedText;
 }
 
 class _AppLocalizationsDelegate

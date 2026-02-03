@@ -210,5 +210,8 @@
     "chooseIconText": "Elige un ícono para tu meta",
     "saveAhorroText": "Guardar Ahorro",
     "insertAmountContributeText": "Inserta la cantidad a aportar",
-    "aporteSeccessText": "Aporte realizado con éxito"
+    "aporteSeccessText": "Aporte realizado con éxito",
+    "ahorroCompletedText": "Ahorro completado",
+    "ahorroCompletedAskText": "¿Deseas marcar este ahorro como completado?",
+    "markAsCompletedText": "Marcar como completado"
 }
