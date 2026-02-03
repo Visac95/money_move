@@ -27,8 +27,7 @@ class VerDeuda extends StatelessWidget {
       builder: (context) => AddAbonoWindow(
         debo: deudaActual.debo, // Usamos datos frescos
         monto: deudaActual.monto, // Usamos datos frescos
-        abono: deudaActual.abono, // Usamos datos frescos
-        esDeuda: true,
+        abono: deudaActual.abono,
       ),
     );
     return montoIngresado;

@@ -14,13 +14,14 @@ class AppConstants {
   static const String catHome = 'cat_home';
   static const String catServices = 'cat_services';
   static const String catDebt = 'cat_debt';
+  static const String catTechnology = "cat_technology";
+  static const String catSavings = "cat_savings";
+  static const String catGifts = "cat_gifts";
   static const String catOthers = 'cat_others';
-  static const String catTechnology = "catTechnology";
-  static const String catSavings = "catSavings";
-  static const String catGift = "catGift";
 
   // Lista de claves para iterar
   static const List<String> categories = [
+    catOthers,
     catFood,
     catTransport,
     catLeisure,
@@ -32,10 +33,9 @@ class AppConstants {
     catHome,
     catServices,
     catDebt,
-    catOthers,
     catSavings,
     catTechnology,
-    catGift,
+    catGifts,
   ];
 
   // Mapa de íconos usando las CLAVES
@@ -54,7 +54,7 @@ class AppConstants {
     catDebt: Icons.receipt_long,
     catTechnology: Icons.devices_other_rounded,
     catSavings: Icons.savings_rounded,
-    catGift: Icons.card_giftcard_rounded,
+    catGifts: Icons.card_giftcard_rounded,
   };
 
   static IconData getIconForCategory(String categoryKey) {

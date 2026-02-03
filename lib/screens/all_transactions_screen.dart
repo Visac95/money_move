@@ -143,6 +143,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
       ),
       floatingActionButton: AddDynamicButtonWidget(
         screen: AddTransactionScreen(),
+        heroTag: "heroTagTransaction",
       ),
     );
   }

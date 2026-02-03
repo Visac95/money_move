@@ -131,7 +131,7 @@ class AhorroProvider extends ChangeNotifier {
           monto: montoRestante,
           saldo: transProvider.saldoActual,
           fecha: DateTime.now(),
-          categoria: AppConstants.catDebt,
+          categoria: AppConstants.catSavings,
           isExpense: true, // Si yo debía, pagar es un Gasto.
         ),
       );

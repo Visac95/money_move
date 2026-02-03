@@ -203,5 +203,10 @@
     "startSavingNowText":"Comienza a guardar para tus sueños hoy.",
     "goalText":"Meta",
     "goalAchievedText":"¡Meta alcanzada!",
-    "settledAhorrosText": "Ahorros liquidados"
+    "settledAhorrosText": "Ahorros liquidados",
+    "objectiveCompletedText": "Meta alcanzada 🎉",
+    "savedText": "Ahorrado",
+    "contributeText": "Aportar",
+    "chooseIconText": "Elige un ícono para tu meta",
+    "saveAhorroText": "Guardar Ahorro"
 }

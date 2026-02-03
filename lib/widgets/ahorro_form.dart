@@ -6,7 +6,6 @@ import 'package:money_move/models/ahorro.dart';
 import 'package:money_move/providers/ai_category_provider.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/widgets/emoji_selector.dart';
-//import 'package:money_move/widgets/emoji_selector.dart';
 import 'package:money_move/widgets/select_category_window.dart';
 import 'package:provider/provider.dart';
 
@@ -15,21 +14,22 @@ class AhorroForm extends StatefulWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController amountController;
-  bool debo;
-  final Function(bool) onTypeChanged;
+  // bool debo; // ELIMINADO: No es necesario saber si "debo" en un ahorro.
+  // final Function(bool) onTypeChanged; // ELIMINADO: No se usaba en el build.
   final Function(String) onSave;
   final Ahorro? ahorro;
   final bool? isEditMode;
   final TextEditingController dateController;
   final VoidCallback onDateTap;
 
-  AhorroForm({
+  const AhorroForm({
+    // Agregado const para optimización
     super.key,
     required this.titleController,
     required this.descriptionController,
     required this.amountController,
-    required this.debo,
-    required this.onTypeChanged,
+    // required this.debo, // Eliminado para limpiar
+    // required this.onTypeChanged, // Eliminado para limpiar
     required this.onSave,
     this.ahorro,
     this.isEditMode,
@@ -42,12 +42,11 @@ class AhorroForm extends StatefulWidget {
 }
 
 class _AhorroFormState extends State<AhorroForm> {
-  String _emojiSeleccionado = "🐷"; // Valor por defecto
+  String _emojiSeleccionado = "💰"; // Valor por defecto
 
   @override
   void initState() {
     super.initState();
-    // CAMBIO 2: Si estamos editando, cargamos el emoji existente
     if (widget.ahorro != null && widget.ahorro!.emoji.isNotEmpty) {
       _emojiSeleccionado = widget.ahorro!.emoji;
     }
@@ -55,18 +54,17 @@ class _AhorroFormState extends State<AhorroForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos watch para reconstruir si cambia el estado del provider (IA o Manual)
     final aiProvider = context.watch<AiCategoryProvider>();
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     final strings = AppLocalizations.of(context)!;
 
-    final activeColor = widget.debo ? AppColors.accent : AppColors.income;
+    // CAMBIO 1: Color fijo para Ahorros.
+    // Los ahorros siempre son positivos (verde o color primario), no rojos como las deudas.
+    final activeColor = AppColors.income;
 
     // --- LÓGICA DE ESTADO DEL BOTÓN DE CATEGORÍA ---
-    // La lógica ahora es universal: EditDeudaScreen ya cargó la categoría en 'manualCategory'
     final bool hasManual = aiProvider.manualCategory != null;
     final bool hasSuggestion = aiProvider.suggestedCategory.isNotEmpty;
 
@@ -77,14 +75,12 @@ class _AhorroFormState extends State<AhorroForm> {
     String chipLabel;
 
     if (hasManual) {
-      // 1. MANUAL (Usuario eligió o estamos editando una existente) -> VERDE
       chipBgColor = Colors.green.withValues(alpha: isDark ? 0.2 : 0.1);
       chipBorderColor = Colors.green.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.greenAccent : Colors.green.shade700;
       chipIcon = Icons.check_circle;
       chipLabel = getCategoryName(context, aiProvider.manualCategory!);
     } else if (hasSuggestion) {
-      // 2. SUGERENCIA IA -> COLOR PRIMARY
       chipBgColor = colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1);
       chipBorderColor = colorScheme.primary.withValues(alpha: 0.5);
       chipTextColor = isDark ? Colors.white : colorScheme.primary;
@@ -92,7 +88,6 @@ class _AhorroFormState extends State<AhorroForm> {
       chipLabel =
           "${strings.category}: ${getCategoryName(context, aiProvider.suggestedCategory)}";
     } else {
-      // 3. ESTADO INICIAL -> GRIS / "CATEGORÍA"
       chipBgColor = colorScheme.surfaceContainerHighest;
       chipBorderColor = Colors.transparent;
       chipTextColor = colorScheme.onSurfaceVariant;
@@ -139,7 +134,7 @@ class _AhorroFormState extends State<AhorroForm> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5), // Corregido const
             // 2. DESCRIPCIÓN
             Text(
               strings.ahorroDescriptionText,
@@ -177,17 +172,20 @@ class _AhorroFormState extends State<AhorroForm> {
             const SizedBox(height: 30),
 
             //----DateLimit--------
-            // Ejemplo de TextField para la fecha
             TextField(
-              controller:
-                  widget.dateController, // El controlador que le pasamos
-              readOnly: true, // Importante: para que no escriban, solo toquen
-              onTap: widget.onDateTap, // Al tocar, se abre el calendario
+              controller: widget.dateController,
+              readOnly: true,
+              onTap: widget.onDateTap,
               decoration: InputDecoration(
-                labelText: strings.metaDateText, // O usa AppLocalizations
+                labelText: strings.metaDateText,
                 prefixIcon: const Icon(Icons.calendar_today),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
+                ),
+                // Agregado color de foco para consistencia
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: activeColor, width: 2),
                 ),
               ),
             ),
@@ -208,6 +206,8 @@ class _AhorroFormState extends State<AhorroForm> {
                 decimal: true,
               ),
               inputFormatters: [
+                // Nota: Esto permite puntos. Si tus usuarios usan comas (Latam),
+                // considera permitir ',' en el RegExp: RegExp(r'^\d+([.,]\d{0,2})?')
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
               ],
               style: TextStyle(
@@ -230,24 +230,10 @@ class _AhorroFormState extends State<AhorroForm> {
                 contentPadding: EdgeInsets.zero,
               ),
             ),
-            Text(
-              "Elige un icono para tu meta",
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 10),
 
-            EmojiSelector(
-              selectedEmoji: _emojiSeleccionado,
-              onEmojiSelected: (nuevoEmoji) {
-                setState(() {
-                  _emojiSeleccionado = nuevoEmoji;
-                });
-              },
-            ),
+            const SizedBox(height: 15),
 
-            const SizedBox(height: 8),
-
-            // --- SECCIÓN AI / CATEGORÍA (OPTIMIZADA) ---
+            // --- SECCIÓN AI / CATEGORÍA ---
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: aiProvider.isLoading
@@ -282,7 +268,6 @@ class _AhorroFormState extends State<AhorroForm> {
                                 return const SelectCategoryWindow();
                               },
                             );
-                        // Si selecciona algo, actualizamos el Provider (esto pone el botón verde)
                         if (selectedManualCategory != null) {
                           aiProvider.manualCategory = selectedManualCategory;
                         }
@@ -320,8 +305,26 @@ class _AhorroFormState extends State<AhorroForm> {
                       ),
                     ),
             ),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                // Agregado const
+                strings.chooseIconText,
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+            ),
+            const SizedBox(height: 10),
 
-            SizedBox(height: 40),
+            EmojiSelector(
+              selectedEmoji: _emojiSeleccionado,
+              onEmojiSelected: (nuevoEmoji) {
+                setState(() {
+                  _emojiSeleccionado = nuevoEmoji;
+                });
+              },
+            ),
+
+            const SizedBox(height: 40),
             // Botón Guardar
             SizedBox(
               width: double.infinity,
@@ -339,7 +342,7 @@ class _AhorroFormState extends State<AhorroForm> {
                   elevation: 2,
                 ),
                 child: Text(
-                  strings.saveDeudaText,
+                  strings.saveAhorroText, 
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

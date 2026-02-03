@@ -4,22 +4,16 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
-class AddAbonoWindow extends StatefulWidget {
+class AddAporteWindow extends StatefulWidget {
   double monto;
   double abono;
-  final bool debo;
-  AddAbonoWindow({
-    super.key,
-    required this.monto,
-    required this.abono,
-    required this.debo,
-  });
+  AddAporteWindow({super.key, required this.monto, required this.abono});
 
   @override
-  State<AddAbonoWindow> createState() => _AddAbonoWindowState();
+  State<AddAporteWindow> createState() => _AddAporteWindowState();
 }
 
-class _AddAbonoWindowState extends State<AddAbonoWindow> {
+class _AddAporteWindowState extends State<AddAporteWindow> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -30,7 +24,7 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
       insetPadding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-
+        
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(1, 15, 1, 15),
@@ -65,8 +59,9 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
               contentPadding: EdgeInsets.zero,
             ),
           ),
+
           Text(
-            "${(widget.debo ? strings.totalPorPagarText : strings.totalPorCobrarText)}: ${widget.monto - widget.abono}",
+            "${(strings.totalPorPagarText)}: ${widget.monto - widget.abono}",
             style: TextStyle(color: colorScheme.outline),
           ),
           SizedBox(height: 15),
@@ -77,13 +72,13 @@ class _AddAbonoWindowState extends State<AddAbonoWindow> {
                 height: 55,
                 child: ElevatedButton.icon(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close, color: colorScheme.surface),
+                  icon: Icon(Icons.close, color: AppColors.expense),
                   label: Text(
                     strings.cancelText,
-                    style: TextStyle(color: colorScheme.surface, fontSize: 18),
+                    style: TextStyle(color: AppColors.expense, fontSize: 18),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.expense,
+                    backgroundColor: AppColors.expense.withValues(alpha: 0.1),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),

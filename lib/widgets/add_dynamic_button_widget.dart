@@ -5,14 +5,15 @@ import 'package:provider/provider.dart';
 
 class AddDynamicButtonWidget extends StatelessWidget {
   final dynamic screen;
-  const AddDynamicButtonWidget({super.key, required this.screen});
+  final String heroTag;
+  const AddDynamicButtonWidget({super.key, required this.screen, required this.heroTag});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SpaceProvider>(context);
     final colorScheme = Theme.of(context).colorScheme;
     return FloatingActionButton(
-      heroTag: "addDynamicButton",
+      heroTag: heroTag,
       backgroundColor: provider.isInSpace
           ? modeColorAppbar(context, 1)
           : colorScheme.primary,

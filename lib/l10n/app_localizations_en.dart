@@ -78,6 +78,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cat_debt => 'Debts';
 
   @override
+  String get cat_savings => 'Savings';
+
+  @override
+  String get cat_Technology => 'Technology';
+
+  @override
+  String get cat_Gifts => 'Gifts';
+
+  @override
   String get cat_others => 'Others';
 
   @override
@@ -625,4 +634,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settledAhorrosText => 'Settled savings';
+
+  @override
+  String get objectiveCompletedText => 'Goal achieved 🎉';
+
+  @override
+  String get savedText => 'Saved';
+
+  @override
+  String get contributeText => 'Contribute';
+
+  @override
+  String get chooseIconText => 'Choose an icon for your goal';
+
+  @override
+  String get saveAhorroText => 'Save Saving';
 }

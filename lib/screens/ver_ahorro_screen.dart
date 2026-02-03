@@ -11,6 +11,7 @@ import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:money_move/widgets/add_abono_window.dart';
+import 'package:money_move/widgets/add_aporte_window.dart';
 import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +25,9 @@ class VerAhorroScreen extends StatelessWidget {
   ) async {
     final double? montoIngresado = await showDialog<double>(
       context: context,
-      builder: (context) => AddAbonoWindow(
+      builder: (context) => AddAporteWindow(
         monto: ahorro.monto,
         abono: ahorro.abono,
-        esDeuda: false,
       ),
     );
     return montoIngresado;
@@ -225,7 +225,7 @@ class VerAhorroScreen extends StatelessWidget {
           const Icon(Icons.verified, color: AppColors.income, size: 30),
           const SizedBox(width: 10),
           Text(
-            "¡Meta Alcanzada!", //strings.objectiveCompletedText ?? ,
+            strings.objectiveCompletedText,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class VerAhorroScreen extends StatelessWidget {
 
           // --- EL NÚMERO GRANDE (LO AHORRADO) ---
           Text(
-            "ahorrado", //strings.savedText,
+            "${strings.savedText}:",
             style: TextStyle(color: colorScheme.outline, fontSize: 14),
           ),
           const SizedBox(height: 5),
@@ -453,7 +453,7 @@ class VerAhorroScreen extends StatelessWidget {
               },
               icon: const Icon(Icons.savings_outlined, color: Colors.white),
               label: Text(
-                strings.abonarText,
+                strings.contributeText,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,

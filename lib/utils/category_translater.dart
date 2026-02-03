@@ -33,6 +33,12 @@ String getCategoryName(BuildContext context, String categoryKey) {
       return l10n.cat_others;
     case "all":
       return l10n.todoText;
+    case AppConstants.catSavings:
+      return l10n.cat_savings;
+    case AppConstants.catTechnology:
+      return l10n.cat_Technology;
+    case AppConstants.catGifts:
+      return l10n.cat_Gifts;
     default:
       return 'Desconocido';
   }

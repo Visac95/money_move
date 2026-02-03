@@ -202,13 +202,6 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         // Estos son los nuevos parámetros que debes recibir en DeudaForm:
         dateController: dateLimitController,
         onDateTap: () => _selectDate(context),
-
-        debo: debo,
-        onTypeChanged: (bool value) {
-          setState(() {
-            debo = value;
-          });
-        },
         onSave: _saveDeuda,
         isEditMode: false,
       ),

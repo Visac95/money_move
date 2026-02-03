@@ -197,13 +197,6 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
           // 6. Pasamos los controles de fecha al formulario
           dateController: dateLimitController,
           onDateTap: () => _selectDate(context),
-
-          debo: debo,
-          onTypeChanged: (bool value) {
-            setState(() {
-              debo = value;
-            });
-          },
           onSave: _saveDeuda,
           ahorro: widget
               .ahorro, // Opcional, dependiendo de cómo uses esto en DeudaForm

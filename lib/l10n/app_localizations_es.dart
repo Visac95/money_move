@@ -78,6 +78,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cat_debt => 'Deudas';
 
   @override
+  String get cat_savings => 'Ahorros';
+
+  @override
+  String get cat_Technology => 'Tecnología';
+
+  @override
+  String get cat_Gifts => 'Regalos';
+
+  @override
   String get cat_others => 'Otros';
 
   @override
@@ -627,4 +636,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settledAhorrosText => 'Ahorros liquidados';
+
+  @override
+  String get objectiveCompletedText => 'Meta alcanzada 🎉';
+
+  @override
+  String get savedText => 'Ahorrado';
+
+  @override
+  String get contributeText => 'Aportar';
+
+  @override
+  String get chooseIconText => 'Elige un ícono para tu meta';
+
+  @override
+  String get saveAhorroText => 'Guardar Ahorro';
 }

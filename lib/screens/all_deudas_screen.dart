@@ -65,7 +65,10 @@ class _AllDeudasScreenState extends State<AllDeudasScreen> {
           ],
         ),
       ),
-      floatingActionButton: AddDynamicButtonWidget(screen: AddDeudaScreen()),
+      floatingActionButton: AddDynamicButtonWidget(
+        screen: AddDeudaScreen(),
+        heroTag: "heroTagDeudas",
+      ),
     );
   }
 

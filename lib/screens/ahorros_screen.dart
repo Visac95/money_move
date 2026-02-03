@@ -61,7 +61,10 @@ class _AhorrosScreenState extends State<AhorrosScreen> {
           ],
         ),
       ),
-      floatingActionButton: AddDynamicButtonWidget(screen: AddAhorroScreen()),
+      floatingActionButton: AddDynamicButtonWidget(
+        screen: AddAhorroScreen(),
+        heroTag: "heroTagAhorros",
+      ),
     );
   }
 

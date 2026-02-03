@@ -203,5 +203,10 @@
     "startSavingNowText":"Start saving for your dreams today.",
     "goalText":"Goal",
     "goalAchievedText":"Goal achieved!",
-    "settledAhorrosText": "Settled savings"
+    "settledAhorrosText": "Settled savings",
+    "objectiveCompletedText": "Goal achieved 🎉",
+    "savedText": "Saved",
+    "contributeText": "Contribute",
+    "chooseIconText": "Choose an icon for your goal",
+    "saveAhorroText": "Save Saving"
 }

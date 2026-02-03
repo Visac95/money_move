@@ -236,6 +236,24 @@ abstract class AppLocalizations {
   /// **'Debts'**
   String get cat_debt;
 
+  /// No description provided for @cat_savings.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get cat_savings;
+
+  /// No description provided for @cat_Technology.
+  ///
+  /// In en, this message translates to:
+  /// **'Technology'**
+  String get cat_Technology;
+
+  /// No description provided for @cat_Gifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts'**
+  String get cat_Gifts;
+
   /// No description provided for @cat_others.
   ///
   /// In en, this message translates to:
@@ -1303,6 +1321,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settled savings'**
   String get settledAhorrosText;
+
+  /// No description provided for @objectiveCompletedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal achieved 🎉'**
+  String get objectiveCompletedText;
+
+  /// No description provided for @savedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get savedText;
+
+  /// No description provided for @contributeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute'**
+  String get contributeText;
+
+  /// No description provided for @chooseIconText.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an icon for your goal'**
+  String get chooseIconText;
+
+  /// No description provided for @saveAhorroText.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Saving'**
+  String get saveAhorroText;
 }
 
 class _AppLocalizationsDelegate
