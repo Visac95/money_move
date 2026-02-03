@@ -649,4 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveAhorroText => 'Save Saving';
+
+  @override
+  String get insertAmountContributeText => 'Insert the amount to contribute';
 }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/utils/mode_color_app_bar.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AddAporteWindow extends StatefulWidget {
@@ -19,17 +22,21 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
     final colorScheme = Theme.of(context).colorScheme;
     final montoController = TextEditingController();
     final strings = AppLocalizations.of(context)!;
+    final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+    final mainColor = (spaceProv.isInSpace && spaceProv.isSpaceMode)
+        ? modeColorAppbar(context, 1)
+        : colorScheme.primary;
 
     return AlertDialog(
       insetPadding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        
+
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(1, 15, 1, 15),
             child: Text(
-              strings.insertAmountPaymentText,
+              strings.insertAmountContributeText,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ),
@@ -42,7 +49,7 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
-              color: colorScheme.primary,
+              color: mainColor,
             ),
             decoration: InputDecoration(
               hintText: "0.00",
@@ -53,7 +60,7 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
               prefixStyle: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
+                color: mainColor,
               ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
@@ -61,7 +68,7 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
           ),
 
           Text(
-            "${(strings.totalPorPagarText)}: ${widget.monto - widget.abono}",
+            "${(strings.restanteText)}: ${widget.monto - widget.abono}",
             style: TextStyle(color: colorScheme.outline),
           ),
           SizedBox(height: 15),
@@ -100,14 +107,14 @@ class _AddAporteWindowState extends State<AddAporteWindow> {
                     ),
                     icon: Icon(Icons.add_box, color: colorScheme.surface),
                     label: Text(
-                      strings.abonarText,
+                      strings.contributeText,
                       style: TextStyle(
                         color: colorScheme.surface,
                         fontSize: 18,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
+                      backgroundColor: mainColor,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),

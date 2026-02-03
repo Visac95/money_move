@@ -208,5 +208,6 @@
     "savedText": "Saved",
     "contributeText": "Contribute",
     "chooseIconText": "Choose an icon for your goal",
-    "saveAhorroText": "Save Saving"
+    "saveAhorroText": "Save Saving",
+    "insertAmountContributeText": "Insert the amount to contribute"
 }

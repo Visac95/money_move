@@ -1351,6 +1351,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save Saving'**
   String get saveAhorroText;
+
+  /// No description provided for @insertAmountContributeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert the amount to contribute'**
+  String get insertAmountContributeText;
 }
 
 class _AppLocalizationsDelegate

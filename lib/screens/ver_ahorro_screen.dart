@@ -10,7 +10,6 @@ import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/utils/ui_utils.dart';
-import 'package:money_move/widgets/add_abono_window.dart';
 import 'package:money_move/widgets/add_aporte_window.dart';
 import '../utils/date_formater.dart';
 import 'package:provider/provider.dart';

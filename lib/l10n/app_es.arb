@@ -208,5 +208,6 @@
     "savedText": "Ahorrado",
     "contributeText": "Aportar",
     "chooseIconText": "Elige un ícono para tu meta",
-    "saveAhorroText": "Guardar Ahorro"
+    "saveAhorroText": "Guardar Ahorro",
+    "insertAmountContributeText": "Inserta la cantidad a aportar"
 }
