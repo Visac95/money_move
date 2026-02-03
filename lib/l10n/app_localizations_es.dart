@@ -654,4 +654,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get insertAmountContributeText => 'Inserta la cantidad a aportar';
+
+  @override
+  String get aporteSeccessText => 'Aporte realizado con éxito';
 }

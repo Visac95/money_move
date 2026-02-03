@@ -60,7 +60,7 @@ class VerAhorroScreen extends StatelessWidget {
 
       switch (status) {
         case AbonoStatus.exito:
-          text = strings.abonoSucessText;
+          text = strings.aporteSeccessText;
           color = Colors.green;
           break;
         case AbonoStatus.montoInvalido:

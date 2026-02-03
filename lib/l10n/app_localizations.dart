@@ -1357,6 +1357,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insert the amount to contribute'**
   String get insertAmountContributeText;
+
+  /// No description provided for @aporteSeccessText.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution made successfully'**
+  String get aporteSeccessText;
 }
 
 class _AppLocalizationsDelegate
