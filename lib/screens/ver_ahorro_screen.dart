@@ -33,19 +33,6 @@ class VerAhorroScreen extends StatelessWidget {
     return result ?? (null, null);
   }
 
-  Future<(bool?, bool?)> _mostrarDialogoCompleted(
-    BuildContext context,
-    Ahorro ahorro,
-  ) async {
-    // We expect the dialog to return a Record: (double, bool)
-    final result = await showDialog<(bool?, bool?)>(
-      context: context,
-      builder: (context) => _markAsCompletedAhorro(ahorro: ahorro),
-    );
-    print("🤑💀✅📨👻😍 completado $result");
-    return result ?? (null, null);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -503,7 +490,7 @@ class VerAhorroScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return _markAsCompletedAhorro(ahorro: ahorro);
+                    return _MarkAsCompletedAhorro(ahorro: ahorro);
                   },
                 );
               },
@@ -524,15 +511,15 @@ class VerAhorroScreen extends StatelessWidget {
   }
 }
 
-class _markAsCompletedAhorro extends StatefulWidget {
-  Ahorro ahorro;
-  _markAsCompletedAhorro({super.key, required this.ahorro});
+class _MarkAsCompletedAhorro extends StatefulWidget {
+  final Ahorro ahorro;
+  const _MarkAsCompletedAhorro({required this.ahorro});
 
   @override
-  State<_markAsCompletedAhorro> createState() => __markAsCompletedAhorroState();
+  State<_MarkAsCompletedAhorro> createState() => __MarkAsCompletedAhorroState();
 }
 
-class __markAsCompletedAhorroState extends State<_markAsCompletedAhorro> {
+class __MarkAsCompletedAhorroState extends State<_MarkAsCompletedAhorro> {
   bool _autoTransaction = false;
   @override
   Widget build(BuildContext context) {
@@ -548,11 +535,7 @@ class __markAsCompletedAhorroState extends State<_markAsCompletedAhorro> {
       title: Text(strings.ahorroCompletedText),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(strings.ahorroCompletedAskText),
-
-          
-        ],
+        children: [Text(strings.ahorroCompletedAskText)],
       ),
       actions: [
         // 2. CHECKBOX ROW
