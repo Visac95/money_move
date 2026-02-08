@@ -183,7 +183,6 @@ class AhorroProvider extends ChangeNotifier {
             fecha: DateTime.now(),
             categoria: AppConstants.catSavings,
             isExpense: true,
-            deudaAsociada: a.id,
             ahorroAsociado: a.id, 
           ),
         );

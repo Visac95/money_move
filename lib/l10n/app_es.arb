@@ -213,5 +213,6 @@
     "aporteSeccessText": "Aporte realizado con éxito",
     "ahorroCompletedText": "Ahorro completado",
     "ahorroCompletedAskText": "¿Deseas marcar este ahorro como completado?",
-    "markAsCompletedText": "Marcar como completado"
+    "markAsCompletedText": "Marcar como completado",
+    "seeAsociatedAhorroText": "Ver ahorro asociado"
 }

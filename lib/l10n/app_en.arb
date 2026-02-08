@@ -213,5 +213,6 @@
     "aporteSeccessText": "Contribution made successfully",
     "ahorroCompletedText": "Saving completed",
     "ahorroCompletedAskText": "Do you want to mark this saving as completed?",
-    "markAsCompletedText": "Mark as completed"
+    "markAsCompletedText": "Mark as completed",
+    "seeAsociatedAhorroText": "See asociated saving"
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/config/app_constants.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
 import 'package:money_move/providers/deuda_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/edit_transaction_screen.dart';
 import 'package:money_move/l10n/app_localizations.dart'; // Asegúrate que esta ruta esté bien
+import 'package:money_move/screens/ver_ahorro_screen.dart';
 import 'package:money_move/screens/ver_deuda_screen.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
@@ -202,18 +204,35 @@ class VerTransactionScreen extends StatelessWidget {
     final strings = AppLocalizations.of(context)!;
     // Usamos 'listen: true' (por defecto) para que si borras la deuda en otra pantalla,
     // este botón desaparezca automáticamente al volver aquí.
-    final deudaProvider = Provider.of<DeudaProvider>(context);
+    final deudaProvider = Provider.of<DeudaProvider>(context, listen: false);
+    final ahorroProvider = Provider.of<AhorroProvider>(context);
 
     bool shouldShowButton = false;
+    bool esDeudaAsociada = true;
 
     if (transaction.deudaAsociada != null &&
         transaction.deudaAsociada!.isNotEmpty) {
       // Intentamos buscar la deuda real
-      final deudaReal = deudaProvider.getDeudaById(transaction.deudaAsociada!);
+      final debtSaveingAsociada = deudaProvider.getDeudaById(
+        transaction.deudaAsociada!,
+      );
 
       // Solo mostramos el botón si la deudaReal NO es nula
-      if (deudaReal != null) {
+      if (debtSaveingAsociada != null) {
         shouldShowButton = true;
+        esDeudaAsociada = true;
+      }
+    } else if (transaction.ahorroAsociado != null &&
+        transaction.ahorroAsociado!.isNotEmpty) {
+      // Intentamos buscar la deuda real
+      final debtSaveingAsociada = ahorroProvider.getAhorroById(
+        transaction.ahorroAsociado!,
+      );
+
+      // Solo mostramos el botón si la deudaReal NO es nula
+      if (debtSaveingAsociada != null) {
+        shouldShowButton = true;
+        esDeudaAsociada = false;
       }
     }
 
@@ -313,18 +332,33 @@ class VerTransactionScreen extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
-                    // Aquí ya es seguro buscar directamente porque verificamos antes
-                    final deuda = deudaProvider.getDeudaById(
-                      transaction.deudaAsociada!,
-                    );
-
-                    // Navegamos (como ya validamos arriba que 'deuda' no es null, es seguro)
-                    if (deuda != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => VerDeuda(deudaId: deuda.id),
-                        ),
+                    if (esDeudaAsociada) {
+                      final deuda = deudaProvider.getDeudaById(
+                        transaction.deudaAsociada!,
                       );
+
+                      // Navegamos (como ya validamos arriba que 'deuda' no es null, es seguro)
+                      if (deuda != null) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => VerDeuda(deudaId: deuda.id),
+                          ),
+                        );
+                      }
+                    } else if (!esDeudaAsociada) {
+                      final ahorro = ahorroProvider.getAhorroById(
+                        transaction.ahorroAsociado!,
+                      );
+
+                      // Navegamos (como ya validamos arriba que 'deuda' no es null, es seguro)
+                      if (ahorro != null) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                VerAhorroScreen(ahorroId: ahorro.id),
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Padding(
@@ -344,7 +378,7 @@ class VerTransactionScreen extends StatelessWidget {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              strings.seeAsociatedDeuda,
+                              esDeudaAsociada ? strings.seeAsociatedDeuda : strings.seeAsociatedAhorroText,
                               style: TextStyle(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.bold,

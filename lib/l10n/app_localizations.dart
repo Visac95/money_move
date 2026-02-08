@@ -1381,6 +1381,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark as completed'**
   String get markAsCompletedText;
+
+  /// No description provided for @seeAsociatedAhorroText.
+  ///
+  /// In en, this message translates to:
+  /// **'See asociated saving'**
+  String get seeAsociatedAhorroText;
 }
 
 class _AppLocalizationsDelegate

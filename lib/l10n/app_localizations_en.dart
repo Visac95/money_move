@@ -665,4 +665,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markAsCompletedText => 'Mark as completed';
+
+  @override
+  String get seeAsociatedAhorroText => 'See asociated saving';
 }

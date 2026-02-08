@@ -667,4 +667,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get markAsCompletedText => 'Marcar como completado';
+
+  @override
+  String get seeAsociatedAhorroText => 'Ver ahorro asociado';
 }
