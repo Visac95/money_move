@@ -218,5 +218,7 @@
     "icomeSavingText" : "Income from completed saving",
     "seAbonoText": "Was contributed to the saving",
     "ahorroCompletedIncomeText": "Congratulations! You've reached your saving goal 🎉",
-    "restantePorAhorrarText": "The remaining amount to reach the goal is"
+    "restantePorAhorrarText": "The remaining amount to reach the goal is",
+    "contributeToText": "Contribute to",
+    "saveCompletedText": "Saving Completed"
 }

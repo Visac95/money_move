@@ -682,4 +682,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get restantePorAhorrarText =>
       'The remaining amount to reach the goal is';
+
+  @override
+  String get contributeToText => 'Contribute to';
+
+  @override
+  String get saveCompletedText => 'Saving Completed';
 }

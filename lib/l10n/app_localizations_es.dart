@@ -683,4 +683,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get restantePorAhorrarText => 'El restante para llegar a la meta es';
+
+  @override
+  String get contributeToText => 'Aporte a';
+
+  @override
+  String get saveCompletedText => 'Ahorro Completado';
 }

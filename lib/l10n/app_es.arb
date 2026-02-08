@@ -218,5 +218,7 @@
     "icomeSavingText" : "Ingreso del ahorro completado",
     "seAbonoText": "Se abonó al ahorro",
     "ahorroCompletedIncomeText": "¡Felicidades! Has alcanzado tu meta de ahorro 🎉",
-    "restantePorAhorrarText": "El restante para llegar a la meta es"
+    "restantePorAhorrarText": "El restante para llegar a la meta es",
+    "contributeToText": "Aporte a",
+    "saveCompletedText": "Ahorro Completado"
 }

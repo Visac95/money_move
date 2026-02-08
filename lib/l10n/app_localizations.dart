@@ -1411,6 +1411,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The remaining amount to reach the goal is'**
   String get restantePorAhorrarText;
+
+  /// No description provided for @contributeToText.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute to'**
+  String get contributeToText;
+
+  /// No description provided for @saveCompletedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving Completed'**
+  String get saveCompletedText;
 }
 
 class _AppLocalizationsDelegate

@@ -133,8 +133,8 @@ class AhorroProvider extends ChangeNotifier {
         await transProvider.addTransaction(
           Transaction(
             userId: FirebaseAuth.instance.currentUser!.uid,
-            title: "${strings.pagoDeText} ${a.title}",
-            description: "${a.description}. $description",
+            title: "${strings.saveCompletedText}: ${a.title}",
+            description: "${a.description} - $description",
             monto: a.monto,
             saldo: transProvider.saldoActual,
             fecha: DateTime.now(),
@@ -188,8 +188,8 @@ class AhorroProvider extends ChangeNotifier {
           Transaction(
             userId: a.userId,
             title:
-                "${(a.ahorrado ? strings.pagoDeText : strings.abonoForText)} ${a.title}",
-            description: "${a.description}. $description",
+                "${strings.contributeToText} ${a.title}",
+            description: "${a.description} - $description",
             monto: monto,
             saldo: provider.saldoActual,
             fecha: DateTime.now(),
