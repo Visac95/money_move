@@ -13,6 +13,7 @@ class Transaction {
   final String categoria;
   final bool isExpense;
   final String? deudaAsociada;
+  final String? ahorroAsociado;
 
   Transaction({
     String? id,
@@ -25,6 +26,7 @@ class Transaction {
     required this.categoria,
     required this.isExpense,
     this.deudaAsociada,
+    this.ahorroAsociado,
   }) : id = id ?? uuid.v4();
 
   // 1. TO MAP (Subir) - Esto estaba bien
@@ -40,6 +42,7 @@ class Transaction {
       'categoria': categoria,
       'isExpense': isExpense,
       'deudaAsociada': deudaAsociada,
+      'ahorroAsociado': ahorroAsociado,
     };
   }
 
@@ -75,6 +78,7 @@ class Transaction {
           : (map['isExpense'] ?? true), // Default a gasto por seguridad
           
       deudaAsociada: map['deudaAsociada'] as String?,
+      ahorroAsociado: map['ahorroAsociado'] as String?,
     );
   }
 }

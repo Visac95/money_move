@@ -21,7 +21,6 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
   var titleController = TextEditingController();
   var descriptionController = TextEditingController();
   var amountController = TextEditingController();
-  var involucradoController = TextEditingController();
 
   // 1. NUEVO: Controlador para la fecha y variable de estado
   final dateLimitController = TextEditingController();
@@ -63,7 +62,6 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
     titleController.dispose();
     descriptionController.dispose();
     amountController.dispose();
-    involucradoController.dispose();
     dateLimitController.dispose(); // Limpieza del nuevo controller
     super.dispose();
   }
@@ -150,8 +148,9 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
       description:
           descriptionController.text, // Asegúrate de guardar la descripción
       monto: enteredAmount,
-      fechaMeta: _selectedDate, // <--- AQUÍ GUARDAMOS LA NUEVA FECHA
+      fechaMeta: _selectedDate,
       categoria: finalCategory,
+      emoji: emoji,
     );
 
     if (!mounted) return;
@@ -178,7 +177,7 @@ class _EditAhorroScreenState extends State<EditAhorroScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)!.editDeudaText,
+            AppLocalizations.of(context)!.editAhorroText,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,

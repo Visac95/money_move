@@ -3,6 +3,7 @@ import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart'; // Asegúrate de tener este archivo
 import 'package:money_move/providers/ahorro_provider.dart'; // Asegúrate de crear este provider
+import 'package:money_move/screens/edit_ahorro_screen.dart';
 import 'package:money_move/screens/ver_ahorro_screen.dart';
 import 'package:money_move/utils/category_translater.dart';
 import 'package:money_move/utils/date_formater.dart';
@@ -316,9 +317,11 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
               provider.deleteAhorro(ahorro); // Asumiendo método delete
             });
           }
-          if (value == "editar") {
-            // Navigator.of(context).push(...)
-          }
+          if (value == "editar") {}
+
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => EditAhorroScreen(ahorro: ahorro)),
+          );
         },
         itemBuilder: (context) => [
           PopupMenuItem(
