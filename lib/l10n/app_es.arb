@@ -214,5 +214,9 @@
     "ahorroCompletedText": "Ahorro completado",
     "ahorroCompletedAskText": "¿Deseas marcar este ahorro como completado?",
     "markAsCompletedText": "Marcar como completado",
-    "seeAsociatedAhorroText": "Ver ahorro asociado"
+    "seeAsociatedAhorroText": "Ver ahorro asociado",
+    "icomeSavingText" : "Ingreso del ahorro completado",
+    "seAbonoText": "Se abonó al ahorro",
+    "ahorroCompletedIncomeText": "¡Felicidades! Has alcanzado tu meta de ahorro 🎉",
+    "restantePorAhorrarText": "El restante para llegar a la meta es"
 }

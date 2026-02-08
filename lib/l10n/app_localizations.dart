@@ -1387,6 +1387,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See asociated saving'**
   String get seeAsociatedAhorroText;
+
+  /// No description provided for @icomeSavingText.
+  ///
+  /// In en, this message translates to:
+  /// **'Income from completed saving'**
+  String get icomeSavingText;
+
+  /// No description provided for @seAbonoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Was contributed to the saving'**
+  String get seAbonoText;
+
+  /// No description provided for @ahorroCompletedIncomeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! You\'ve reached your saving goal 🎉'**
+  String get ahorroCompletedIncomeText;
+
+  /// No description provided for @restantePorAhorrarText.
+  ///
+  /// In en, this message translates to:
+  /// **'The remaining amount to reach the goal is'**
+  String get restantePorAhorrarText;
 }
 
 class _AppLocalizationsDelegate

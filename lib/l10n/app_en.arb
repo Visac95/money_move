@@ -214,5 +214,9 @@
     "ahorroCompletedText": "Saving completed",
     "ahorroCompletedAskText": "Do you want to mark this saving as completed?",
     "markAsCompletedText": "Mark as completed",
-    "seeAsociatedAhorroText": "See asociated saving"
+    "seeAsociatedAhorroText": "See asociated saving",
+    "icomeSavingText" : "Income from completed saving",
+    "seAbonoText": "Was contributed to the saving",
+    "ahorroCompletedIncomeText": "Congratulations! You've reached your saving goal 🎉",
+    "restantePorAhorrarText": "The remaining amount to reach the goal is"
 }

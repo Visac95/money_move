@@ -118,21 +118,29 @@ class AhorroProvider extends ChangeNotifier {
     bool createAutoTrax,
   ) async {
     try {
+      final strings = AppLocalizations.of(context)!;
       // Calculamos cuánto faltaba
       final montoRestante = a.monto - a.abono;
-
+      await abonarAhorro(
+        a,
+        montoRestante,
+        transProvider,
+        context,
+        createAutoTrax,
+      );
+      String description = strings.icomeSavingText;
       if (createAutoTrax) {
         await transProvider.addTransaction(
           Transaction(
             userId: FirebaseAuth.instance.currentUser!.uid,
-            title: "${AppLocalizations.of(context)!.pagoDeText} ${a.title}",
-            description: a.description,
-            monto: montoRestante,
+            title: "${strings.pagoDeText} ${a.title}",
+            description: "${a.description}. $description",
+            monto: a.monto,
             saldo: transProvider.saldoActual,
             fecha: DateTime.now(),
             categoria: AppConstants.catSavings,
             isExpense: false,
-            ahorroAsociado: a.id, 
+            ahorroAsociado: a.id,
           ),
         );
       }
@@ -158,6 +166,7 @@ class AhorroProvider extends ChangeNotifier {
     BuildContext context,
     bool genAutoTrax,
   ) async {
+    final strings = AppLocalizations.of(context)!;
     if (monto <= 0) return AbonoStatus.montoInvalido;
 
     // Pequeño margen de error para comparaciones de punto flotante
@@ -172,18 +181,21 @@ class AhorroProvider extends ChangeNotifier {
       }
 
       if (genAutoTrax) {
+        String description = a.ahorrado
+            ? "${strings.seAbonoText} $monto. ${strings.ahorroCompletedIncomeText}"
+            : "${strings.seAbonoText} $monto. ${strings.restantePorAhorrarText}: ${a.monto - a.abono}";
         await provider.addTransaction(
           Transaction(
             userId: a.userId,
             title:
-                "${(a.ahorrado ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${a.title}",
-            description: a.description,
+                "${(a.ahorrado ? strings.pagoDeText : strings.abonoForText)} ${a.title}",
+            description: "${a.description}. $description",
             monto: monto,
             saldo: provider.saldoActual,
             fecha: DateTime.now(),
             categoria: AppConstants.catSavings,
             isExpense: true,
-            ahorroAsociado: a.id, 
+            ahorroAsociado: a.id,
           ),
         );
       }

@@ -670,4 +670,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get seeAsociatedAhorroText => 'Ver ahorro asociado';
+
+  @override
+  String get icomeSavingText => 'Ingreso del ahorro completado';
+
+  @override
+  String get seAbonoText => 'Se abonó al ahorro';
+
+  @override
+  String get ahorroCompletedIncomeText =>
+      '¡Felicidades! Has alcanzado tu meta de ahorro 🎉';
+
+  @override
+  String get restantePorAhorrarText => 'El restante para llegar a la meta es';
 }

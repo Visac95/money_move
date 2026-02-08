@@ -668,4 +668,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeAsociatedAhorroText => 'See asociated saving';
+
+  @override
+  String get icomeSavingText => 'Income from completed saving';
+
+  @override
+  String get seAbonoText => 'Was contributed to the saving';
+
+  @override
+  String get ahorroCompletedIncomeText =>
+      'Congratulations! You\'ve reached your saving goal 🎉';
+
+  @override
+  String get restantePorAhorrarText =>
+      'The remaining amount to reach the goal is';
 }

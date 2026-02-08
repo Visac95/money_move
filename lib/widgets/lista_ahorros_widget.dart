@@ -1,5 +1,7 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
+import 'package:money_move/config/app_constants.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/models/ahorro.dart'; // Asegúrate de tener este archivo
 import 'package:money_move/providers/ahorro_provider.dart'; // Asegúrate de crear este provider
@@ -137,17 +139,29 @@ class _ListaAhorrosWidgetState extends State<ListaAhorrosWidget> {
                                     color: chipBgColor,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Text(
-                                    getCategoryName(
-                                      context,
-                                      ahorro.categoria,
-                                    ).toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: mainColor,
-                                      letterSpacing: 0.5,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        color: mainColor,
+                                        size: 14,
+                                        AppConstants.getIconForCategory(
+                                          ahorro.categoria,
+                                        ),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        getCategoryName(
+                                          context,
+                                          ahorro.categoria,
+                                        ).toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: mainColor,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 // Menú
