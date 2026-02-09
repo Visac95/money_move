@@ -1435,6 +1435,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share invitation'**
   String get shareInvitationText;
+
+  /// No description provided for @invitationShareText1.
+  ///
+  /// In en, this message translates to:
+  /// **'Hey! 👋 I\'m using Money Move to manage my finances. '**
+  String get invitationShareText1;
+
+  /// No description provided for @invitationShareText2.
+  ///
+  /// In en, this message translates to:
+  /// **'Join me using my invitation link'**
+  String get invitationShareText2;
+
+  /// No description provided for @invitationShareText3.
+  ///
+  /// In en, this message translates to:
+  /// **'You can also write the code in the secction of \'Shared Space\''**
+  String get invitationShareText3;
+
+  /// No description provided for @invitationShareText4.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation to Money Move'**
+  String get invitationShareText4;
 }
 
 class _AppLocalizationsDelegate

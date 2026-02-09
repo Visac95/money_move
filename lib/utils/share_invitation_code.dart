@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
-Future<ShareResultStatus> shareInvitationCode(BuildContext context, String code, String link) async {
+Future<ShareResultStatus> shareInvitationCode(
+  BuildContext context,
+  String code,
+  String link,
+) async {
+  final strings = AppLocalizations.of(context)!;
   print("🥹🥹🥹🥹 entramos a la funcion");
   final String message =
-      "Hey! 👋 I'm using Money Move to manage my finances. "
-      "Join me using my invitation link:\n\n"
+      "${strings.invitationShareText1} "
+      "${strings.invitationShareText2}:\n\n"
       "$link\n\n"
-      "You can also write the code in the secction of 'Shared Space'\n\n"
+      "${strings.invitationShareText3}\n\n"
       "$code\n\n";
   print("🥹🥹🥹🥹 intento compartir");
 
   final sharePlus = await SharePlus.instance.share(
     ShareParams(
       text: message,
-      subject: "Invitation to Money Move",
+      subject: strings.invitationShareText4,
       sharePositionOrigin: findRenderObject(context),
     ),
   );
   print("🥹🥹🥹🥹 Termine");
-  
+
   return sharePlus.status;
 }
 

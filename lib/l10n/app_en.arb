@@ -222,5 +222,9 @@
     "contributeToText": "Contribute to",
     "saveCompletedText": "Saving Completed",
     "invitationDescriptionText": "Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It's a great way to keep finances organized as a couple, family, or with a roommate.",
-    "shareInvitationText": "Share invitation"
+    "shareInvitationText": "Share invitation",
+    "invitationShareText1": "Hey! 👋 I'm using Money Move to manage my finances.",
+    "invitationShareText2": "Join me using my invitation link",
+    "invitationShareText3": "You can also write the code in the secction of 'Shared Space'",
+    "invitationShareText4": "Invitation to Money Move"
 }

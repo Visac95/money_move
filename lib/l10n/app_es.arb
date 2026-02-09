@@ -222,5 +222,9 @@
     "contributeToText": "Aporte a",
     "saveCompletedText": "Ahorro Completado",
     "invitationDescriptionText": "Envia este código a la persona con la que deseas compartir tus finanzas. Al ingresar el código, podrán ver y gestionar juntos los movimientos, deudas y ahorros compartidos. Es una excelente manera de mantener las finanzas organizadas en pareja, familia o con un compañero de cuarto.",
-    "shareInvitationText": "Compartir invitación"
+    "shareInvitationText": "Compartir invitación",
+    "invitationShareText1": "¡Hola! 👋 Estoy usando Money Move para gestionar mis finanzas.",
+    "invitationShareText2": "Únete a mi usando mi enlace de invitación",
+    "invitationShareText3": "También puedes escribir el código en la sección de 'Espacio Compartido'",
+    "invitationShareText4": "Invitación a Money Move"
 }
