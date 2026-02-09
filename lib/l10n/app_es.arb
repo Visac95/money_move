@@ -220,5 +220,7 @@
     "ahorroCompletedIncomeText": "¡Felicidades! Has alcanzado tu meta de ahorro 🎉",
     "restantePorAhorrarText": "El restante para llegar a la meta es",
     "contributeToText": "Aporte a",
-    "saveCompletedText": "Ahorro Completado"
+    "saveCompletedText": "Ahorro Completado",
+    "invitationDescriptionText": "Envia este código a la persona con la que deseas compartir tus finanzas. Al ingresar el código, podrán ver y gestionar juntos los movimientos, deudas y ahorros compartidos. Es una excelente manera de mantener las finanzas organizadas en pareja, familia o con un compañero de cuarto.",
+    "shareInvitationText": "Compartir invitación"
 }

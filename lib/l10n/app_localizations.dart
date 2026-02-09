@@ -1423,6 +1423,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saving Completed'**
   String get saveCompletedText;
+
+  /// No description provided for @invitationDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It\'s a great way to keep finances organized as a couple, family, or with a roommate.'**
+  String get invitationDescriptionText;
+
+  /// No description provided for @shareInvitationText.
+  ///
+  /// In en, this message translates to:
+  /// **'Share invitation'**
+  String get shareInvitationText;
 }
 
 class _AppLocalizationsDelegate

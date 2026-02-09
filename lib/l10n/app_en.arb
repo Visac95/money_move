@@ -220,5 +220,7 @@
     "ahorroCompletedIncomeText": "Congratulations! You've reached your saving goal 🎉",
     "restantePorAhorrarText": "The remaining amount to reach the goal is",
     "contributeToText": "Contribute to",
-    "saveCompletedText": "Saving Completed"
+    "saveCompletedText": "Saving Completed",
+    "invitationDescriptionText": "Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It's a great way to keep finances organized as a couple, family, or with a roommate.",
+    "shareInvitationText": "Share invitation"
 }

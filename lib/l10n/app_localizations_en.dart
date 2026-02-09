@@ -688,4 +688,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveCompletedText => 'Saving Completed';
+
+  @override
+  String get invitationDescriptionText =>
+      'Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It\'s a great way to keep finances organized as a couple, family, or with a roommate.';
+
+  @override
+  String get shareInvitationText => 'Share invitation';
 }

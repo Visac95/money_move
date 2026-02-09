@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/join_space_screen.dart';
+import 'package:money_move/utils/clipboard_utils.dart';
+import 'package:money_move/utils/share_invitation_code.dart';
 import 'package:money_move/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -100,6 +102,7 @@ class SharedIntroScreen extends StatelessWidget {
                             spaceProvider,
                             strings,
                             accentColor,
+                            colorScheme,
                           ),
                   ],
                 ),
@@ -247,6 +250,7 @@ class SharedIntroScreen extends StatelessWidget {
     SpaceProvider spaceProvider,
     AppLocalizations strings,
     Color accentColor,
+    ColorScheme colorScheme,
   ) {
     return Column(
       children: [
@@ -271,6 +275,7 @@ class SharedIntroScreen extends StatelessWidget {
               // 4. LÓGICA FINAL
               if (invitacion != null) {
                 showModalBottomSheet(
+                  backgroundColor: colorScheme.surface,
                   showDragHandle: true,
                   context: context,
                   shape: const RoundedRectangleBorder(
@@ -294,10 +299,60 @@ class SharedIntroScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
-                            style: const TextStyle(
-                              fontSize: 30,
-                              letterSpacing: 2,
+                            "${strings.invitationCreatedText}:",
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          Card(
+                            elevation: 6,
+                            margin: const EdgeInsets.all(5),
+                            color: colorScheme.surfaceContainer,
+                            // 1. Clips the ripple effect to the card's rounded corners
+                            clipBehavior: Clip.hardEdge,
+                            child: InkWell(
+                              // 2. InkWell gives the visual "splash" feedback
+                              splashColor: colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
+                              onTap: () async {
+                                await copyToClipboard(
+                                  context,
+                                  invitacion.codeInvitacion,
+                                  message: strings.copiedToClipboardText,
+                                );
+                              },
+                              child: Padding(
+                                // 3. Padding goes INSIDE InkWell so the ripple covers the whole area
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .center, // Center content
+                                  children: [
+                                    Text(
+                                      invitacion.codeInvitacion,
+                                      style: TextStyle(
+                                        fontSize: 35,
+                                        letterSpacing:
+                                            4, // Increased slightly for "code" look
+                                        fontWeight: FontWeight
+                                            .bold, // Makes it pop more
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 16,
+                                    ), // More breathing room
+                                    Icon(
+                                      Icons.copy,
+                                      color: colorScheme
+                                          .primary, // Tint the icon for style
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -307,27 +362,38 @@ class SharedIntroScreen extends StatelessWidget {
                                 icon: const Icon(Icons.copy),
                                 label: Text(strings.copyLinkText),
                                 onPressed: () async {
-                                  // 1. Copiar al portapapeles
-                                  await Clipboard.setData(
-                                    ClipboardData(
-                                      text: invitacion.linkInvitacion,
-                                    ),
+                                  await copyToClipboard(
+                                    context,
+                                    invitacion.linkInvitacion,
+                                    message: strings.copiedToClipboardText,
                                   );
+                                },
+                              ),
+                              Spacer(),
+                              ElevatedButton.icon(
+                                icon: const Icon(Icons.share_rounded),
+                                label: Text(strings.shareInvitationText),
+                                onPressed: () async {
+                                  print("🥹🥹🥹🥹 empezando");
+                                  final result = await shareInvitationCode(
+                                    context,
+                                    invitacion.codeInvitacion,
+                                    invitacion.linkInvitacion,
+                                  );
+                                  print("🥹🥹🥹🥹 que paso?");
 
-                                  if (!context.mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        strings.copiedToClipboardText,
-                                      ),
-                                      backgroundColor: Colors.green,
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
+                                  if (result == ShareResultStatus.success) {
+                                    print(
+                                      '😊🙂🤨🫤😖🥹🤢Thank you for sharing the picture!',
+                                    );
+                                  } else {
+                                    print("something went wrong🤢🤢🤢🤢");
+                                  }
                                 },
                               ),
                             ],
                           ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     );
