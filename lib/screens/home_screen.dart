@@ -23,6 +23,8 @@ class HomeScreen extends StatelessWidget {
     if (tProvider.isLoading) {
       return const LoadingScreen();
     }
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: modeColorAppbar(context, 0.4),

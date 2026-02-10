@@ -698,7 +698,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invitationShareText1 =>
-      'Hey! 👋 I\'m using Money Move to manage my finances. ';
+      'Hey! 👋 I\'m using Money Move to manage my finances.';
 
   @override
   String get invitationShareText2 => 'Join me using my invitation link';

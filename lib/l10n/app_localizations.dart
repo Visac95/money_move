@@ -1439,7 +1439,7 @@ abstract class AppLocalizations {
   /// No description provided for @invitationShareText1.
   ///
   /// In en, this message translates to:
-  /// **'Hey! 👋 I\'m using Money Move to manage my finances. '**
+  /// **'Hey! 👋 I\'m using Money Move to manage my finances.'**
   String get invitationShareText1;
 
   /// No description provided for @invitationShareText2.
