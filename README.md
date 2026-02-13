@@ -76,7 +76,7 @@ YouTube demo link:
 If you want to run the project locally:
 
 ```bash
-git clone https://github.com/Visac95/moneymove.git
+git clone https://github.com/Visac95/money_move.git
 cd moneymove
 flutter pub get
 flutter run
