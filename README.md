@@ -1,6 +1,7 @@
 # MoneyMove
 
-MoneyMove is a mobile application built with Flutter that helps users manage and track their personal and colectives finances in a simple and intuitive way.
+MoneyMove is a cross-platform mobile application built with Flutter that helps users manage and track their personal and shared finances with real-time synchronization and collaborative features.
+
 
 ---
 
@@ -18,8 +19,6 @@ MoneyMove is a mobile application built with Flutter that helps users manage and
 - Dark and light mode support
 - Multi-language support (English & Spanish)
 
-
-
 ---
 
 ## 🛠 Tech Stack
@@ -27,8 +26,8 @@ MoneyMove is a mobile application built with Flutter that helps users manage and
 - Flutter
 - Dart
 - State Management: Provider
-- [Database: Firebase / Local storage]
-- [API in process]
+- Firebase (Firestore)
+- SharedPreferences
 
 ---
 
@@ -77,7 +76,7 @@ YouTube demo link:
 If you want to run the project locally:
 
 ```bash
-git clone https://github.com/your-username/moneymove.git
+git clone https://github.com/Visac95/moneymove.git
 cd moneymove
 flutter pub get
 flutter run
