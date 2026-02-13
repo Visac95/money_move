@@ -709,4 +709,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invitationShareText4 => 'Invitation to Money Move';
+
+  @override
+  String get joinSpaceText => 'Join Space';
 }

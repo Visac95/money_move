@@ -1459,6 +1459,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invitation to Money Move'**
   String get invitationShareText4;
+
+  /// No description provided for @joinSpaceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Space'**
+  String get joinSpaceText;
 }
 
 class _AppLocalizationsDelegate

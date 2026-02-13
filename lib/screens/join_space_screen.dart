@@ -41,7 +41,7 @@ class JoinSpaceScreen extends StatelessWidget {
     final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Unirse al Espacio')),
+      appBar: AppBar(title: Text(strings.joinSpaceText)),
 
       // 2. CAMBIAMOS EL TIPO DEL FUTURE BUILDER PARA QUE ACEPTE 3 COSAS
       body: FutureBuilder<(Invitacion?, InvitacionStatus, UserModel?)>(

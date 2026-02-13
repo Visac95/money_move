@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
-import 'package:money_move/screens/home_screen.dart';
+import 'package:money_move/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TutorialAppScreen extends StatefulWidget {
@@ -105,7 +104,6 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
           // ---------------------------------------------
           // LAYER 4: The RIGHT Arrow (Next / Finish)
           // ---------------------------------------------
-          
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
@@ -170,7 +168,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
     if (mounted) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     }
   }

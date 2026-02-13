@@ -711,4 +711,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invitationShareText4 => 'Invitación a Money Move';
+
+  @override
+  String get joinSpaceText => 'Unirse al Espacio';
 }

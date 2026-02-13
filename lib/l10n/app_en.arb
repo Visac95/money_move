@@ -226,5 +226,6 @@
     "invitationShareText1": "Hey! 👋 I'm using Money Move to manage my finances.",
     "invitationShareText2": "Join me using my invitation link",
     "invitationShareText3": "You can also write the code in the secction of 'Shared Space'",
-    "invitationShareText4": "Invitation to Money Move"
+    "invitationShareText4": "Invitation to Money Move",
+    "joinSpaceText": "Join Space"
 }
