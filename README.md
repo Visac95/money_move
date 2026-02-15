@@ -23,26 +23,30 @@ MoneyMove is a cross-platform mobile application built with Flutter that helps u
 
 ## 🛠 Tech Stack
 
-- Flutter
+- Flutter (Mobile Framework)
 - Dart
-- State Management: Provider
-- Firebase (Firestore)
-- SharedPreferences
+- Provider (State Management)
+- Firebase Firestore (Cloud Database)
+- SharedPreferences (Local Storage)
 
 ---
 
 ## 📱 Screenshots
 
+## 📱 Screenshots
+
 <p align="center">
-  <img src="assets/screenshots/homeScreen.png" width="300"/>
-  <img src="assets/screenshots/addTrax.png" width="300"/>
-  <img src="assets/screenshots/debtsView.png" width="300"/>
-  <img src="assets/screenshots/savingView.png" width="300"/>
-  <img src="assets/screenshots/stats.png" width="300"/>
-  <img src="assets/screenshots/sharedMode.png" width="300"/>
-  <img src="assets/screenshots/allTransactions.png" width="300"/>
-  <img src="assets/screenshots/allDebts.png" width="300"/>
+  <img src="assets/screenshots/homeScreen.png" width="250"/>
+  <img src="assets/screenshots/addTrax.png" width="250"/>
+  <img src="assets/screenshots/stats.png" width="250"/>
 </p>
+
+<p align="center">
+  <img src="assets/screenshots/debtsView.png" width="250"/>
+  <img src="assets/screenshots/savingView.png" width="250"/>
+  <img src="assets/screenshots/sharedMode.png" width="250"/>
+</p>
+
 
 
 
@@ -87,6 +91,6 @@ If you want to run the project locally:
 
 ```bash
 git clone https://github.com/Visac95/money_move.git
-cd moneymove
+cd money_move
 flutter pub get
 flutter run
