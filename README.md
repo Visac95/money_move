@@ -33,13 +33,12 @@ MoneyMove is a cross-platform mobile application built with Flutter that helps u
 
 ## 📱 Screenshots
 
-![Home Screen](assets/screenshots/homeScreen.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
-![Summary Screen](assets/screenshots/allTransactions.png)
+<p align="center">
+  <img src="assets/screenshots/home.png" width="250"/>
+  <img src="assets/screenshots/stats.png" width="250"/>
+  <img src="assets/screenshots/debt.png" width="250"/>
+</p>
+
 
 
 ---
