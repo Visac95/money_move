@@ -712,4 +712,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get joinSpaceText => 'Join Space';
+
+  @override
+  String get tutorialTitle => 'Welcome to MoneyMove!';
+
+  @override
+  String get tutorialSubtitle =>
+      'MoneyMove is your ideal companion for managing your personal finances easily and efficiently. With this app, you can record your income and expenses, set saving goals, and maintain full control over your money. Let\'s discover how it works!';
+
+  @override
+  String get tutorialTitle1 => 'Register Transactions';
+
+  @override
+  String get tutorialSubtitle1 =>
+      'Log your income and expenses in seconds. Assign categories like \'Food\' or \'Transport\' to keep your ledger organized.';
+
+  @override
+  String get tutorialTitle2 => 'Visual Insights';
+
+  @override
+  String get tutorialSubtitle2 =>
+      'Understand your habits with detailed charts. Remember: Money Move tracks your records; it does not move actual money from your bank.';
+
+  @override
+  String get tutorialTitle3 => 'Debts & Savings';
+
+  @override
+  String get tutorialSubtitle3 =>
+      'Track money you owe or save. Add payments or contributions to watch your progress bars update in real-time.';
+
+  @override
+  String get tutorialTitle4 => 'Space Mode';
+
+  @override
+  String get tutorialSubtitle4 =>
+      'Manage finances with a partner or friend. Activate Space Mode to share a budget and see the same data together.';
+
+  @override
+  String get tutorialSkipButton => 'Skip';
+
+  @override
+  String get tutorialStartButton => 'Start Now';
 }

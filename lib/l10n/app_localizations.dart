@@ -1465,6 +1465,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Join Space'**
   String get joinSpaceText;
+
+  /// No description provided for @tutorialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to MoneyMove!'**
+  String get tutorialTitle;
+
+  /// No description provided for @tutorialSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'MoneyMove is your ideal companion for managing your personal finances easily and efficiently. With this app, you can record your income and expenses, set saving goals, and maintain full control over your money. Let\'s discover how it works!'**
+  String get tutorialSubtitle;
+
+  /// Title for the first page: Income and Expense tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Register Transactions'**
+  String get tutorialTitle1;
+
+  /// Subtitle explaining how to record transactions
+  ///
+  /// In en, this message translates to:
+  /// **'Log your income and expenses in seconds. Assign categories like \'Food\' or \'Transport\' to keep your ledger organized.'**
+  String get tutorialSubtitle1;
+
+  /// Title for the second page: Charts and Disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Visual Insights'**
+  String get tutorialTitle2;
+
+  /// Subtitle explaining charts and clarifying the app does not handle real bank transfers
+  ///
+  /// In en, this message translates to:
+  /// **'Understand your habits with detailed charts. Remember: Money Move tracks your records; it does not move actual money from your bank.'**
+  String get tutorialSubtitle2;
+
+  /// Title for the third page: Goals and Obligations
+  ///
+  /// In en, this message translates to:
+  /// **'Debts & Savings'**
+  String get tutorialTitle3;
+
+  /// Subtitle explaining the progress tracking for debts and savings
+  ///
+  /// In en, this message translates to:
+  /// **'Track money you owe or save. Add payments or contributions to watch your progress bars update in real-time.'**
+  String get tutorialSubtitle3;
+
+  /// Title for the fourth page: Shared Finances
+  ///
+  /// In en, this message translates to:
+  /// **'Space Mode'**
+  String get tutorialTitle4;
+
+  /// Subtitle explaining the shared finance feature
+  ///
+  /// In en, this message translates to:
+  /// **'Manage finances with a partner or friend. Activate Space Mode to share a budget and see the same data together.'**
+  String get tutorialSubtitle4;
+
+  /// Label for the button to skip the tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get tutorialSkipButton;
+
+  /// Label for the button to finish the tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Start Now'**
+  String get tutorialStartButton;
 }
 
 class _AppLocalizationsDelegate

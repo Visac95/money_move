@@ -13,7 +13,6 @@ class UltimasDeudas extends StatefulWidget {
 }
 
 class _UltimasDeudasState extends State<UltimasDeudas> {
-  
   // Formateador de fecha simple
   String _formatDate(DateTime date) {
     String day = date.day.toString().padLeft(2, '0');
@@ -25,7 +24,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DeudaProvider>(context);
     // Tomamos solo las últimas 2 o 3 deudas para la vista previa
-    final lista = provider.deudas.where((d)=>d.pagada==false).toList(); 
+    final lista = provider.deudas.where((d) => d.pagada == false).toList();
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -42,7 +41,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha:0.5),
+                  color: Colors.grey.withValues(alpha: 0.5),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -65,7 +64,8 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   ),
                 ),
                 Icon(
-                  Icons.handshake_rounded, // Icono diferente a "history" para diferenciarlo
+                  Icons
+                      .handshake_rounded, // Icono diferente a "history" para diferenciarlo
                   color: colorScheme.outline,
                   size: 20,
                 ),
@@ -79,8 +79,11 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Column(
                     children: [
-                      Icon(Icons.check_circle_outline, 
-                           size: 40, color: colorScheme.tertiary), // Color distinto al de transacciones
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 40,
+                        color: colorScheme.tertiary,
+                      ), // Color distinto al de transacciones
                       const SizedBox(height: 8),
                       Text(
                         strings.noOutstandingDeudas,
@@ -98,23 +101,25 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final deuda = lista[index];
-                    
+
                     // --- LÓGICA DE COLORES DE TU REFERENCIA ---
                     final bool soyDeudor = deuda.debo;
-                    final Color statusColor = soyDeudor 
-                        ? AppColors.accent // Rojo/Naranja
+                    final Color statusColor = soyDeudor
+                        ? AppColors
+                              .accent // Rojo/Naranja
                         : AppColors.income; // Verde
-                    
+
                     // Icono direccional
                     final IconData statusIcon = soyDeudor
-                        ? Icons.arrow_outward_rounded // Sale dinero
+                        ? Icons
+                              .arrow_outward_rounded // Sale dinero
                         : Icons.arrow_downward_rounded; // Entra dinero
 
                     return InkWell(
                       // Opcional: Si quieres que al tocar vaya al detalle, implementa onTap aquí
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
-                         // Aquí podrías navegar a editar deuda si quisieras
+                        // Aquí podrías navegar a editar deuda si quisieras
                       },
                       child: Row(
                         children: [
@@ -128,8 +133,8 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                             ),
                             alignment: Alignment.center,
                             child: Text(
-                              deuda.involucrado.isNotEmpty 
-                                  ? deuda.involucrado[0].toUpperCase() 
+                              deuda.involucrado.isNotEmpty
+                                  ? deuda.involucrado[0].toUpperCase()
                                   : "?",
                               style: TextStyle(
                                 fontSize: 18,
@@ -138,9 +143,9 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(width: 12),
-                          
+
                           // 2. DATOS DE LA DEUDA
                           Expanded(
                             child: Column(
@@ -159,7 +164,11 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                                 const SizedBox(height: 2),
                                 Row(
                                   children: [
-                                    Icon(Icons.person, size: 12, color: colorScheme.outline),
+                                    Icon(
+                                      Icons.person,
+                                      size: 12,
+                                      color: colorScheme.outline,
+                                    ),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
@@ -184,14 +193,19 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(statusIcon, size: 14, color: statusColor),
+                                  Icon(
+                                    statusIcon,
+                                    size: 14,
+                                    color: statusColor,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     "\$${deuda.monto.toStringAsFixed(2)}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 15,
-                                      color: statusColor, // Usamos el color semántico
+                                      color:
+                                          statusColor, // Usamos el color semántico
                                     ),
                                   ),
                                 ],
@@ -203,7 +217,7 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
                                   fontSize: 10,
                                   color: colorScheme.outline,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -218,10 +232,14 @@ class _UltimasDeudasState extends State<UltimasDeudas> {
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () => Provider.of<UiProvider>(context, listen: false)
-                  .selectedIndex = 2, // Cambiado a 2 asumiendo que "Deudas" es la 3ra pestaña
+              onPressed: () => Provider.of<UiProvider>(
+                context,
+                listen: false,
+              ).selectedIndex = 3,
               style: TextButton.styleFrom(
-                backgroundColor: colorScheme.secondaryContainer.withValues(alpha:0.4),
+                backgroundColor: colorScheme.secondaryContainer.withValues(
+                  alpha: 0.4,
+                ),
                 foregroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(

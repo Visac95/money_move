@@ -227,5 +227,52 @@
     "invitationShareText2": "Join me using my invitation link",
     "invitationShareText3": "You can also write the code in the secction of 'Shared Space'",
     "invitationShareText4": "Invitation to Money Move",
-    "joinSpaceText": "Join Space"
+    "joinSpaceText": "Join Space",
+    "tutorialTitle": "Welcome to MoneyMove!",
+    "tutorialSubtitle": "MoneyMove is your ideal companion for managing your personal finances easily and efficiently. With this app, you can record your income and expenses, set saving goals, and maintain full control over your money. Let's discover how it works!",
+
+    "tutorialTitle1": "Register Transactions",
+    "@tutorialTitle1": {
+        "description": "Title for the first page: Income and Expense tracking"
+    },
+    "tutorialSubtitle1": "Log your income and expenses in seconds. Assign categories like 'Food' or 'Transport' to keep your ledger organized.",
+    "@tutorialSubtitle1": {
+        "description": "Subtitle explaining how to record transactions"
+    },
+
+    "tutorialTitle2": "Visual Insights",
+    "@tutorialTitle2": {
+        "description": "Title for the second page: Charts and Disclaimer"
+    },
+    "tutorialSubtitle2": "Understand your habits with detailed charts. Remember: Money Move tracks your records; it does not move actual money from your bank.",
+    "@tutorialSubtitle2": {
+        "description": "Subtitle explaining charts and clarifying the app does not handle real bank transfers"
+    },
+
+    "tutorialTitle3": "Debts & Savings",
+    "@tutorialTitle3": {
+        "description": "Title for the third page: Goals and Obligations"
+    },
+    "tutorialSubtitle3": "Track money you owe or save. Add payments or contributions to watch your progress bars update in real-time.",
+    "@tutorialSubtitle3": {
+        "description": "Subtitle explaining the progress tracking for debts and savings"
+    },
+
+    "tutorialTitle4": "Space Mode",
+    "@tutorialTitle4": {
+        "description": "Title for the fourth page: Shared Finances"
+    },
+    "tutorialSubtitle4": "Manage finances with a partner or friend. Activate Space Mode to share a budget and see the same data together.",
+    "@tutorialSubtitle4": {
+        "description": "Subtitle explaining the shared finance feature"
+    },
+
+    "tutorialSkipButton": "Skip",
+    "@tutorialSkipButton": {
+        "description": "Label for the button to skip the tutorial"
+    },
+    "tutorialStartButton": "Start Now",
+    "@tutorialStartButton": {
+        "description": "Label for the button to finish the tutorial"
+    }
 }

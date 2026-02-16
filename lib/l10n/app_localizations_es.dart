@@ -714,4 +714,45 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get joinSpaceText => 'Unirse al Espacio';
+
+  @override
+  String get tutorialTitle => '¡Bienvenid@ a MoneyMove!';
+
+  @override
+  String get tutorialSubtitle =>
+      'MoneyMove es tu compañero ideal para gestionar tus finanzas personales de manera fácil y eficiente. Con esta aplicación, podrás registrar tus ingresos y gastos, establecer metas de ahorro, y mantener un control total sobre tu dinero. ¡Vamos a descubrir cómo funciona!';
+
+  @override
+  String get tutorialTitle1 => 'Registra Movimientos';
+
+  @override
+  String get tutorialSubtitle1 =>
+      'Anota tus ingresos y egresos rápidamente. Asigna categorías para mantener todo organizado y saber en qué gastas.';
+
+  @override
+  String get tutorialTitle2 => 'Análisis y Realidad';
+
+  @override
+  String get tutorialSubtitle2 =>
+      'Entiende tus hábitos con gráficos detallados. Nota: Esta app es solo de registro, no mueve dinero real de tus cuentas bancarias.';
+
+  @override
+  String get tutorialTitle3 => 'Deudas y Ahorros';
+
+  @override
+  String get tutorialSubtitle3 =>
+      'Crea metas de ahorro y registra deudas. Realiza abonos o aportes manuales y mira cómo avanza tu progreso en tiempo real.';
+
+  @override
+  String get tutorialTitle4 => 'Space Mode';
+
+  @override
+  String get tutorialSubtitle4 =>
+      'Finanzas compartidas. Activa el Space Mode para gestionar un presupuesto en conjunto con tu pareja o socio.';
+
+  @override
+  String get tutorialSkipButton => 'Omitir';
+
+  @override
+  String get tutorialStartButton => 'Empezar';
 }

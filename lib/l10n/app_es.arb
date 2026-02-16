@@ -227,5 +227,22 @@
     "invitationShareText2": "Únete a mi usando mi enlace de invitación",
     "invitationShareText3": "También puedes escribir el código en la sección de 'Espacio Compartido'",
     "invitationShareText4": "Invitación a Money Move",
-    "joinSpaceText": "Unirse al Espacio"
+    "joinSpaceText": "Unirse al Espacio",
+    "tutorialTitle": "¡Bienvenid@ a MoneyMove!",
+    "tutorialSubtitle": "MoneyMove es tu compañero ideal para gestionar tus finanzas personales de manera fácil y eficiente. Con esta aplicación, podrás registrar tus ingresos y gastos, establecer metas de ahorro, y mantener un control total sobre tu dinero. ¡Vamos a descubrir cómo funciona!",
+
+    "tutorialTitle1": "Registra Movimientos",
+    "tutorialSubtitle1": "Anota tus ingresos y egresos rápidamente. Asigna categorías para mantener todo organizado y saber en qué gastas.",
+
+    "tutorialTitle2": "Análisis y Realidad",
+    "tutorialSubtitle2": "Entiende tus hábitos con gráficos detallados. Nota: Esta app es solo de registro, no mueve dinero real de tus cuentas bancarias.",
+
+    "tutorialTitle3": "Deudas y Ahorros",
+    "tutorialSubtitle3": "Crea metas de ahorro y registra deudas. Realiza abonos o aportes manuales y mira cómo avanza tu progreso en tiempo real.",
+
+    "tutorialTitle4": "Space Mode",
+    "tutorialSubtitle4": "Finanzas compartidas. Activa el Space Mode para gestionar un presupuesto en conjunto con tu pareja o socio.",
+
+    "tutorialSkipButton": "Omitir",
+    "tutorialStartButton": "Empezar"
 }
