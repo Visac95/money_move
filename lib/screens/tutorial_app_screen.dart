@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         colorScheme,
         strings.tutorialTitle,
         strings.tutorialSubtitle,
-        colorScheme.surface,
+        colorScheme.primary,
         Icons.face,
       ),
       _buildTutorialPage(
@@ -43,7 +44,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         colorScheme,
         strings.tutorialTitle2,
         strings.tutorialSubtitle2,
-        colorScheme.primary,
+        colorScheme.inversePrimary,
         Icons.deblur,
       ),
       _buildTutorialPage(
@@ -51,7 +52,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         colorScheme,
         strings.tutorialTitle3,
         strings.tutorialSubtitle3,
-        colorScheme.inversePrimary,
+        AppColors.income,
         Icons.generating_tokens,
       ),
     ];
@@ -164,8 +165,8 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         onTap: onTap,
         customBorder: const CircleBorder(),
         child: Container(
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             // Semi-transparent background for contrast
@@ -207,7 +208,7 @@ Widget _buildTutorialPage(
     color: mainColor, // El color de fondo principal de la página
     child: SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
