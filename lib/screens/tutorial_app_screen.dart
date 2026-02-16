@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
-import 'package:money_move/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TutorialAppScreen extends StatefulWidget {
@@ -29,7 +28,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         strings.tutorialTitle,
         strings.tutorialSubtitle,
         colorScheme.primary,
-        Icons.face,
+        Icons.account_balance_wallet,
       ),
       _buildTutorialPage(
         context,
@@ -37,7 +36,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         strings.tutorialTitle1,
         strings.tutorialSubtitle1,
         colorScheme.surface,
-        Icons.face,
+        Icons.payments,
       ),
       _buildTutorialPage(
         context,
@@ -45,7 +44,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         strings.tutorialTitle2,
         strings.tutorialSubtitle2,
         colorScheme.inversePrimary,
-        Icons.deblur,
+        Icons.bar_chart,
       ),
       _buildTutorialPage(
         context,
@@ -53,7 +52,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
         strings.tutorialTitle3,
         strings.tutorialSubtitle3,
         AppColors.income,
-        Icons.generating_tokens,
+        Icons.receipt_long,
       ),
     ];
 
@@ -189,10 +188,7 @@ class _TutorialAppScreenState extends State<TutorialAppScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('skipAppTutorial', true);
     if (!context.mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MainScreen()),
-    );
+    Navigator.pop(context);
   }
 }
 

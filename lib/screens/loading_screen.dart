@@ -14,10 +14,8 @@ class LoadingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // TU LOGO AQUÍ (Asegúrate de tener la imagen en assets)
-            // Si no tienes imagen aún, usa un Icono temporalmente
             Image.asset(
-              'assets/Logo.png', // ⚠️ CAMBIA ESTO por tu ruta real
+              '/assets/logo.png', // ⚠️ CAMBIA ESTO por tu ruta real
               width: 100,
               height: 100,
               errorBuilder: (c, o, s) =>
