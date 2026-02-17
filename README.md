@@ -80,7 +80,7 @@ MoneyMove is a cross-platform mobile application built with Flutter that helps u
 ## ▶️ Demo
 
 YouTube demo link:  
-(https://github.com/Visac95/money_move)
+https://youtu.be/8dEJ1r6tIDI
 
 ---
 
