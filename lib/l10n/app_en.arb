@@ -274,5 +274,13 @@
     "tutorialStartButton": "Start Now",
     "@tutorialStartButton": {
         "description": "Label for the button to finish the tutorial"
+    },
+    "dontHaveAccountText": "Don't have an account? Sign up here",
+    "@dontHaveAccountText": {
+        "description": "Text prompting users to sign up if they don't have an account"
+    },
+    "haveAccountText": "Already have an account? Sign in here",
+    "@haveAccountText": {
+        "description": "Text prompting users to sign in if they already have an account"
     }
 }

@@ -37,10 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // 1. TÍTULO O LOGO
-                Icon(
-                  Icons.account_balance_wallet,
-                  size: 80,
-                  color: colorScheme.primary,
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: colorScheme.outline.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 100,
+                    height: 100,
+                    //errorBuilder: (c, o, s) =>
+                    //   const Icon(Icons.account_balance_wallet, size: 80),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -115,8 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Text(
                     _isLogin
-                        ? "¿No tienes cuenta? Regístrate aquí"
-                        : "¿Ya tienes cuenta? Inicia sesión",
+                        ? strings.dontHaveAccountText
+                        : strings.haveAccountText,
                   ),
                 ),
 

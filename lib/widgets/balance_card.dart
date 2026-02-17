@@ -28,23 +28,19 @@ class BalanceCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        // FONDO: Blanco en día, Gris Oscuro en noche
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
-        // SOMBRA: Solo la mostramos en modo claro (isDark == false)
-        // En modo oscuro, las sombras ensucian la interfaz.
         boxShadow: isDark
             ? []
             : [
                 BoxShadow(
                   color: Colors.black.withValues(
                     alpha: 0.1,
-                  ), // Bajé un poco la opacidad para que sea más elegante
+                  ), 
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
               ],
-        // Opcional: Un borde muy fino en modo oscuro para definir la tarjeta
         border: isDark
             ? Border.all(color: Colors.white.withValues(alpha: 0.1))
             : null,

@@ -32,7 +32,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: modeColorAppbar(context, 0.4),
+              backgroundColor: modeColorAppbar(context, 1, isTranxScreen: true),
               pinned: true,
               floating: true,
               elevation: 0,

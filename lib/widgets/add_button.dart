@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/screens/add_ahorro_screen.dart';
 import 'package:money_move/screens/add_deuda_screen.dart';
 import 'package:money_move/screens/add_transaction_screen.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
@@ -35,7 +37,7 @@ class AddButton extends StatelessWidget {
         // Usamos onPrimary (generalmente blanco).
         icon: Icon(Icons.add, color: colorScheme.onPrimary, size: 28),
 
-        offset: const Offset(0, -120),
+        offset: const Offset(0, -160),
 
         // El color del fondo del menú emergente
         color: colorScheme.surface,
@@ -72,7 +74,21 @@ class AddButton extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   AppLocalizations.of(context)!.addDeuda,
-                  style: TextStyle(color: colorScheme.error),
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: "ahorro",
+            child: Row(
+              children: [
+                // Usamos el color de error del tema para mantener coherencia (suele ser rojo)
+                Icon(Icons.savings, color: AppColors.income),
+                const SizedBox(width: 10),
+                Text(
+                  AppLocalizations.of(context)!.addAhorroText,
+                  style: TextStyle(color: colorScheme.onSurface),
                 ),
               ],
             ),
@@ -91,6 +107,10 @@ class AddButton extends StatelessWidget {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => const AddDeudaScreen()));
+    } else if (value == "ahorro") {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const AddAhorroScreen()));
     }
   }
 }

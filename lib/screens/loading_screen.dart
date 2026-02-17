@@ -15,11 +15,11 @@ class LoadingScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              '/assets/logo.png', // ⚠️ CAMBIA ESTO por tu ruta real
+              'assets/logo.png',
               width: 100,
               height: 100,
-              errorBuilder: (c, o, s) =>
-                  const Icon(Icons.account_balance_wallet, size: 80),
+              //errorBuilder: (c, o, s) =>
+              //   const Icon(Icons.account_balance_wallet, size: 80),
             ),
             const SizedBox(height: 30),
             // LA BOLITA GIRANDO

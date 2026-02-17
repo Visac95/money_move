@@ -244,5 +244,8 @@
     "tutorialSubtitle4": "Finanzas compartidas. Activa el Space Mode para gestionar un presupuesto en conjunto con tu pareja o socio.",
 
     "tutorialSkipButton": "Omitir",
-    "tutorialStartButton": "Empezar"
+    "tutorialStartButton": "Empezar",
+    "dontHaveAccountText": "¿No tienes cuenta? Regístrate aquí",
+    "haveAccountText": "¿Ya tienes cuenta? Inicia sesión"
+
 }

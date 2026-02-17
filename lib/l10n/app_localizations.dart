@@ -1537,6 +1537,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Now'**
   String get tutorialStartButton;
+
+  /// Text prompting users to sign up if they don't have an account
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? Sign up here'**
+  String get dontHaveAccountText;
+
+  /// Text prompting users to sign in if they already have an account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in here'**
+  String get haveAccountText;
 }
 
 class _AppLocalizationsDelegate

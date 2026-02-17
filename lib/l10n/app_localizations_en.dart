@@ -753,4 +753,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tutorialStartButton => 'Start Now';
+
+  @override
+  String get dontHaveAccountText => 'Don\'t have an account? Sign up here';
+
+  @override
+  String get haveAccountText => 'Already have an account? Sign in here';
 }

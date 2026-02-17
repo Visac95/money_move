@@ -755,4 +755,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tutorialStartButton => 'Empezar';
+
+  @override
+  String get dontHaveAccountText => '¿No tienes cuenta? Regístrate aquí';
+
+  @override
+  String get haveAccountText => '¿Ya tienes cuenta? Inicia sesión';
 }
