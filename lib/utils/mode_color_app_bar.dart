@@ -17,10 +17,10 @@ Color modeColorAppbar(
   String? spaceId = user?.spaceId;
 
   if (spaceId != null) {
-    if (isTranxScreen != null && isTranxScreen){
-      if(isSpaceMode){
+    if (isTranxScreen != null && isTranxScreen) {
+      if (isSpaceMode) {
         return isDark ? Color(0xFF623B0D) : Color(0xFFECCC95);
-      } else{
+      } else {
         return isDark ? Color(0xFF3F436E) : Color(0xFFB2AFEF);
       }
     }
@@ -29,6 +29,9 @@ Color modeColorAppbar(
     } else {
       return colorScheme.primary.withValues(alpha: alpha ?? 0.4);
     }
+  }
+  if (isTranxScreen != null && isTranxScreen) {
+    return isDark ? Color(0xFF121212) : Color(0xFFF9FAFB);
   } else {
     return Colors.transparent;
   }
