@@ -17,20 +17,20 @@ class VerDeuda extends StatelessWidget {
   final String deudaId;
   const VerDeuda({super.key, required this.deudaId});
 
-  // --- CORRECCIÓN 1: Ahora pedimos la 'deudaActual' como parámetro ---
-  Future<double?> _mostrarDialogoAbono(
+  // --- MODIFICACIÓN: Ahora devuelve un Record (monto, autoTransaction) ---
+  Future<(double?, bool?)> _mostrarDialogoAbono(
     BuildContext context,
     Deuda deudaActual,
   ) async {
-    final double? montoIngresado = await showDialog<double>(
+    final result = await showDialog<(double?, bool?)>(
       context: context,
       builder: (context) => AddAbonoWindow(
-        debo: deudaActual.debo, // Usamos datos frescos
-        monto: deudaActual.monto, // Usamos datos frescos
+        debo: deudaActual.debo,
+        monto: deudaActual.monto,
         abono: deudaActual.abono,
       ),
     );
-    return montoIngresado;
+    return result ?? (null, null);
   }
 
   @override
@@ -38,7 +38,11 @@ class VerDeuda extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final strings = AppLocalizations.of(context)!;
-    final deuda = Provider.of<DeudaProvider>(context).getDeudaById(deudaId)!;
+    final deuda = Provider.of<DeudaProvider>(context).getDeudaById(deudaId);
+
+    // Manejo de seguridad por si se borra y el widget sigue montado
+    if (deuda == null) return const SizedBox.shrink();
+
     final Color mainColor = deuda.debo ? AppColors.accent : AppColors.income;
 
     final double restante = deuda.monto - deuda.abono;
@@ -222,7 +226,7 @@ class VerDeuda extends StatelessWidget {
   Column _actionButtons(
     AppLocalizations strings,
     BuildContext context,
-    Deuda deuda, // <--- Esta es la deuda actualizada que viene del build
+    Deuda deuda,
     ColorScheme colorScheme,
     void Function(AbonoStatus status) caseNotiAbono,
   ) {
@@ -239,7 +243,11 @@ class VerDeuda extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      _pagarDeudaTotalmente(context, deuda);
+                      // Llamamos al nuevo widget de confirmación
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => _MarkAsPaidDeuda(deuda: deuda),
+                      );
                     },
                     icon: Icon(
                       Icons.check_circle_outline,
@@ -269,13 +277,13 @@ class VerDeuda extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      // --- CORRECCIÓN 2: Pasamos la 'deuda' actualizada a la función ---
-                      final double? monto = await _mostrarDialogoAbono(
-                        context,
-                        deuda,
-                      );
+                      // --- MODIFICACIÓN: Desestructuramos el monto y el autoTransaction ---
+                      final (monto, autoTransaction) =
+                          await _mostrarDialogoAbono(context, deuda);
+
                       if (!context.mounted) return;
-                      if (monto != null && context.mounted) {
+
+                      if (monto != null && autoTransaction != null) {
                         final status =
                             await Provider.of<DeudaProvider>(
                               context,
@@ -288,6 +296,7 @@ class VerDeuda extends StatelessWidget {
                                 listen: false,
                               ),
                               context,
+                              autoTransaction, // Pasamos el booleano al provider
                             );
 
                         if (!context.mounted) return;
@@ -550,56 +559,115 @@ class VerDeuda extends StatelessWidget {
       ],
     );
   }
+}
 
-  void _pagarDeudaTotalmente(BuildContext context, Deuda deuda) {
+// --- NUEVO WIDGET: Reemplaza la antigua función _pagarDeudaTotalmente ---
+class _MarkAsPaidDeuda extends StatefulWidget {
+  final Deuda deuda;
+  const _MarkAsPaidDeuda({required this.deuda});
+
+  @override
+  State<_MarkAsPaidDeuda> createState() => _MarkAsPaidDeudaState();
+}
+
+class _MarkAsPaidDeudaState extends State<_MarkAsPaidDeuda> {
+  bool _autoTransaction = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final strings = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(strings.paidDeudasText),
-        content: Text(strings.markAsPaidConfirmText),
-        actions: [
-          // Botón Cancelar
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(), // Cierra solo el diálogo
-            child: Text(strings.cancelText),
-          ),
+    final deuda = widget.deuda;
 
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.expense),
-            onPressed: () async {
-              Navigator.of(ctx).pop();
+    // Puedes ajustar el color base según sea 'debo' o 'me deben'
+    final mainColor = deuda.debo ? AppColors.accent : AppColors.income;
 
-              try {
-                if (!context.mounted) return;
-                await Provider.of<DeudaProvider>(
-                  context,
-                  listen: false,
-                ).pagarDeuda(
-                  deuda,
-                  Provider.of<TransactionProvider>(context, listen: false),
-                  context,
-                );
+    return AlertDialog(
+      title: Text(strings.paidDeudasText),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(strings.markAsPaidConfirmText),
+          const SizedBox(height: 15),
 
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(strings.deudaPaidSucessText),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              } catch (e) {
-                return;
-              }
+          // Checkbox para transacción automática
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _autoTransaction = !_autoTransaction;
+              });
             },
-            child: Text(strings.markAsPaidText),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Checkbox(
+                    value: _autoTransaction,
+                    activeColor: mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        _autoTransaction = val ?? true;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    strings
+                        .generateAutoTransactionText, // Igual, asegúrate de ponerlo en tu AppLocalizations si lo necesitas
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(strings.cancelText),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: AppColors.expense),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            try {
+              if (!context.mounted) return;
+              await Provider.of<DeudaProvider>(
+                context,
+                listen: false,
+              ).pagarDeuda(
+                deuda,
+                Provider.of<TransactionProvider>(context, listen: false),
+                context,
+                _autoTransaction, // <--- Pasamos la decisión al provider
+              );
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(strings.deudaPaidSucessText),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                Navigator.of(context).pop(); // Saca la pantalla de VerDeuda
+              }
+            } catch (e) {
+              // Manejo de errores si es necesario
+            }
+          },
+          child: Text(strings.markAsPaidText),
+        ),
+      ],
     );
   }
 }

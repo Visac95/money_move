@@ -143,24 +143,26 @@ class DeudaProvider extends ChangeNotifier {
     Deuda d,
     TransactionProvider transProvider,
     BuildContext context,
+    bool autoTransaction,
   ) async {
     try {
       // Calculamos cuánto faltaba
       final montoRestante = d.monto - d.abono;
-
+      if (autoTransaction) {
+        await transProvider.addTransaction(
+          Transaction(
+            userId: FirebaseAuth.instance.currentUser!.uid,
+            title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
+            description: d.description,
+            monto: montoRestante,
+            saldo: transProvider.saldoActual,
+            fecha: DateTime.now(),
+            categoria: AppConstants.catDebt,
+            isExpense: d.debo, // Si yo debía, pagar es un Gasto.
+          ),
+        );
+      }
       // Creamos la transacción de pago
-      await transProvider.addTransaction(
-        Transaction(
-          userId: FirebaseAuth.instance.currentUser!.uid,
-          title: "${AppLocalizations.of(context)!.pagoDeText} ${d.title}",
-          description: d.description,
-          monto: montoRestante,
-          saldo: transProvider.saldoActual,
-          fecha: DateTime.now(),
-          categoria: AppConstants.catDebt,
-          isExpense: d.debo, // Si yo debía, pagar es un Gasto.
-        ),
-      );
 
       // Actualizamos la deuda a PAGADA
       d.pagada = true;
@@ -179,6 +181,7 @@ class DeudaProvider extends ChangeNotifier {
     double monto,
     TransactionProvider provider,
     BuildContext context,
+    bool autoTransaction,
   ) async {
     if (monto <= 0) return AbonoStatus.montoInvalido;
 
@@ -192,22 +195,23 @@ class DeudaProvider extends ChangeNotifier {
         d.abono = d.monto; // Ajuste exacto
         d.pagada = true;
       }
-
-      // Generamos la transacción del abono
-      await provider.addTransaction(
-        Transaction(
-          userId: d.userId,
-          title:
-              "${(d.pagada ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${d.title}",
-          description: d.description,
-          monto: monto,
-          saldo: provider.saldoActual,
-          fecha: DateTime.now(),
-          categoria: AppConstants.catDebt,
-          isExpense: d.debo,
-          deudaAsociada: d.id,
-        ),
-      );
+      if (autoTransaction) {
+        // Generamos la transacción del abono
+        await provider.addTransaction(
+          Transaction(
+            userId: d.userId,
+            title:
+                "${(d.pagada ? AppLocalizations.of(context)!.pagoDeText : AppLocalizations.of(context)!.abonoForText)} ${d.title}",
+            description: d.description,
+            monto: monto,
+            saldo: provider.saldoActual,
+            fecha: DateTime.now(),
+            categoria: AppConstants.catDebt,
+            isExpense: d.debo,
+            deudaAsociada: d.id,
+          ),
+        );
+      }
 
       // Actualizamos en Firebase
       await updateDeuda(d);
