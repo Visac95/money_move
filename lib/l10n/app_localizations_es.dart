@@ -761,4 +761,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get haveAccountText => '¿Ya tienes cuenta? Inicia sesión';
+
+  @override
+  String get spaceTutorialTitle => 'Bienvenido al modo \"Espacio Compartido\"';
+
+  @override
+  String get spaceTutorialSubtitle =>
+      'A partir de ahora, organizar las cuentas en equipo es mucho más fácil. Aquí te explicamos cómo funciona tu nueva herramienta:';
+
+  @override
+  String get spaceTutorialPoint1Title => 'Sincronización en tiempo real:';
+
+  @override
+  String get spaceTutorialPoint1Subtitle =>
+      'Cada transacción, deuda y ahorro que registres en este modo le aparecerá al instante a tu compañero/a (y viceversa). Ambos tendrán el control total de lo que pasa con el dinero compartido.';
+
+  @override
+  String get spaceTutorialPoint2Title =>
+      'Tu dinero personal sigue siendo privado:';
+
+  @override
+  String get spaceTutorialPoint2Subtitle =>
+      'Entrar a este espacio no mezcla tus finanzas. Puedes seguir llevando el registro de tu dinero personal de forma totalmente independiente; tu compañero/a solo verá lo que agregues en el modo compartido.';
+
+  @override
+  String get spaceTutorialPoint3Title => 'Cambia de modo con un solo toque:';
+
+  @override
+  String get spaceTutorialPoint3Subtitle =>
+      'En la parte superior de tus pantallas vas a notar un nuevo interruptor (switch). Úsalo para saltar rápidamente entre tu Modo Personal y el Espacio Compartido sin complicaciones.';
+
+  @override
+  String get spaceTutorialPoint4Title => '¿Qué pasa si te sales?';
+
+  @override
+  String get spaceTutorialPoint4Subtitle =>
+      'Puedes abandonar el Espacio Compartido en cualquier momento desde los ajustes. Sin embargo, ten en cuenta que al salir perderás el acceso a todo el registro e historial de finanzas que construyeron juntos.';
 }

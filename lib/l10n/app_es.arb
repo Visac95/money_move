@@ -246,6 +246,16 @@
     "tutorialSkipButton": "Omitir",
     "tutorialStartButton": "Empezar",
     "dontHaveAccountText": "¿No tienes cuenta? Regístrate aquí",
-    "haveAccountText": "¿Ya tienes cuenta? Inicia sesión"
+    "haveAccountText": "¿Ya tienes cuenta? Inicia sesión",
 
+    "spaceTutorialTitle": "Bienvenido al modo \"Espacio Compartido\"",
+    "spaceTutorialSubtitle": "A partir de ahora, organizar las cuentas en equipo es mucho más fácil. Aquí te explicamos cómo funciona tu nueva herramienta:",
+    "spaceTutorialPoint1Title": "Sincronización en tiempo real:",
+    "spaceTutorialPoint1Subtitle": "Cada transacción, deuda y ahorro que registres en este modo le aparecerá al instante a tu compañero/a (y viceversa). Ambos tendrán el control total de lo que pasa con el dinero compartido.",
+    "spaceTutorialPoint2Title": "Tu dinero personal sigue siendo privado:",
+    "spaceTutorialPoint2Subtitle": "Entrar a este espacio no mezcla tus finanzas. Puedes seguir llevando el registro de tu dinero personal de forma totalmente independiente; tu compañero/a solo verá lo que agregues en el modo compartido.",
+    "spaceTutorialPoint3Title": "Cambia de modo con un solo toque:",
+    "spaceTutorialPoint3Subtitle": "En la parte superior de tus pantallas vas a notar un nuevo interruptor (switch). Úsalo para saltar rápidamente entre tu Modo Personal y el Espacio Compartido sin complicaciones.",
+    "spaceTutorialPoint4Title": "¿Qué pasa si te sales?",
+    "spaceTutorialPoint4Subtitle": "Puedes abandonar el Espacio Compartido en cualquier momento desde los ajustes. Sin embargo, ten en cuenta que al salir perderás el acceso a todo el registro e historial de finanzas que construyeron juntos."
 }

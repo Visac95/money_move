@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/loading_screen.dart';
-import 'package:money_move/screens/tutorial_app_screen.dart';
+import 'package:money_move/screens/tutorials/space_tutorial_screen.dart';
+import 'package:money_move/screens/tutorials/tutorial_app_screen.dart';
 import 'package:money_move/utils/mode_color_app_bar.dart';
 import 'package:money_move/widgets/add_button.dart';
 import 'package:money_move/widgets/balance_card.dart';
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     if (mounted) {
       final bool skipTutorial = prefs?.getBool("skipAppTutorial") ?? false;
+      final bool skipSpaceTutorial = prefs?.getBool("skipSpaceTutorial") ?? false;
       
       if (!skipTutorial) {
         Navigator.push(
@@ -42,9 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(builder: (context) => TutorialAppScreen()),
         );
       }
+      if (!skipSpaceTutorial) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SpaceTutorialScreen()),
+        );
+      }
       setState(() {}); 
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

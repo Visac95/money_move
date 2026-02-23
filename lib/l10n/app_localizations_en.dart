@@ -759,4 +759,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haveAccountText => 'Already have an account? Sign in here';
+
+  @override
+  String get spaceTutorialTitle => 'Welcome to \"Shared Space\" mode';
+
+  @override
+  String get spaceTutorialSubtitle =>
+      'From now on, managing your finances as a team is much easier. Here\'s how your new tool works:';
+
+  @override
+  String get spaceTutorialPoint1Title => 'Real-time synchronization:';
+
+  @override
+  String get spaceTutorialPoint1Subtitle =>
+      'Every transaction, debt, and saving you record in this mode will instantly appear to your partner (and vice versa). Both of you will have full control over what happens with the shared money.';
+
+  @override
+  String get spaceTutorialPoint2Title => 'Your personal money remains private:';
+
+  @override
+  String get spaceTutorialPoint2Subtitle =>
+      'Entering this space doesn\'t mix your finances. You can continue tracking your personal money completely independently; your partner will only see what you add in the shared mode.';
+
+  @override
+  String get spaceTutorialPoint3Title => 'Switch modes with a single tap:';
+
+  @override
+  String get spaceTutorialPoint3Subtitle =>
+      'At the top of your screens, you will notice a new toggle switch. Use it to quickly jump between your Personal Mode and the Shared Space without any hassle.';
+
+  @override
+  String get spaceTutorialPoint4Title => 'What happens if you leave?';
+
+  @override
+  String get spaceTutorialPoint4Subtitle =>
+      'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.';
 }

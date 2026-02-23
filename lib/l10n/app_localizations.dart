@@ -1549,6 +1549,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Already have an account? Sign in here'**
   String get haveAccountText;
+
+  /// No description provided for @spaceTutorialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to \"Shared Space\" mode'**
+  String get spaceTutorialTitle;
+
+  /// No description provided for @spaceTutorialSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'From now on, managing your finances as a team is much easier. Here\'s how your new tool works:'**
+  String get spaceTutorialSubtitle;
+
+  /// No description provided for @spaceTutorialPoint1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time synchronization:'**
+  String get spaceTutorialPoint1Title;
+
+  /// No description provided for @spaceTutorialPoint1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every transaction, debt, and saving you record in this mode will instantly appear to your partner (and vice versa). Both of you will have full control over what happens with the shared money.'**
+  String get spaceTutorialPoint1Subtitle;
+
+  /// No description provided for @spaceTutorialPoint2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal money remains private:'**
+  String get spaceTutorialPoint2Title;
+
+  /// No description provided for @spaceTutorialPoint2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Entering this space doesn\'t mix your finances. You can continue tracking your personal money completely independently; your partner will only see what you add in the shared mode.'**
+  String get spaceTutorialPoint2Subtitle;
+
+  /// No description provided for @spaceTutorialPoint3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch modes with a single tap:'**
+  String get spaceTutorialPoint3Title;
+
+  /// No description provided for @spaceTutorialPoint3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'At the top of your screens, you will notice a new toggle switch. Use it to quickly jump between your Personal Mode and the Shared Space without any hassle.'**
+  String get spaceTutorialPoint3Subtitle;
+
+  /// No description provided for @spaceTutorialPoint4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens if you leave?'**
+  String get spaceTutorialPoint4Title;
+
+  /// No description provided for @spaceTutorialPoint4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.'**
+  String get spaceTutorialPoint4Subtitle;
 }
 
 class _AppLocalizationsDelegate
