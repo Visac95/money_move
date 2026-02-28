@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/providers/space_provider.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/screens/loading_screen.dart';
 import 'package:money_move/screens/tutorials/space_tutorial_screen.dart';
@@ -33,35 +34,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> cargarPreferencias() async {
     prefs = await SharedPreferences.getInstance();
-    
+
     if (mounted) {
       final bool skipTutorial = prefs?.getBool("skipAppTutorial") ?? false;
-      final bool skipSpaceTutorial = prefs?.getBool("skipSpaceTutorial") ?? false;
-      
-      if (!skipTutorial) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TutorialAppScreen()),
-        );
-      }
-      if (!skipSpaceTutorial) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SpaceTutorialScreen()),
-        );
-      }
-      setState(() {}); 
+      final bool skipSpaceTutorial =
+          prefs?.getBool("skipSpaceTutorial") ?? false;
+
+      // CORRECCIÓN 1: Agregar listen: false
+      final spaceProv = Provider.of<SpaceProvider>(context, listen: false);
+
+      // CORRECCIÓN 2: Esperar a que la pantalla termine de construirse para navegar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!skipTutorial) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TutorialAppScreen()),
+          );
+        } else if (spaceProv.isInSpace && !skipSpaceTutorial) {
+          // Usamos 'else if' para evitar abrir los dos tutoriales al mismo tiempo
+          // si por alguna razón el usuario no ha visto ninguno de los dos.
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SpaceTutorialScreen()),
+          );
+        }
+      });
+
+      setState(() {});
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tProvider = Provider.of<TransactionProvider>(context);
+    final tProvider = Provider.of<TransactionProvider>(context, listen: false);
 
     if (tProvider.isLoading || prefs == null) {
-      return const LoadingScreen();
+      return LoadingScreen();
     }
 
     return Scaffold(

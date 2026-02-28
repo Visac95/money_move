@@ -107,6 +107,7 @@ class TransactionProvider extends ChangeNotifier {
     } else {
       _spaceTransactions = [];
       if (_isSpaceMode) _isLoading = false;
+      notifyListeners();
     }
   }
 

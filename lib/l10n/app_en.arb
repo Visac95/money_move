@@ -292,5 +292,6 @@
     "spaceTutorialPoint3Title": "Switch modes with a single tap:",
     "spaceTutorialPoint3Subtitle": "At the top of your screens, you will notice a new toggle switch. Use it to quickly jump between your Personal Mode and the Shared Space without any hassle.",
     "spaceTutorialPoint4Title": "What happens if you leave?",
-    "spaceTutorialPoint4Subtitle": "You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together."
+    "spaceTutorialPoint4Subtitle": "You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.",
+    "continueText": "Continue"
 }

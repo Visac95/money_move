@@ -794,4 +794,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get spaceTutorialPoint4Subtitle =>
       'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.';
+
+  @override
+  String get continueText => 'Continue';
 }

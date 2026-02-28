@@ -188,11 +188,13 @@ class JoinSpaceScreen extends StatelessWidget {
                               ),
                             );
 
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MainScreen(),
+                                builder: (context) => const MainScreen(),
                               ),
+                              (route) =>
+                                  false, // Al devolver false, destruye todas las rutas anteriores
                             );
                           },
                           style: FilledButton.styleFrom(

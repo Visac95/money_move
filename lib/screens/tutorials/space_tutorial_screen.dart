@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SpaceTutorialScreen extends StatelessWidget {
   const SpaceTutorialScreen({super.key});
@@ -15,7 +16,7 @@ class SpaceTutorialScreen extends StatelessWidget {
           padding: const EdgeInsets.only(
             left: 15,
             right: 15,
-            bottom: 15,
+            bottom: 50,
             top: 60,
           ),
           child: Column(
@@ -74,11 +75,40 @@ class SpaceTutorialScreen extends StatelessWidget {
                 strings.spaceTutorialPoint4Title,
                 strings.spaceTutorialPoint4Subtitle,
               ),
+              SizedBox(height: 20),
+              //Buton to skipt
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton.icon(
+                  onPressed: () async {
+                    _finishTutorial(context);
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.inversePrimary,
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: const Icon(Icons.link, size: 24),
+                  label: Text(
+                    strings.continueText,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _finishTutorial(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('skipSpaceTutorial', true);
+    if (!context.mounted) return;
+    Navigator.pop(context);
   }
 }
 

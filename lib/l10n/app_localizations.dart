@@ -1609,6 +1609,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.'**
   String get spaceTutorialPoint4Subtitle;
+
+  /// No description provided for @continueText.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueText;
 }
 
 class _AppLocalizationsDelegate

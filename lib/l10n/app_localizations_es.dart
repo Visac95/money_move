@@ -797,4 +797,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get spaceTutorialPoint4Subtitle =>
       'Puedes abandonar el Espacio Compartido en cualquier momento desde los ajustes. Sin embargo, ten en cuenta que al salir perderás el acceso a todo el registro e historial de finanzas que construyeron juntos.';
+
+  @override
+  String get continueText => 'Continuar';
 }
