@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:money_move/config/app_colors.dart';
 import 'package:money_move/l10n/app_localizations.dart';
@@ -278,6 +279,7 @@ class SharedIntroScreen extends StatelessWidget {
                   backgroundColor: colorScheme.surface,
                   showDragHandle: true,
                   context: context,
+                  isScrollControlled: true,
                   shape: const RoundedRectangleBorder(
                     // Redondeamos las esquinas de arriba
                     borderRadius: BorderRadius.vertical(
@@ -287,114 +289,143 @@ class SharedIntroScreen extends StatelessWidget {
                   builder: (context) {
                     return Container(
                       margin: EdgeInsets.only(right: 20, left: 20, bottom: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            strings.invitationCreatedText,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            "${strings.invitationCreatedText}:",
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          Card(
-                            elevation: 6,
-                            margin: const EdgeInsets.all(5),
-                            color: colorScheme.surfaceContainer,
-                            // 1. Clips the ripple effect to the card's rounded corners
-                            clipBehavior: Clip.hardEdge,
-                            child: InkWell(
-                              // 2. InkWell gives the visual "splash" feedback
-                              splashColor: colorScheme.primary.withValues(
-                                alpha: 0.1,
-                              ),
-                              onTap: () async {
-                                await copyToClipboard(
-                                  context,
-                                  invitacion.codeInvitacion,
-                                  message: strings.copiedToClipboardText,
-                                );
-                              },
-                              child: Padding(
-                                // 3. Padding goes INSIDE InkWell so the ripple covers the whole area
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .center, // Center content
-                                  children: [
-                                    Text(
-                                      invitacion.codeInvitacion,
-                                      style: TextStyle(
-                                        fontSize: 35,
-                                        letterSpacing:
-                                            4, // Increased slightly for "code" look
-                                        fontWeight: FontWeight
-                                            .bold, // Makes it pop more
-                                        color: colorScheme.onSurface,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ), // More breathing room
-                                    Icon(
-                                      Icons.copy,
-                                      color: colorScheme
-                                          .primary, // Tint the icon for style
-                                    ),
-                                  ],
-                                ),
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              strings.invitationCreatedText,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.copy),
-                                label: Text(strings.copyLinkText),
-                                onPressed: () async {
+                            const SizedBox(height: 20),
+                            Text(
+                              "${strings.invitationCreatedText}:",
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Card(
+                              elevation: 6,
+                              margin: const EdgeInsets.all(5),
+                              color: colorScheme.surfaceContainer,
+                              // 1. Clips the ripple effect to the card's rounded corners
+                              clipBehavior: Clip.hardEdge,
+                              child: InkWell(
+                                // 2. InkWell gives the visual "splash" feedback
+                                splashColor: colorScheme.primary.withValues(
+                                  alpha: 0.1,
+                                ),
+                                onTap: () async {
                                   await copyToClipboard(
                                     context,
-                                    invitacion.linkInvitacion,
+                                    invitacion.codeInvitacion,
                                     message: strings.copiedToClipboardText,
                                   );
                                 },
+                                child: Padding(
+                                  // 3. Padding goes INSIDE InkWell so the ripple covers the whole area
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center, // Center content
+                                    children: [
+                                      Text(
+                                        invitacion.codeInvitacion,
+                                        style: TextStyle(
+                                          fontSize: 35,
+                                          letterSpacing:
+                                              4, // Increased slightly for "code" look
+                                          fontWeight: FontWeight
+                                              .bold, // Makes it pop more
+                                          color: colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ), // More breathing room
+                                      Icon(
+                                        Icons.copy,
+                                        color: colorScheme
+                                            .primary, // Tint the icon for style
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Spacer(),
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.share_rounded),
-                                label: Text(strings.shareInvitationText),
-                                onPressed: () async {
-                                  print("🥹🥹🥹🥹 empezando");
-                                  final result = await shareInvitationCode(
-                                    context,
-                                    invitacion.codeInvitacion,
-                                    invitacion.linkInvitacion,
-                                  );
-                                  print("🥹🥹🥹🥹 que paso?");
-
-                                  if (result == ShareResultStatus.success) {
-                                    print(
-                                      '😊🙂🤨🫤😖🥹🤢Thank you for sharing the picture!',
+                            ),
+                            const SizedBox(height: 20),
+                            Card(
+                              elevation: 5,
+                              color: colorScheme.surfaceContainer,
+                              // 1. Clips the ripple effect to the card's rounded corners
+                              clipBehavior: Clip.hardEdge,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: QrImageView(
+                                  data: invitacion.linkInvitacion,
+                                  version: QrVersions.auto,
+                                  size: 320,
+                                  backgroundColor: colorScheme
+                                      .surface, // Fundamental para modo oscuro
+                                  eyeStyle: QrEyeStyle(
+                                    eyeShape: QrEyeShape.square,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                  dataModuleStyle: QrDataModuleStyle(
+                                    dataModuleShape: QrDataModuleShape.square,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                  errorCorrectionLevel: QrErrorCorrectLevel.H,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.copy),
+                                  label: Text(strings.copyLinkText),
+                                  onPressed: () async {
+                                    await copyToClipboard(
+                                      context,
+                                      invitacion.linkInvitacion,
+                                      message: strings.copiedToClipboardText,
                                     );
-                                  } else {
-                                    print("something went wrong🤢🤢🤢🤢");
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                        ],
+                                  },
+                                ),
+                                Spacer(),
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.share_rounded),
+                                  label: Text(strings.shareInvitationText),
+                                  onPressed: () async {
+                                    print("🥹🥹🥹🥹 empezando");
+                                    final result = await shareInvitationCode(
+                                      context,
+                                      invitacion.codeInvitacion,
+                                      invitacion.linkInvitacion,
+                                    );
+                                    print("🥹🥹🥹🥹 que paso?");
+
+                                    if (result == ShareResultStatus.success) {
+                                      print(
+                                        '😊🙂🤨🫤😖🥹🤢Thank you for sharing the picture!',
+                                      );
+                                    } else {
+                                      print("something went wrong🤢🤢🤢🤢");
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     );
                   },
