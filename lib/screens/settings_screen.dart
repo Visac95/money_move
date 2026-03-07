@@ -1,6 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:money_move/models/user_model.dart';
-import 'package:money_move/providers/user_provider.dart';
 import 'package:money_move/screens/shared_intro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
@@ -16,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
     final strings = AppLocalizations.of(context)!;
     // Accedemos al provider de idioma
     final localeProv = Provider.of<LocaleProvider>(context);
-    final user = Provider.of<UserProvider>(context).usuarioActual;
+    final fbUser = FirebaseAuth.instance.currentUser;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -29,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           children: [
             //------Profile Information-----------
-            _profileContainer(colorScheme, user, strings, context),
+            _profileContainer(colorScheme, fbUser, strings, context),
             _SectionHeader(title: strings.profileText, icon: Icons.person),
             _navigationCardOption(
               context,
@@ -143,7 +142,7 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _profileContainer(
     ColorScheme colorScheme,
-    UserModel? user,
+    User? user,
     AppLocalizations strings,
     BuildContext context,
   ) {
@@ -192,10 +191,10 @@ class SettingsScreen extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 50, // Un pelín más pequeño para balancear
                     backgroundColor: colorScheme.surfaceContainerHighest,
-                    backgroundImage: user?.photoUrl != null
-                        ? NetworkImage(user!.photoUrl!)
+                    backgroundImage: user?.photoURL != null
+                        ? NetworkImage(user!.photoURL!)
                         : null,
-                    child: user?.photoUrl == null
+                    child: user?.photoURL == null
                         ? Icon(
                             Icons.person_rounded,
                             size: 50,
@@ -209,7 +208,7 @@ class SettingsScreen extends StatelessWidget {
 
                 // 3. NOMBRE (Grande y fuerte)
                 Text(
-                  user?.name ?? "Usuario",
+                  user?.displayName ?? "Usuario",
                   style: TextStyle(
                     color: colorScheme.onSurface,
                     fontSize: 22, // Más grande

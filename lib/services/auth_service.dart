@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:money_move/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // --- LOGIN CON GOOGLE ---
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
     try {
       // 1. Disparar el flujo de autenticación nativo (abre la ventanita de elegir cuenta)
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -26,6 +29,11 @@ class AuthService {
 
       // 4. Iniciar sesión en Firebase con esa credencial
       // (Esto es lo que dispara el cambio en el AuthGate)
+      if (context.mounted) {
+        final userProv = Provider.of<UserProvider>(context, listen: false);
+        userProv.initSubscription();
+      }
+
       return await _auth.signInWithCredential(credential);
     } catch (e) {
       //print("Error en Google Sign-In: $e");
@@ -34,12 +42,14 @@ class AuthService {
   }
 
   // --- CERRAR SESIÓN ---
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     await _googleSignIn.signOut();
     await _auth.signOut();
+    if (context.mounted) {
+      final userProv = Provider.of<UserProvider>(context, listen: false);
+      userProv.stopSubscription();
+    }
   }
-
-  // En auth_service.dart
 
   // 1. Iniciar sesión con Correo y Clave
   Future<User?> signInWithEmail(String email, String password) async {

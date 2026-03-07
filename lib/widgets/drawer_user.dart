@@ -82,7 +82,7 @@ Drawer drawerUser(BuildContext context) {
           ),
           onTap: () async {
             // 1. Llamamos al servicio para desconectar Google y Firebase
-            await AuthService().logout();
+            await AuthService().logout(context);
           },
         ),
         const SizedBox(height: 20),

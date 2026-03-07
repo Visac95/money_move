@@ -235,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _handleGoogleLogin(strings) async {
     setState(() => _isLoading = true);
     try {
-      await AuthService().signInWithGoogle();
+      await AuthService().signInWithGoogle(context);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
