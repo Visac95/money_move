@@ -1615,6 +1615,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue'**
   String get continueText;
+
+  /// No description provided for @accountText.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountText;
+
+  /// No description provided for @logOutDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out of your current session'**
+  String get logOutDescriptionText;
 }
 
 class _AppLocalizationsDelegate

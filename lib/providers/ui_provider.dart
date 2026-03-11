@@ -10,4 +10,12 @@ class UiProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  // --------------------------------------------------------
+  // RESETEO DE UI (Para cerrar sesión)
+  // --------------------------------------------------------
+  void clearData() {
+    _selectedIndex = 0;
+    notifyListeners();
+    print("🧹 UiProvider reseteado (Volviendo a la pestaña principal).");
+  }
 }

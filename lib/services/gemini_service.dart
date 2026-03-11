@@ -24,13 +24,18 @@ class GeminiService {
       """;
     
     try{
+      print("🤢🤢 try gemini");
       final content = [Content.text(prompt)];
+      print("🤢🤢 $content");
       final response = await _model.generateContent(content);
+      print("🤢🤢 $response");
 
 
       return response.text?.trim() ?? "manual_category";
     } catch(e) {
+      print("🤢🤢 ERROR FATAL DE GEMINI: $e");
       return "manual_category";
+      
     }// Resultado de prueba
   }
 }

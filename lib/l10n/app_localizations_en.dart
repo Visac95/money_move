@@ -797,4 +797,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueText => 'Continue';
+
+  @override
+  String get accountText => 'Account';
+
+  @override
+  String get logOutDescriptionText => 'Log out of your current session';
 }

@@ -61,11 +61,16 @@ class UserProvider extends ChangeNotifier {
   }
 
   // Método para cerrar la escucha cuando cierras sesión (importante)
-  void stopSubscription() {
+  // --------------------------------------------------------
+  // RESETEO DE DATOS (Para cerrar sesión de forma segura)
+  // --------------------------------------------------------
+  void clearData() {
     _userSubscription?.cancel();
     _userSubscription = null;
     _usuarioActual = null;
+    
     notifyListeners();
+    print("🧹 UserProvider reseteado exitosamente.");
   }
 
   Future<UserModel?> getUserByUid(String uid) async {

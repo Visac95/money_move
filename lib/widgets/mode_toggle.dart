@@ -117,8 +117,8 @@ class ModeToggle extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(
-        horizontal: showText ? 12 : 6,
-        vertical: showText ? 6 : 2,
+        horizontal: showText ? 12 : 4,
+        vertical: showText ? 6 : 1,
       ),
       decoration: BoxDecoration(
         // Si está activo, usamos el color de superficie (blanco/negro), si no, transparente
@@ -134,9 +134,9 @@ class ModeToggle extends StatelessWidget {
             color: showText
                 ? (isActive
                       ? activeColor
-                      : colorScheme.surface.withOpacity(0.6))
+                      : colorScheme.surface.withValues(alpha:  0.6))
                 : colorScheme.surface,
-            size: showText ? 20 : 18,
+            size: showText ? 20 : 15,
           ),
 
           if (showText) ...[

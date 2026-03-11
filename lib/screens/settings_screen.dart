@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:money_move/screens/login_screen.dart';
 import 'package:money_move/screens/shared_intro_screen.dart';
+import 'package:money_move/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:money_move/providers/settings_provider.dart';
 import 'package:money_move/providers/locale_provider.dart';
@@ -36,6 +38,7 @@ class SettingsScreen extends StatelessWidget {
               strings.sharedSpaceDescriptionText,
               SharedIntroScreen(),
               Icons.people_alt_outlined,
+              false,
             ),
             // --- SECCIÓN IDIOMA ---
             _SectionHeader(title: strings.generalText, icon: Icons.settings),
@@ -109,6 +112,15 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            _SectionHeader(title: strings.accountText, icon: Icons.person),
+            _navigationCardOption(
+              context,
+              strings.logoutText,
+              strings.logOutDescriptionText,
+              SharedIntroScreen(),
+              Icons.person,
+              true,
+            ),
           ],
         ),
       ),
@@ -121,6 +133,7 @@ class SettingsScreen extends StatelessWidget {
     String subtitle,
     dynamic screen,
     IconData icon,
+    bool logOut,
   ) {
     return Card(
       elevation: 0,
@@ -131,9 +144,19 @@ class SettingsScreen extends StatelessWidget {
         title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(subtitle),
         trailing: IconButton(
-          onPressed: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => screen)),
+          onPressed: () async {
+            if (!logOut) {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => screen));
+            }
+
+            await AuthService().logout(context);
+            if (!context.mounted) return;
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+          },
           icon: Icon(Icons.arrow_forward_ios, size: 16),
         ),
       ),

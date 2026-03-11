@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:money_move/providers/ahorro_provider.dart';
+import 'package:money_move/providers/deuda_provider.dart';
+import 'package:money_move/providers/space_provider.dart';
+import 'package:money_move/providers/transaction_provider.dart';
+import 'package:money_move/providers/ui_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,43 +16,63 @@ class AuthService {
   // --- LOGIN CON GOOGLE ---
   Future<UserCredential?> signInWithGoogle(BuildContext context) async {
     try {
-      // 1. Disparar el flujo de autenticación nativo (abre la ventanita de elegir cuenta)
+      print("🔍 DEBUG 1: Iniciando Google Sign-In...");
+
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      // Si el usuario cancela la ventana, devolvemos null
-      if (googleUser == null) return null;
+      if (googleUser == null) {
+        print("🔍 DEBUG 2: El usuario canceló o cerró la ventanita de Google.");
+        return null;
+      }
 
-      // 2. Obtener los detalles de autenticación de la petición
+      print("🔍 DEBUG 3: Cuenta seleccionada: ${googleUser.email}");
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      // 3. Crear una credencial nueva para Firebase
+      print("🔍 DEBUG 4: Credenciales obtenidas, conectando a Firebase...");
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // 4. Iniciar sesión en Firebase con esa credencial
-      // (Esto es lo que dispara el cambio en el AuthGate)
+      final result = await _auth.signInWithCredential(credential);
+      print(
+        "🔍 DEBUG 5: ¡Login exitoso en Firebase para ${result.user?.email}!",
+      );
+
       if (context.mounted) {
+        print("🔍 DEBUG 6: Inicializando UserProvider...");
         final userProv = Provider.of<UserProvider>(context, listen: false);
         userProv.initSubscription();
       }
 
-      return await _auth.signInWithCredential(credential);
+      print("🔍 DEBUG 7: ¡Todo listo, devolviendo credenciales!");
+      return result;
     } catch (e) {
-      //print("Error en Google Sign-In: $e");
-      rethrow; // Pasamos el error para que la pantalla lo muestre
+      print("🚨🚨🚨 ERROR FATAL EN LOGIN: $e"); // ESTO NOS DIRÁ LA VERDAD
+      rethrow;
     }
   }
 
   // --- CERRAR SESIÓN ---
+  // --- CERRAR SESIÓN ---
   Future<void> logout(BuildContext context) async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    if (context.mounted) {
-      final userProv = Provider.of<UserProvider>(context, listen: false);
-      userProv.stopSubscription();
+    try {
+      // TRUCO MÁGICO: Usar disconnect en lugar de signOut para Google
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+      
+      if (context.mounted) {
+        Provider.of<UserProvider>(context, listen: false).clearData();
+        Provider.of<TransactionProvider>(context, listen: false).clearData();
+        Provider.of<DeudaProvider>(context, listen: false).clearData();
+        Provider.of<AhorroProvider>(context, listen: false).clearData();
+        Provider.of<SpaceProvider>(context, listen: false).clearData();
+        Provider.of<UiProvider>(context, listen: false).clearData();
+      }
+      print("🚪 Logout completado al 100%");
+    } catch (e) {
+      print("🚨 Error durante el logout: $e");
     }
   }
 

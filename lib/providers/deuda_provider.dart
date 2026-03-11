@@ -239,6 +239,37 @@ class DeudaProvider extends ChangeNotifier {
       return null;
     }
   }
+  // --------------------------------------------------------
+  // RESETEO DE DATOS (Para cerrar sesión)
+  // --------------------------------------------------------
+  void clearData() {
+    // 1. Cancelar suscripciones a Firebase
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+
+    // 2. Limpiar usuario y espacio
+    _currentUser = null;
+    _currentSpaceId = null;
+
+    // 3. Vaciar listas de deudas
+    _personalDeudas.clear();
+    _spaceDeudas.clear();
+
+    // 4. Restaurar variables de estado
+    _isSpaceMode = false;
+    _isLoading = true;
+
+    // 5. Notificar a la UI
+    notifyListeners();
+    print("🧹 DeudaProvider reseteado exitosamente.");
+  }
+
+  @override
+  void dispose() {
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+    super.dispose();
+  }
 }
 
 enum AbonoStatus { exito, montoInvalido, excedeDeuda, error }

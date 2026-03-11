@@ -272,4 +272,31 @@ class TransactionProvider extends ChangeNotifier {
     _spaceSub?.cancel();
     super.dispose();
   }
+
+  // --------------------------------------------------------
+  // 5. RESETEO DE DATOS (Para cerrar sesión de forma segura)
+  // --------------------------------------------------------
+  void clearData() {
+    // 1. Cancelar las conexiones activas a la base de datos
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+
+    // 2. Limpiar las credenciales de usuario
+    _currentUser = null;
+    _currentSpaceId = null;
+
+    // 3. Vaciar las listas de transacciones
+    _personalTransactions.clear();
+    _spaceTransactions.clear();
+
+    // 4. Restaurar variables de estado a sus valores por defecto
+    _isSpaceMode = false;
+    _isLoading = true; // Lo dejamos en true por si alguien vuelve a loguearse
+    _filtroActual = "all";
+    _catFiltroActual = "all";
+
+    // 5. Avisar a la UI que todo se borró
+    notifyListeners();
+    print("🧹 TransactionProvider reseteado exitosamente.");
+  }
 }

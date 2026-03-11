@@ -21,6 +21,7 @@ class AiCategoryProvider extends ChangeNotifier {
 
   // --- FUNCIÓN PRINCIPAL ---
   Future<void> requestClassification(String title) async {
+    print("🤢🤢 reques IN");
     //if (_manualCategory != null) return;
     if (title.trim().isEmpty) {
       _suggestedCategory = 'manual_category';
@@ -31,12 +32,15 @@ class AiCategoryProvider extends ChangeNotifier {
     notifyListeners(); // Avisamos a la UI que el spinner debe aparecer
 
     try {
+      print("🤢🤢 try");
       // Llamamos al servicio (y esperamos el resultado)
       final result = await _geminiService.classifyTransaction(title);
       
       _suggestedCategory = result;
+      print("🤢🤢 $result");
 
     } catch (e) {
+      print("🤢🤢 ERROR FATAL DE GEMINI: $e");
       _suggestedCategory = 'manual_category'; 
 
     } finally {

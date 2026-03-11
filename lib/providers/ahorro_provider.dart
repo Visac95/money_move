@@ -187,8 +187,7 @@ class AhorroProvider extends ChangeNotifier {
         await provider.addTransaction(
           Transaction(
             userId: a.userId,
-            title:
-                "${strings.contributeToText} ${a.title}",
+            title: "${strings.contributeToText} ${a.title}",
             description: "${a.description} - $description",
             monto: monto,
             saldo: provider.saldoActual,
@@ -217,5 +216,37 @@ class AhorroProvider extends ChangeNotifier {
     } catch (e) {
       return null;
     }
+  }
+
+  // --------------------------------------------------------
+  // RESETEO DE DATOS (Para cerrar sesión de forma segura)
+  // --------------------------------------------------------
+  void clearData() {
+    // 1. Cancelar suscripciones activas a Firebase
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+
+    // 2. Limpiar usuario y espacio asociado
+    _currentUser = null;
+    _currentSpaceId = null;
+
+    // 3. Vaciar las listas de ahorros
+    _personalAhorros.clear();
+    _spaceAhorros.clear();
+
+    // 4. Restaurar variables de estado a valores por defecto
+    _isSpaceMode = false;
+    _isLoading = true;
+
+    // 5. Notificar a la UI
+    notifyListeners();
+    print("🧹 AhorroProvider reseteado exitosamente.");
+  }
+
+  @override
+  void dispose() {
+    _personalSub?.cancel();
+    _spaceSub?.cancel();
+    super.dispose();
   }
 }

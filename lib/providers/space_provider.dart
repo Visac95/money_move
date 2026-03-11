@@ -44,7 +44,7 @@ class SpaceProvider extends ChangeNotifier {
 
       String shortCode = generarCodigoCorto();
       String spaceId = const Uuid().v4();
-      
+
       String linkInvitacion =
           "https://moneymove.visacstudio.online/invite?code=$shortCode";
 
@@ -107,7 +107,9 @@ class SpaceProvider extends ChangeNotifier {
         try {
           await deleteInvitacion(i.codeInvitacion);
         } catch (_) {
-          print("No se pudo borrar la invitación expirada (probablemente permisos)");
+          print(
+            "No se pudo borrar la invitación expirada (probablemente permisos)",
+          );
         }
         return InvitacionStatus.expired;
       }
@@ -233,12 +235,12 @@ class SpaceProvider extends ChangeNotifier {
       batch.update(guestRef, {'linkedAccountId': null, 'spaceId': null});
 
       await batch.commit();
-      
+
       // Intentamos borrar el space (si las reglas lo permiten)
       await firestore.collection("spaces").doc(spaceId).delete();
       print("📨✅ Space eliminado y usuarios desvinculados");
 
-      clearSpace();
+      clearData();
       notifyListeners();
       return true;
     } catch (e) {
@@ -303,7 +305,8 @@ class SpaceProvider extends ChangeNotifier {
             } else {
               print("⚠️ El documento del espacio no existe (¿Fue borrado?)");
               _currentSpace = null;
-              _isSpaceMode = false; // 🔥 Si borran el grupo, volvemos a personal
+              _isSpaceMode =
+                  false; // 🔥 Si borran el grupo, volvemos a personal
             }
             notifyListeners();
           },
@@ -314,12 +317,24 @@ class SpaceProvider extends ChangeNotifier {
   }
 
   // Método para limpiar todo (Logout o Salir del grupo)
-  void clearSpace() {
-    print("🧹 SpaceProvider: Limpiando espacio local");
+  // --------------------------------------------------------
+  // RESETEO DE DATOS (Para cerrar sesión o salir del grupo)
+  // --------------------------------------------------------
+  void clearData() {
+    print("🧹 SpaceProvider: Limpiando espacio local e invitaciones");
+
+    // 1. Cancelar suscripción al grupo
     _spaceSubscription?.cancel();
     _spaceSubscription = null;
+
+    // 2. Limpiar datos del espacio y modo de vista
     _currentSpace = null;
-    _isSpaceMode = false; // 🔥 Apagamos el modo Space al salir
+    _isSpaceMode = false;
+
+    // 3. Limpiar cualquier invitación pendiente en memoria
+    _invitacion = null;
+
+    // 4. Notificar a la UI
     notifyListeners();
   }
 }

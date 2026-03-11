@@ -1,4 +1,4 @@
-package com.example.money_move
+package com.visacstudio.moneymove
 
 import io.flutter.embedding.android.FlutterActivity
 

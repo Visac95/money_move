@@ -800,4 +800,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get continueText => 'Continuar';
+
+  @override
+  String get accountText => 'Cuenta';
+
+  @override
+  String get logOutDescriptionText => 'Cierra tu sesión actual';
 }
