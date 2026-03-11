@@ -99,7 +99,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addTransaction => 'Añadir Movimiento';
 
   @override
-  String get chooseCategoryManualTitle => 'Elija la categoría para su movimiento';
+  String get chooseCategoryManualTitle =>
+      'Elija la categoría para su movimiento';
 
   @override
   String get editTransaccionText => 'Editar Movimiento';
@@ -201,7 +202,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noOutstandingDeudas => 'No tienes deudas pendientes';
 
   @override
-  String get transactionsWillAppearHereText => 'Tus transacciones aparecerán aquí';
+  String get transactionsWillAppearHereText =>
+      'Tus transacciones aparecerán aquí';
 
   @override
   String get deudaTitleText => 'Título de la Deuda';
@@ -294,7 +296,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get markAsPaidText => '¿Marcar como pagada?';
 
   @override
-  String get markAsPaidConfirmText => 'Esto saldará la deuda completa por el monto restante.';
+  String get markAsPaidConfirmText =>
+      'Esto saldará la deuda completa por el monto restante.';
 
   @override
   String get deudaPaidSucessText => '¡Deuda pagada exitosamente! 🎉';
@@ -336,7 +339,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noHistorialText => 'Sin historial';
 
   @override
-  String get noPaidDeudasText => 'Aún no hay deudas liquidadas en esta sección.';
+  String get noPaidDeudasText =>
+      'Aún no hay deudas liquidadas en esta sección.';
 
   @override
   String get filtrarText => 'Filtrar';
@@ -360,7 +364,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get seeSettledDeudasText => 'Ver deudas liquidadas';
 
   @override
-  String get generateAutoTransactionText => 'Generar movimiento automaticamente';
+  String get generateAutoTransactionText =>
+      'Generar movimiento automaticamente';
 
   @override
   String get lentFromText => 'Dinero prestado de';
@@ -429,7 +434,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noConectionModeText => 'Modo sin conexión';
 
   @override
-  String get noConectionModeDescriptionText => 'Parece que no tienes internet. Puedes seguir usando la app, pero los cambios de otros dispositivos no se verán hasta que recuperes la conexión.';
+  String get noConectionModeDescriptionText =>
+      'Parece que no tienes internet. Puedes seguir usando la app, pero los cambios de otros dispositivos no se verán hasta que recuperes la conexión.';
 
   @override
   String get noShowAgainText => 'No volver a mostrar este aviso';
@@ -438,10 +444,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gotItText => 'Entendido';
 
   @override
-  String get noConecctionAddTraxText => 'Guardado en dispositivo. Se subirá al tener internet ☁️⏳';
+  String get noConecctionAddTraxText =>
+      'Guardado en dispositivo. Se subirá al tener internet ☁️⏳';
 
   @override
-  String get savedTrasactionSuccessText => 'Transacción guardada exitosamente ✅';
+  String get savedTrasactionSuccessText =>
+      'Transacción guardada exitosamente ✅';
 
   @override
   String get welcomeText => '¡Bienvenido a MoneyMove!';
@@ -471,10 +479,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sharedSpaceText => 'Espacio Compartido';
 
   @override
-  String get sharedSpaceDescriptionText => 'Lleva tus finanzas junto a otra persona';
+  String get sharedSpaceDescriptionText =>
+      'Lleva tus finanzas junto a otra persona';
 
   @override
-  String get sharedSpaceLargeDescriptionText => 'Conecta tu cuenta con un socio, familiar o compañero. Visualicen sus balances unificados, registren movimientos conjuntos y alcancen sus metas financieras trabajando como un solo equipo.';
+  String get sharedSpaceLargeDescriptionText =>
+      'Conecta tu cuenta con un socio, familiar o compañero. Visualicen sus balances unificados, registren movimientos conjuntos y alcancen sus metas financieras trabajando como un solo equipo.';
 
   @override
   String get inviteSomeoneText => 'Invitar a alguien';
@@ -501,7 +511,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get logoutText => 'Cerrar sesión';
 
   @override
-  String get invitationMessageText => 'Te ha invitado a unirte a su espacio compartido.';
+  String get invitationMessageText =>
+      'Te ha invitado a unirte a su espacio compartido.';
 
   @override
   String get aceptInvitationText => 'Aceptar invitación';
@@ -516,13 +527,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get invitationSelfErrorText => 'No puedes unirte a tu propio espacio';
 
   @override
-  String get invitationSuccessText => '¡Has unido exitosamente al espacio compartido! 🎉';
+  String get invitationSuccessText =>
+      '¡Has unido exitosamente al espacio compartido! 🎉';
 
   @override
-  String get acceptInvitationAlertText => 'Al aceptar la invitación, tu cuenta se fusionará con el espacio compartido y podrás ver y gestionar las finanzas conjuntas. Tendras acceso a tus finanazas personales y las compartidas en un solo lugar.';
+  String get acceptInvitationAlertText =>
+      'Al aceptar la invitación, tu cuenta se fusionará con el espacio compartido y podrás ver y gestionar las finanzas conjuntas. Tendras acceso a tus finanazas personales y las compartidas en un solo lugar.';
 
   @override
-  String get noLogInAlertText => 'Para acceder a esta función, por favor inicia sesión o crea una cuenta.';
+  String get noLogInAlertText =>
+      'Para acceder a esta función, por favor inicia sesión o crea una cuenta.';
 
   @override
   String get alreadyInSharedSpaceText => 'Ya estás en un espacio compartido';
@@ -558,13 +572,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exitSharedSpaceText => 'Salir del espacio compartido';
 
   @override
-  String get exitSharedSpaceDescriptionText => 'Al salir del espacio compartido, tu cuenta volverá a ser personal y ya no tendrás acceso a las finanzas conjuntas. Tus datos personales permanecerán intactos.';
+  String get exitSharedSpaceDescriptionText =>
+      'Al salir del espacio compartido, tu cuenta volverá a ser personal y ya no tendrás acceso a las finanzas conjuntas. Tus datos personales permanecerán intactos.';
 
   @override
   String get areYouSureExitText => '¿Estás seguro de que quieres salir?';
 
   @override
-  String get leftSharedSpaceSuccessText => 'Has salido exitosamente del espacio compartido';
+  String get leftSharedSpaceSuccessText =>
+      'Has salido exitosamente del espacio compartido';
 
   @override
   String get exitText => 'Salir';
@@ -606,7 +622,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sinMetasText => 'Sin metas cumplidas';
 
   @override
-  String get yourFinancySuccessWillApearHereText => '¡Tus éxitos financieros aparecerán aquí!';
+  String get yourFinancySuccessWillApearHereText =>
+      '¡Tus éxitos financieros aparecerán aquí!';
 
   @override
   String get startSavingNowText => 'Comienza a guardar para tus sueños hoy.';
@@ -645,7 +662,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ahorroCompletedText => 'Ahorro completado';
 
   @override
-  String get ahorroCompletedAskText => '¿Deseas marcar este ahorro como completado?';
+  String get ahorroCompletedAskText =>
+      '¿Deseas marcar este ahorro como completado?';
 
   @override
   String get markAsCompletedText => 'Marcar como completado';
@@ -660,7 +678,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get seAbonoText => 'Se abonó al ahorro';
 
   @override
-  String get ahorroCompletedIncomeText => '¡Felicidades! Has alcanzado tu meta de ahorro 🎉';
+  String get ahorroCompletedIncomeText =>
+      '¡Felicidades! Has alcanzado tu meta de ahorro 🎉';
 
   @override
   String get restantePorAhorrarText => 'El restante para llegar a la meta es';
@@ -672,19 +691,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveCompletedText => 'Ahorro Completado';
 
   @override
-  String get invitationDescriptionText => 'Envia este código a la persona con la que deseas compartir tus finanzas. Al ingresar el código, podrán ver y gestionar juntos los movimientos, deudas y ahorros compartidos. Es una excelente manera de mantener las finanzas organizadas en pareja, familia o con un compañero de cuarto.';
+  String get invitationDescriptionText =>
+      'Envia este código a la persona con la que deseas compartir tus finanzas. Al ingresar el código, podrán ver y gestionar juntos los movimientos, deudas y ahorros compartidos. Es una excelente manera de mantener las finanzas organizadas en pareja, familia o con un compañero de cuarto.';
 
   @override
   String get shareInvitationText => 'Compartir invitación';
 
   @override
-  String get invitationShareText1 => '¡Hola! 👋 Estoy usando Money Move para gestionar mis finanzas.';
+  String get invitationShareText1 =>
+      '¡Hola! 👋 Estoy usando Money Move para gestionar mis finanzas.';
 
   @override
-  String get invitationShareText2 => 'Únete a mi usando mi enlace de invitación';
+  String get invitationShareText2 =>
+      'Únete a mi usando mi enlace de invitación';
 
   @override
-  String get invitationShareText3 => 'También puedes escribir el código en la sección de \'Espacio Compartido\'';
+  String get invitationShareText3 =>
+      'También puedes escribir el código en la sección de \'Espacio Compartido\'';
 
   @override
   String get invitationShareText4 => 'Invitación a Money Move';
@@ -696,31 +719,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tutorialTitle => '¡Bienvenid@ a MoneyMove!';
 
   @override
-  String get tutorialSubtitle => 'MoneyMove es tu compañero ideal para gestionar tus finanzas personales de manera fácil y eficiente. Con esta aplicación, podrás registrar tus ingresos y gastos, establecer metas de ahorro, y mantener un control total sobre tu dinero. ¡Vamos a descubrir cómo funciona!';
+  String get tutorialSubtitle =>
+      'MoneyMove es tu compañero ideal para gestionar tus finanzas personales de manera fácil y eficiente. Con esta aplicación, podrás registrar tus ingresos y gastos, establecer metas de ahorro, y mantener un control total sobre tu dinero. ¡Vamos a descubrir cómo funciona!';
 
   @override
   String get tutorialTitle1 => 'Registra Movimientos';
 
   @override
-  String get tutorialSubtitle1 => 'Anota tus ingresos y egresos rápidamente. Asigna categorías para mantener todo organizado y saber en qué gastas.';
+  String get tutorialSubtitle1 =>
+      'Anota tus ingresos y egresos rápidamente. Asigna categorías para mantener todo organizado y saber en qué gastas.';
 
   @override
   String get tutorialTitle2 => 'Análisis y Realidad';
 
   @override
-  String get tutorialSubtitle2 => 'Entiende tus hábitos con gráficos detallados. Nota: Esta app es solo de registro, no mueve dinero real de tus cuentas bancarias.';
+  String get tutorialSubtitle2 =>
+      'Entiende tus hábitos con gráficos detallados. Nota: Esta app es solo de registro, no mueve dinero real de tus cuentas bancarias.';
 
   @override
   String get tutorialTitle3 => 'Deudas y Ahorros';
 
   @override
-  String get tutorialSubtitle3 => 'Crea metas de ahorro y registra deudas. Realiza abonos o aportes manuales y mira cómo avanza tu progreso en tiempo real.';
+  String get tutorialSubtitle3 =>
+      'Crea metas de ahorro y registra deudas. Realiza abonos o aportes manuales y mira cómo avanza tu progreso en tiempo real.';
 
   @override
   String get tutorialTitle4 => 'Space Mode';
 
   @override
-  String get tutorialSubtitle4 => 'Finanzas compartidas. Activa el Space Mode para gestionar un presupuesto en conjunto con tu pareja o socio.';
+  String get tutorialSubtitle4 =>
+      'Finanzas compartidas. Activa el Space Mode para gestionar un presupuesto en conjunto con tu pareja o socio.';
 
   @override
   String get tutorialSkipButton => 'Omitir';
@@ -738,31 +766,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spaceTutorialTitle => 'Bienvenido al modo \"Espacio Compartido\"';
 
   @override
-  String get spaceTutorialSubtitle => 'A partir de ahora, organizar las cuentas en equipo es mucho más fácil. Aquí te explicamos cómo funciona tu nueva herramienta:';
+  String get spaceTutorialSubtitle =>
+      'A partir de ahora, organizar las cuentas en equipo es mucho más fácil. Aquí te explicamos cómo funciona tu nueva herramienta:';
 
   @override
   String get spaceTutorialPoint1Title => 'Sincronización en tiempo real:';
 
   @override
-  String get spaceTutorialPoint1Subtitle => 'Cada transacción, deuda y ahorro que registres en este modo le aparecerá al instante a tu compañero/a (y viceversa). Ambos tendrán el control total de lo que pasa con el dinero compartido.';
+  String get spaceTutorialPoint1Subtitle =>
+      'Cada transacción, deuda y ahorro que registres en este modo le aparecerá al instante a tu compañero/a (y viceversa). Ambos tendrán el control total de lo que pasa con el dinero compartido.';
 
   @override
-  String get spaceTutorialPoint2Title => 'Tu dinero personal sigue siendo privado:';
+  String get spaceTutorialPoint2Title =>
+      'Tu dinero personal sigue siendo privado:';
 
   @override
-  String get spaceTutorialPoint2Subtitle => 'Entrar a este espacio no mezcla tus finanzas. Puedes seguir llevando el registro de tu dinero personal de forma totalmente independiente; tu compañero/a solo verá lo que agregues en el modo compartido.';
+  String get spaceTutorialPoint2Subtitle =>
+      'Entrar a este espacio no mezcla tus finanzas. Puedes seguir llevando el registro de tu dinero personal de forma totalmente independiente; tu compañero/a solo verá lo que agregues en el modo compartido.';
 
   @override
   String get spaceTutorialPoint3Title => 'Cambia de modo con un solo toque:';
 
   @override
-  String get spaceTutorialPoint3Subtitle => 'En la parte superior de tus pantallas vas a notar un nuevo interruptor (switch). Úsalo para saltar rápidamente entre tu Modo Personal y el Espacio Compartido sin complicaciones.';
+  String get spaceTutorialPoint3Subtitle =>
+      'En la parte superior de tus pantallas vas a notar un nuevo interruptor (switch). Úsalo para saltar rápidamente entre tu Modo Personal y el Espacio Compartido sin complicaciones.';
 
   @override
   String get spaceTutorialPoint4Title => '¿Qué pasa si te sales?';
 
   @override
-  String get spaceTutorialPoint4Subtitle => 'Puedes abandonar el Espacio Compartido en cualquier momento desde los ajustes. Sin embargo, ten en cuenta que al salir perderás el acceso a todo el registro e historial de finanzas que construyeron juntos.';
+  String get spaceTutorialPoint4Subtitle =>
+      'Puedes abandonar el Espacio Compartido en cualquier momento desde los ajustes. Sin embargo, ten en cuenta que al salir perderás el acceso a todo el registro e historial de finanzas que construyeron juntos.';
 
   @override
   String get continueText => 'Continuar';

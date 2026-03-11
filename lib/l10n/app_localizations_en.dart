@@ -99,7 +99,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addTransaction => 'Add Transaction';
 
   @override
-  String get chooseCategoryManualTitle => 'Choose category for your transaction';
+  String get chooseCategoryManualTitle =>
+      'Choose category for your transaction';
 
   @override
   String get editTransaccionText => 'Edit Transaction';
@@ -201,7 +202,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOutstandingDeudas => 'You have no outstanding debts';
 
   @override
-  String get transactionsWillAppearHereText => 'Your transactions will appear here';
+  String get transactionsWillAppearHereText =>
+      'Your transactions will appear here';
 
   @override
   String get deudaTitleText => 'Debt Title';
@@ -294,7 +296,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get markAsPaidText => 'Mark as Paid?';
 
   @override
-  String get markAsPaidConfirmText => 'This will pay off the remaining balance.';
+  String get markAsPaidConfirmText =>
+      'This will pay off the remaining balance.';
 
   @override
   String get deudaPaidSucessText => 'Debt paid successfully! 🎉';
@@ -360,7 +363,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeSettledDeudasText => 'See settled debts';
 
   @override
-  String get generateAutoTransactionText => 'Generate transaction automatically';
+  String get generateAutoTransactionText =>
+      'Generate transaction automatically';
 
   @override
   String get lentFromText => 'Money lent from';
@@ -429,7 +433,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noConectionModeText => 'No Connection Mode';
 
   @override
-  String get noConectionModeDescriptionText => 'It seems you are offline. You can continue using the app, but changes from other devices won\'t be reflected until you regain connection.';
+  String get noConectionModeDescriptionText =>
+      'It seems you are offline. You can continue using the app, but changes from other devices won\'t be reflected until you regain connection.';
 
   @override
   String get noShowAgainText => 'Don\'t show this again';
@@ -438,7 +443,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gotItText => 'Got it';
 
   @override
-  String get noConecctionAddTraxText => 'Saved on device. It will upload when online ☁️⏳';
+  String get noConecctionAddTraxText =>
+      'Saved on device. It will upload when online ☁️⏳';
 
   @override
   String get savedTrasactionSuccessText => 'Transaction saved successfully ✅';
@@ -471,10 +477,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sharedSpaceText => 'Shared Space';
 
   @override
-  String get sharedSpaceDescriptionText => 'Manage your finances together with someone else';
+  String get sharedSpaceDescriptionText =>
+      'Manage your finances together with someone else';
 
   @override
-  String get sharedSpaceLargeDescriptionText => 'Connect your account with a partner, family member, or associate. View unified balances, track joint transactions, and reach your financial goals by working as a single team.';
+  String get sharedSpaceLargeDescriptionText =>
+      'Connect your account with a partner, family member, or associate. View unified balances, track joint transactions, and reach your financial goals by working as a single team.';
 
   @override
   String get inviteSomeoneText => 'Invite someone';
@@ -501,7 +509,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutText => 'Log out';
 
   @override
-  String get invitationMessageText => 'Has invited you to join their shared space.';
+  String get invitationMessageText =>
+      'Has invited you to join their shared space.';
 
   @override
   String get aceptInvitationText => 'Accept Invitation';
@@ -516,13 +525,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invitationSelfErrorText => 'You cannot join your own space';
 
   @override
-  String get invitationSuccessText => 'You have successfully joined the shared space! 🎉';
+  String get invitationSuccessText =>
+      'You have successfully joined the shared space! 🎉';
 
   @override
-  String get acceptInvitationAlertText => 'By accepting the invitation, your account will merge with the shared space and you will be able to view and manage joint finances. You will have access to your personal and shared finances in one place.';
+  String get acceptInvitationAlertText =>
+      'By accepting the invitation, your account will merge with the shared space and you will be able to view and manage joint finances. You will have access to your personal and shared finances in one place.';
 
   @override
-  String get noLogInAlertText => 'To access this feature, please log in or create an account.';
+  String get noLogInAlertText =>
+      'To access this feature, please log in or create an account.';
 
   @override
   String get alreadyInSharedSpaceText => 'You are already in a shared space';
@@ -558,13 +570,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitSharedSpaceText => 'Exit Shared Space';
 
   @override
-  String get exitSharedSpaceDescriptionText => 'By exiting the shared space, your account will return to personal and you will no longer have access to joint finances. Your personal data will remain intact.';
+  String get exitSharedSpaceDescriptionText =>
+      'By exiting the shared space, your account will return to personal and you will no longer have access to joint finances. Your personal data will remain intact.';
 
   @override
   String get areYouSureExitText => 'Are you sure you want to exit?';
 
   @override
-  String get leftSharedSpaceSuccessText => 'You have successfully left the shared space! 🎉';
+  String get leftSharedSpaceSuccessText =>
+      'You have successfully left the shared space! 🎉';
 
   @override
   String get exitText => 'Exit';
@@ -606,7 +620,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sinMetasText => 'No achieved goals';
 
   @override
-  String get yourFinancySuccessWillApearHereText => 'Your financial successes will appear here!';
+  String get yourFinancySuccessWillApearHereText =>
+      'Your financial successes will appear here!';
 
   @override
   String get startSavingNowText => 'Start saving for your dreams today.';
@@ -645,7 +660,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ahorroCompletedText => 'Saving completed';
 
   @override
-  String get ahorroCompletedAskText => 'Do you want to mark this saving as completed?';
+  String get ahorroCompletedAskText =>
+      'Do you want to mark this saving as completed?';
 
   @override
   String get markAsCompletedText => 'Mark as completed';
@@ -660,10 +676,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seAbonoText => 'Was contributed to the saving';
 
   @override
-  String get ahorroCompletedIncomeText => 'Congratulations! You\'ve reached your saving goal 🎉';
+  String get ahorroCompletedIncomeText =>
+      'Congratulations! You\'ve reached your saving goal 🎉';
 
   @override
-  String get restantePorAhorrarText => 'The remaining amount to reach the goal is';
+  String get restantePorAhorrarText =>
+      'The remaining amount to reach the goal is';
 
   @override
   String get contributeToText => 'Contribute to';
@@ -672,19 +690,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveCompletedText => 'Saving Completed';
 
   @override
-  String get invitationDescriptionText => 'Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It\'s a great way to keep finances organized as a couple, family, or with a roommate.';
+  String get invitationDescriptionText =>
+      'Send this code to the person you want to share your finances with. By entering the code, they will be able to view and manage shared transactions, debts, and savings together. It\'s a great way to keep finances organized as a couple, family, or with a roommate.';
 
   @override
   String get shareInvitationText => 'Share invitation';
 
   @override
-  String get invitationShareText1 => 'Hey! 👋 I\'m using Money Move to manage my finances.';
+  String get invitationShareText1 =>
+      'Hey! 👋 I\'m using Money Move to manage my finances.';
 
   @override
   String get invitationShareText2 => 'Join me using my invitation link';
 
   @override
-  String get invitationShareText3 => 'You can also write the code in the secction of \'Shared Space\'';
+  String get invitationShareText3 =>
+      'You can also write the code in the secction of \'Shared Space\'';
 
   @override
   String get invitationShareText4 => 'Invitation to Money Move';
@@ -696,31 +717,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tutorialTitle => 'Welcome to MoneyMove!';
 
   @override
-  String get tutorialSubtitle => 'MoneyMove is your ideal companion for managing your personal finances easily and efficiently. With this app, you can record your income and expenses, set saving goals, and maintain full control over your money. Let\'s discover how it works!';
+  String get tutorialSubtitle =>
+      'MoneyMove is your ideal companion for managing your personal finances easily and efficiently. With this app, you can record your income and expenses, set saving goals, and maintain full control over your money. Let\'s discover how it works!';
 
   @override
   String get tutorialTitle1 => 'Register Transactions';
 
   @override
-  String get tutorialSubtitle1 => 'Log your income and expenses in seconds. Assign categories like \'Food\' or \'Transport\' to keep your ledger organized.';
+  String get tutorialSubtitle1 =>
+      'Log your income and expenses in seconds. Assign categories like \'Food\' or \'Transport\' to keep your ledger organized.';
 
   @override
   String get tutorialTitle2 => 'Visual Insights';
 
   @override
-  String get tutorialSubtitle2 => 'Understand your habits with detailed charts. Remember: Money Move tracks your records; it does not move actual money from your bank.';
+  String get tutorialSubtitle2 =>
+      'Understand your habits with detailed charts. Remember: Money Move tracks your records; it does not move actual money from your bank.';
 
   @override
   String get tutorialTitle3 => 'Debts & Savings';
 
   @override
-  String get tutorialSubtitle3 => 'Track money you owe or save. Add payments or contributions to watch your progress bars update in real-time.';
+  String get tutorialSubtitle3 =>
+      'Track money you owe or save. Add payments or contributions to watch your progress bars update in real-time.';
 
   @override
   String get tutorialTitle4 => 'Space Mode';
 
   @override
-  String get tutorialSubtitle4 => 'Manage finances with a partner or friend. Activate Space Mode to share a budget and see the same data together.';
+  String get tutorialSubtitle4 =>
+      'Manage finances with a partner or friend. Activate Space Mode to share a budget and see the same data together.';
 
   @override
   String get tutorialSkipButton => 'Skip';
@@ -738,31 +764,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spaceTutorialTitle => 'Welcome to \"Shared Space\" mode';
 
   @override
-  String get spaceTutorialSubtitle => 'From now on, managing your finances as a team is much easier. Here\'s how your new tool works:';
+  String get spaceTutorialSubtitle =>
+      'From now on, managing your finances as a team is much easier. Here\'s how your new tool works:';
 
   @override
   String get spaceTutorialPoint1Title => 'Real-time synchronization:';
 
   @override
-  String get spaceTutorialPoint1Subtitle => 'Every transaction, debt, and saving you record in this mode will instantly appear to your partner (and vice versa). Both of you will have full control over what happens with the shared money.';
+  String get spaceTutorialPoint1Subtitle =>
+      'Every transaction, debt, and saving you record in this mode will instantly appear to your partner (and vice versa). Both of you will have full control over what happens with the shared money.';
 
   @override
   String get spaceTutorialPoint2Title => 'Your personal money remains private:';
 
   @override
-  String get spaceTutorialPoint2Subtitle => 'Entering this space doesn\'t mix your finances. You can continue tracking your personal money completely independently; your partner will only see what you add in the shared mode.';
+  String get spaceTutorialPoint2Subtitle =>
+      'Entering this space doesn\'t mix your finances. You can continue tracking your personal money completely independently; your partner will only see what you add in the shared mode.';
 
   @override
   String get spaceTutorialPoint3Title => 'Switch modes with a single tap:';
 
   @override
-  String get spaceTutorialPoint3Subtitle => 'At the top of your screens, you will notice a new toggle switch. Use it to quickly jump between your Personal Mode and the Shared Space without any hassle.';
+  String get spaceTutorialPoint3Subtitle =>
+      'At the top of your screens, you will notice a new toggle switch. Use it to quickly jump between your Personal Mode and the Shared Space without any hassle.';
 
   @override
   String get spaceTutorialPoint4Title => 'What happens if you leave?';
 
   @override
-  String get spaceTutorialPoint4Subtitle => 'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.';
+  String get spaceTutorialPoint4Subtitle =>
+      'You can leave the Shared Space at any time from the settings. However, keep in mind that upon leaving, you will lose access to all the records and financial history you built together.';
 
   @override
   String get continueText => 'Continue';
