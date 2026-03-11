@@ -149,13 +149,13 @@ class SettingsScreen extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (context) => screen));
+            } else {
+              await AuthService().logout(context);
+              if (!context.mounted) return;
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
             }
-
-            await AuthService().logout(context);
-            if (!context.mounted) return;
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
           },
           icon: Icon(Icons.arrow_forward_ios, size: 16),
         ),

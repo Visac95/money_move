@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
 import 'package:money_move/providers/transaction_provider.dart';
 import 'package:money_move/providers/user_provider.dart';
+import 'package:money_move/screens/login_screen.dart';
 import 'package:money_move/services/auth_service.dart';
 import 'package:money_move/widgets/mode_toggle.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +84,10 @@ Drawer drawerUser(BuildContext context) {
           onTap: () async {
             // 1. Llamamos al servicio para desconectar Google y Firebase
             await AuthService().logout(context);
+            if (!context.mounted) return;
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
           },
         ),
         const SizedBox(height: 20),

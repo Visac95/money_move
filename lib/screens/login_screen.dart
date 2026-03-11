@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart'; // Necesario para manejar errores
 import 'package:flutter/material.dart';
 import 'package:money_move/l10n/app_localizations.dart';
+import 'package:money_move/screens/main_screen.dart';
 import 'package:money_move/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -148,6 +149,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 OutlinedButton.icon(
                   onPressed: () async {
                     await _handleGoogleLogin(strings);
+                    if (!context.mounted) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                    );
                   },
                   icon: const Icon(Icons.g_mobiledata, size: 30),
                   label: const Text("Google"),

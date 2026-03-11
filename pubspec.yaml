@@ -81,5 +81,5 @@ flutter_intl:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo.png" # <--- Ruta de tu imagen
+  image_path: "/assets/logo.png" # <--- Ruta de tu imagen
   min_sdk_android: 21
