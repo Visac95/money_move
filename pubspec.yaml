@@ -81,5 +81,6 @@ flutter_intl:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "/assets/logo.png" # <--- Ruta de tu imagen
-  min_sdk_android: 21
+  image_path: "assets/appLogo.png"
+  adaptive_icon_background: "#FFFFFF" # Pon el color hexadecimal del fondo de tu logo
+  adaptive_icon_foreground: "assets/appLogo.png"
