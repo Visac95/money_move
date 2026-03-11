@@ -132,7 +132,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
         return;
       }
     }
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 1");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 1");
 
     if (!mounted) {
       return;
@@ -143,7 +143,7 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       context,
       listen: false,
     );
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
 
     const uuid = Uuid();
     final nuevaAhorro = Ahorro(
@@ -162,12 +162,12 @@ class _AddAhorroScreenState extends State<AddAhorroScreen> {
       emoji: emojiSeleccionado,
     );
 
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
 
     if (!mounted) return;
     ahorroProv.addAhorro(nuevaAhorro);
 
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
 
     if (mounted) Navigator.of(context).pop();
     aiProvider.resetCategory();

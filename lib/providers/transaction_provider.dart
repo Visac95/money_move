@@ -45,9 +45,6 @@ class TransactionProvider extends ChangeNotifier {
     // A. Actualizamos el modo visual (Switch)
     if (_isSpaceMode != isSpaceModeInput) {
       _isSpaceMode = isSpaceModeInput;
-      print(
-        "🔄 TransactionProvider: Modo actualizado a ${_isSpaceMode ? 'SPACE' : 'PERSONAL'}",
-      );
       notifyListeners(); // Avisamos rápido para que la UI cambie la lista
     }
 
@@ -72,7 +69,7 @@ class TransactionProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    print("🐈‍⬛ Iniciando Streams de Transacciones...");
+    //print("🐈‍⬛ Iniciando Streams de Transacciones...");
 
     // A. Cancelar suscripciones viejas
     _personalSub?.cancel();
@@ -88,7 +85,7 @@ class TransactionProvider extends ChangeNotifier {
           // Solo quitamos loading si estamos viendo personal
           if (!_isSpaceMode) _isLoading = false;
           notifyListeners();
-          print("🐈‍⬛ Datos Personales recibidos: ${data.length}");
+          //print("🐈‍⬛ Datos Personales recibidos: ${data.length}");
         });
 
     // C. Escuchar Transacciones SPACE (Solo si hay ID vinculado)
@@ -102,7 +99,7 @@ class TransactionProvider extends ChangeNotifier {
             // Si estamos en modo space, quitamos loading
             _isLoading = false;
             notifyListeners();
-            print("🐈‍⬛ Datos Space recibidos: ${data.length}");
+            //print("🐈‍⬛ Datos Space recibidos: ${data.length}");
           });
     } else {
       _spaceTransactions = [];
@@ -129,9 +126,9 @@ class TransactionProvider extends ChangeNotifier {
         (_isSpaceMode && _currentSpaceId != null),
       );
 
-      print("🗑️ Transacción borrada: ${t.id}");
+      //print("🗑️ Transacción borrada: ${t.id}");
     } catch (e) {
-      print("❌ Error al borrar transacción: $e");
+      //print("❌ Error al borrar transacción: $e");
     }
   }
 
@@ -297,6 +294,6 @@ class TransactionProvider extends ChangeNotifier {
 
     // 5. Avisar a la UI que todo se borró
     notifyListeners();
-    print("🧹 TransactionProvider reseteado exitosamente.");
+    //print("🧹 TransactionProvider reseteado exitosamente.");
   }
 }

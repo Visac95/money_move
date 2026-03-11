@@ -29,7 +29,7 @@ class VerAhorroScreen extends StatelessWidget {
       builder: (context) =>
           AddAporteWindow(monto: ahorro.monto, abono: ahorro.abono),
     );
-    print("🤑💀✅📨👻😍 abono $result");
+    //print("🤑💀✅📨👻😍 abono $result");
     return result ?? (null, null);
   }
 

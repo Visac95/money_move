@@ -16,6 +16,6 @@ class UiProvider extends ChangeNotifier{
   void clearData() {
     _selectedIndex = 0;
     notifyListeners();
-    print("🧹 UiProvider reseteado (Volviendo a la pestaña principal).");
+    //print("🧹 UiProvider reseteado (Volviendo a la pestaña principal).");
   }
 }

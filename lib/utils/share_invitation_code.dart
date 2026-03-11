@@ -8,14 +8,14 @@ Future<ShareResultStatus> shareInvitationCode(
   String link,
 ) async {
   final strings = AppLocalizations.of(context)!;
-  print("🥹🥹🥹🥹 entramos a la funcion");
+  //print("🥹🥹🥹🥹 entramos a la funcion");
   final String message =
       "${strings.invitationShareText1} "
       "${strings.invitationShareText2}:\n\n"
       "$link\n\n"
       "${strings.invitationShareText3}\n\n"
       "$code\n\n";
-  print("🥹🥹🥹🥹 intento compartir");
+  //print("🥹🥹🥹🥹 intento compartir");
 
   final sharePlus = await SharePlus.instance.share(
     ShareParams(
@@ -24,7 +24,7 @@ Future<ShareResultStatus> shareInvitationCode(
       sharePositionOrigin: findRenderObject(context),
     ),
   );
-  print("🥹🥹🥹🥹 Termine");
+  //print("🥹🥹🥹🥹 Termine");
 
   return sharePlus.status;
 }

@@ -16,40 +16,38 @@ class AuthService {
   // --- LOGIN CON GOOGLE ---
   Future<UserCredential?> signInWithGoogle(BuildContext context) async {
     try {
-      print("🔍 DEBUG 1: Iniciando Google Sign-In...");
+      //print("🔍 DEBUG 1: Iniciando Google Sign-In...");
 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        print("🔍 DEBUG 2: El usuario canceló o cerró la ventanita de Google.");
+        //print("🔍 DEBUG 2: El usuario canceló o cerró la ventanita de Google.");
         return null;
       }
 
-      print("🔍 DEBUG 3: Cuenta seleccionada: ${googleUser.email}");
+      //print("🔍 DEBUG 3: Cuenta seleccionada: ${googleUser.email}");
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      print("🔍 DEBUG 4: Credenciales obtenidas, conectando a Firebase...");
+      //print("🔍 DEBUG 4: Credenciales obtenidas, conectando a Firebase...");
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       final result = await _auth.signInWithCredential(credential);
-      print(
-        "🔍 DEBUG 5: ¡Login exitoso en Firebase para ${result.user?.email}!",
-      );
+      //print("🔍 DEBUG 5: ¡Login exitoso en Firebase para ${result.user?.email}!",);
 
       if (context.mounted) {
-        print("🔍 DEBUG 6: Inicializando UserProvider...");
+        //print("🔍 DEBUG 6: Inicializando UserProvider...");
         final userProv = Provider.of<UserProvider>(context, listen: false);
         userProv.initSubscription();
       }
 
-      print("🔍 DEBUG 7: ¡Todo listo, devolviendo credenciales!");
+      //print("🔍 DEBUG 7: ¡Todo listo, devolviendo credenciales!");
       return result;
     } catch (e) {
-      print("🚨🚨🚨 ERROR FATAL EN LOGIN: $e"); // ESTO NOS DIRÁ LA VERDAD
+      //print("🚨🚨🚨 ERROR FATAL EN LOGIN: $e"); // ESTO NOS DIRÁ LA VERDAD
       rethrow;
     }
   }
@@ -70,9 +68,9 @@ class AuthService {
         Provider.of<SpaceProvider>(context, listen: false).clearData();
         Provider.of<UiProvider>(context, listen: false).clearData();
       }
-      print("🚪 Logout completado al 100%");
+      //print("🚪 Logout completado al 100%");
     } catch (e) {
-      print("🚨 Error durante el logout: $e");
+      //print("🚨 Error durante el logout: $e");
     }
   }
 

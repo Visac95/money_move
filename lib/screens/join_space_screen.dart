@@ -11,7 +11,7 @@ class JoinSpaceScreen extends StatelessWidget {
   final String code;
   const JoinSpaceScreen({super.key, required this.code});
 
-  // 1. CREAMOS ESTA FUNCIÓN AUXILIAR PARA TRAER TODO JUNTO
+  // 1. CREAMOS ESTA FUNCIÓN AUXILIAR PARA TRAER 
   Future<(Invitacion?, InvitacionStatus, UserModel?)> _fetchFullData(
     BuildContext context,
   ) async {

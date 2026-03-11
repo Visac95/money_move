@@ -22,7 +22,7 @@ class UserProvider extends ChangeNotifier {
     if (user == null) return;
     if (_userSubscription != null) return;
 
-    print("🎧 Iniciando suscripción al usuario: ${user.uid}");
+    //print("🎧 Iniciando suscripción al usuario: ${user.uid}");
 
     _userSubscription = FirebaseFirestore.instance
         .collection("users")
@@ -34,13 +34,13 @@ class UserProvider extends ChangeNotifier {
               final newUser = UserModel.fromFirestore(snapshot);
 
               if (_usuarioActual?.spaceId != null && newUser.spaceId == null) {
-                print("💔💔💔💔💔💔 Me han sacado del grupo");
+                //print("💔💔💔💔💔💔 Me han sacado del grupo");
               }
 
               _usuarioActual = newUser; // Actualizamos
               notifyListeners();
             } else {
-              print("💀 Usuario no existe en DB, creándolo...");
+              //print("💀 Usuario no existe en DB, creándolo...");
               // Si no existe, lo creamos
               final newUser = UserModel(
                 uid: user.uid,
@@ -55,7 +55,7 @@ class UserProvider extends ChangeNotifier {
             }
           },
           onError: (error) {
-            print("🚨 Error en el listener del usuario: $error");
+            //print("🚨 Error en el listener del usuario: $error");
           },
         );
   }
@@ -70,7 +70,7 @@ class UserProvider extends ChangeNotifier {
     _usuarioActual = null;
     
     notifyListeners();
-    print("🧹 UserProvider reseteado exitosamente.");
+    //print("🧹 UserProvider reseteado exitosamente.");
   }
 
   Future<UserModel?> getUserByUid(String uid) async {
@@ -83,7 +83,7 @@ class UserProvider extends ChangeNotifier {
       if (!doc.exists) return null;
       return UserModel.fromFirestore(doc);
     } catch (e) {
-      print("Error obteniendo usuario por UID: $e");
+      //print("Error obteniendo usuario por UID: $e");
       return null;
     }
   }

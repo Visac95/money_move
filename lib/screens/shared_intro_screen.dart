@@ -404,20 +404,18 @@ class SharedIntroScreen extends StatelessWidget {
                                   icon: const Icon(Icons.share_rounded),
                                   label: Text(strings.shareInvitationText),
                                   onPressed: () async {
-                                    print("🥹🥹🥹🥹 empezando");
+                                    //print("🥹🥹🥹🥹 empezando");
                                     final result = await shareInvitationCode(
                                       context,
                                       invitacion.codeInvitacion,
                                       invitacion.linkInvitacion,
                                     );
-                                    print("🥹🥹🥹🥹 que paso?");
+                                    //print("🥹🥹🥹🥹 que paso?");
 
                                     if (result == ShareResultStatus.success) {
-                                      print(
-                                        '😊🙂🤨🫤😖🥹🤢Thank you for sharing the picture!',
-                                      );
+                                      //print('😊🙂🤨🫤😖🥹🤢Thank you for sharing the picture!',);
                                     } else {
-                                      print("something went wrong🤢🤢🤢🤢");
+                                      //print("something went wrong🤢🤢🤢🤢");
                                     }
                                   },
                                 ),
@@ -430,9 +428,7 @@ class SharedIntroScreen extends StatelessWidget {
                     );
                   },
                 );
-                print(
-                  "${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",
-                );
+                //print("${strings.invitationCreatedText}: ${invitacion.codeInvitacion}",);
               } else {
                 // ❌ ERROR:
                 // Puedes mostrar un snackbar o una alerta de error

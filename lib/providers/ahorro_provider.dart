@@ -43,12 +43,12 @@ class AhorroProvider extends ChangeNotifier {
 
     // 3. Recargamos datos (Lógica simplificada tipo Eager Loading)
     _initAhorros(user, spaceId);
-    print("💀🤐🫤☹️✅🐈‍⬛ $spaceId, ${user?.uid}");
+    //print("💀🤐🫤☹️✅🐈‍⬛ $spaceId, ${user?.uid}");
   }
 
   void _initAhorros(User? user, String? linkedSpaceId) {
     if (user == null) return;
-    print("🐈‍⬛11111DDDDDDD");
+    //print("🐈‍⬛11111DDDDDDD");
     _isLoading = true;
     notifyListeners();
 
@@ -57,7 +57,7 @@ class AhorroProvider extends ChangeNotifier {
     _spaceSub?.cancel();
 
     // B. Escuchar Transacciones PERSONALES (Siempre)
-    print("🐈‍⬛2222222DDDDDD");
+    //print("🐈‍⬛2222222DDDDDD");
     _personalSub = _dbService.getAhorrosStream(user.uid, null, false).listen((
       data,
     ) {
@@ -65,13 +65,13 @@ class AhorroProvider extends ChangeNotifier {
       _personalAhorros.sort(
         (a, b) => b.fechaMeta.compareTo(a.fechaMeta),
       ); // Ordenar por fecha
-      print("🐈‍⬛333333333DDDDDDD");
+      //print("🐈‍⬛333333333DDDDDDD");
 
       if (!_isSpaceMode) _isLoading = false;
       notifyListeners();
-      print("🐈‍⬛4444444444444DDDDDDD");
+      //print("🐈‍⬛4444444444444DDDDDDD");
     });
-    print("🐈‍⬛5555555555555DDDDD");
+    //print("🐈‍⬛5555555555555DDDDD");
     if (linkedSpaceId != null) {
       _spaceSub = _dbService
           .getAhorrosStream(user.uid, linkedSpaceId, true) // true = es space
@@ -82,20 +82,20 @@ class AhorroProvider extends ChangeNotifier {
             // Si arrancamos en modo space, quitamos el loading aquí
             _isLoading = false;
             notifyListeners();
-            print("🐈‍⬛66666666666666DDDDD");
+            //print("🐈‍⬛66666666666666DDDDD");
           });
     } else {
       // Si no tiene space, aseguramos que la lista esté vacía
       _spaceAhorros = [];
       _isLoading = false; // Por si acaso
-      print("🐈‍⬛777777777777DDDDDD");
+      //print("🐈‍⬛777777777777DDDDDD");
     }
-    print("🐈‍⬛888888888888888DDD");
+    //print("🐈‍⬛888888888888888DDD");
   }
 
   // 2. AGREGAR DEUDA
   Future<void> addAhorro(Ahorro a) async {
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
     // A. Guardar en Firebase
     await _dbService.addAhorro(a, _isSpaceMode);
   }
@@ -240,7 +240,7 @@ class AhorroProvider extends ChangeNotifier {
 
     // 5. Notificar a la UI
     notifyListeners();
-    print("🧹 AhorroProvider reseteado exitosamente.");
+    //print("🧹 AhorroProvider reseteado exitosamente.");
   }
 
   @override

@@ -150,8 +150,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     await _handleGoogleLogin(strings);
                     if (!context.mounted) return;
-                    Navigator.of(context).push(
+
+                    // Usamos pushAndRemoveUntil para limpiar el historial
+                    Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => MainScreen()),
+                      (Route<dynamic> route) =>
+                          false, // El 'false' significa: "elimina TODAS las pantallas anteriores"
                     );
                   },
                   icon: const Icon(Icons.g_mobiledata, size: 30),

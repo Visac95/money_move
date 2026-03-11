@@ -152,9 +152,11 @@ class SettingsScreen extends StatelessWidget {
             } else {
               await AuthService().logout(context);
               if (!context.mounted) return;
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (Route<dynamic> route) =>
+                    false, // El 'false' significa: "elimina TODAS las pantallas anteriores"
+              );
             }
           },
           icon: Icon(Icons.arrow_forward_ios, size: 16),

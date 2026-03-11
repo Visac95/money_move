@@ -42,12 +42,12 @@ class DeudaProvider extends ChangeNotifier {
 
     // 3. Recargamos datos (Lógica simplificada tipo Eager Loading)
     _initDeudas(user, spaceId);
-    print("💀🤐🫤☹️✅🐈‍⬛ $spaceId, ${user?.uid}");
+    //print("💀🤐🫤☹️✅🐈‍⬛ $spaceId, ${user?.uid}");
   }
 
   void _initDeudas(User? user, String? linkedSpaceId) {
     if (user == null) return;
-    print("🐈‍⬛11111DDDDDDD");
+    //print("🐈‍⬛11111DDDDDDD");
     _isLoading = true;
     notifyListeners();
 
@@ -56,7 +56,7 @@ class DeudaProvider extends ChangeNotifier {
     _spaceSub?.cancel();
 
     // B. Escuchar Transacciones PERSONALES (Siempre)
-    print("🐈‍⬛2222222DDDDDD");
+    //print("🐈‍⬛2222222DDDDDD");
     _personalSub = _dbService.getDeudasStream(user.uid, null, false).listen((
       data,
     ) {
@@ -64,13 +64,13 @@ class DeudaProvider extends ChangeNotifier {
       _personalDeudas.sort(
         (a, b) => b.fechaLimite.compareTo(a.fechaLimite),
       ); // Ordenar por fecha
-      print("🐈‍⬛333333333DDDDDDD");
+      //print("🐈‍⬛333333333DDDDDDD");
 
       if (!_isSpaceMode) _isLoading = false;
       notifyListeners();
-      print("🐈‍⬛4444444444444DDDDDDD");
+      //print("🐈‍⬛4444444444444DDDDDDD");
     });
-    print("🐈‍⬛5555555555555DDDDD");
+    //print("🐈‍⬛5555555555555DDDDD");
     if (linkedSpaceId != null) {
       _spaceSub = _dbService
           .getDeudasStream(user.uid, linkedSpaceId, true) // true = es space
@@ -81,15 +81,15 @@ class DeudaProvider extends ChangeNotifier {
             // Si arrancamos en modo space, quitamos el loading aquí
             _isLoading = false;
             notifyListeners();
-            print("🐈‍⬛66666666666666DDDDD");
+            //print("🐈‍⬛66666666666666DDDDD");
           });
     } else {
       // Si no tiene space, aseguramos que la lista esté vacía
       _spaceDeudas = [];
       _isLoading = false; // Por si acaso
-      print("🐈‍⬛777777777777DDDDDD");
+      //print("🐈‍⬛777777777777DDDDDD");
     }
-    print("🐈‍⬛888888888888888DDD");
+    //print("🐈‍⬛888888888888888DDD");
   }
 
   // 2. AGREGAR DEUDA
@@ -100,7 +100,7 @@ class DeudaProvider extends ChangeNotifier {
     dynamic stgs, // Settings
     bool generateAutoTransaction,
   ) async {
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 5");
     // A. Guardar en Firebase
     await _dbService.addDeuda(d, _isSpaceMode);
 
@@ -109,7 +109,7 @@ class DeudaProvider extends ChangeNotifier {
       String descriptionString =
           "${(d.debo ? stgs.lentFromText : stgs.lentToText)} ${d.involucrado} \n${stgs.descriptionText}: ${d.description}";
 
-      print("😶‍🌫️😶‍🌫️😶‍🌫️ 9");
+      //print("😶‍🌫️😶‍🌫️😶‍🌫️ 9");
       // Usamos el provider de transacciones que ya está conectado a Firebase
       await tProvdr.addTransaction(
         Transaction(
@@ -261,7 +261,7 @@ class DeudaProvider extends ChangeNotifier {
 
     // 5. Notificar a la UI
     notifyListeners();
-    print("🧹 DeudaProvider reseteado exitosamente.");
+    //print("🧹 DeudaProvider reseteado exitosamente.");
   }
 
   @override

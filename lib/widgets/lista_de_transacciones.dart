@@ -261,7 +261,7 @@ class _TransactionCard extends StatelessWidget {
               context,
               listen: false,
             ).deleteTransaction(tx);
-            print("💀✅💀✅💀✅💀transacción borrada ${tx.id}");
+            //print("💀✅💀✅💀✅💀transacción borrada ${tx.id}");
           });
         }
         if (value == "editar") {

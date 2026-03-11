@@ -57,11 +57,11 @@ class SpaceProvider extends ChangeNotifier {
       );
 
       await _dbService.addInvitacion(_invitacion!);
-      print("✨ Nueva invitación creada: $shortCode");
+      ////print("✨ Nueva invitación creada: $shortCode");
 
       return _invitacion;
     } catch (e) {
-      print("Error generando invitación: $e");
+      ////print("Error generando invitación: $e");
       return null;
     }
   }
@@ -79,7 +79,7 @@ class SpaceProvider extends ChangeNotifier {
     final guestUser = FirebaseAuth.instance.currentUser;
 
     if (guestUser == null) {
-      print("No hay usuario logueado💀💀💀");
+      ////print("No hay usuario logueado💀💀💀");
       return InvitacionStatus.noUser;
     }
 
@@ -88,7 +88,7 @@ class SpaceProvider extends ChangeNotifier {
       final inviteSnapshot = await inviteRef.get();
 
       if (!inviteSnapshot.exists) {
-        print("Código inválido");
+        ////print("Código inválido");
         return InvitacionStatus.invalid;
       }
 
@@ -98,18 +98,16 @@ class SpaceProvider extends ChangeNotifier {
       final String spaceId = inviteData['spaceId'];
 
       if (hostUid == guestUser.uid) {
-        print("No puedes unirte a tu propia invitación");
+        ////print("No puedes unirte a tu propia invitación");
         return InvitacionStatus.selfInvitacion;
       }
 
       if (!i.creationDate.sigueVigente) {
-        print("Ya expiro la invitacion");
+        ////print("Ya expiro la invitacion");
         try {
           await deleteInvitacion(i.codeInvitacion);
         } catch (_) {
-          print(
-            "No se pudo borrar la invitación expirada (probablemente permisos)",
-          );
+          
         }
         return InvitacionStatus.expired;
       }
@@ -136,13 +134,13 @@ class SpaceProvider extends ChangeNotifier {
         'members': [hostUid, guestUser.uid],
       });
 
-      print("📨✅ Space Creado Exitosamente");
+      ////print("📨✅ Space Creado Exitosamente");
 
       notifyListeners();
 
       return InvitacionStatus.success;
     } catch (e) {
-      print("💀💀💀💀💀Error al unirse: $e");
+      ////print("💀💀💀💀💀Error al unirse: $e");
       return InvitacionStatus.error;
     }
   }
@@ -166,7 +164,7 @@ class SpaceProvider extends ChangeNotifier {
       final guestUser = UserModel.fromFirestore(userSnapshot);
 
       if (guestUser.spaceId != null) {
-        print("El usuario ya pertenece a un Space");
+        ////print("El usuario ya pertenece a un Space");
         return (null, InvitacionStatus.alreadyInSpace);
       }
 
@@ -174,7 +172,7 @@ class SpaceProvider extends ChangeNotifier {
       final inviteSnapshot = await inviteRef.get();
 
       if (!inviteSnapshot.exists) {
-        print("Código inválido o expirado🤐🫤☹️");
+        ////print("Código inválido o expirado🤐🫤☹️");
         return (null, InvitacionStatus.expired);
       }
 
@@ -182,19 +180,19 @@ class SpaceProvider extends ChangeNotifier {
       final i = Invitacion.fromMap(inviteData);
 
       if (i.creatorId == guestUser.uid) {
-        print("No puedes unirte a tu propia invitación");
+        ////print("No puedes unirte a tu propia invitación");
         return (null, InvitacionStatus.selfInvitacion);
       }
 
       if (!i.creationDate.sigueVigente) {
-        print("Ya expiro la invitacion");
+        ////print("Ya expiro la invitacion");
         await deleteInvitacion(i.codeInvitacion);
         return (null, InvitacionStatus.expired);
       }
 
       return (i, InvitacionStatus.success);
     } catch (e) {
-      print("💀💀💀 getInvitacionByCode $e");
+      ////print("💀💀💀 getInvitacionByCode $e");
       return (null, InvitacionStatus.error);
     }
   }
@@ -222,7 +220,7 @@ class SpaceProvider extends ChangeNotifier {
 
       if (partnerUid == null) return false;
       if (spaceId == null) {
-        print("😍🫶😊 El usuario no pertenece a un Space");
+        ////print("😍🫶😊 El usuario no pertenece a un Space");
         return false;
       }
 
@@ -238,13 +236,13 @@ class SpaceProvider extends ChangeNotifier {
 
       // Intentamos borrar el space (si las reglas lo permiten)
       await firestore.collection("spaces").doc(spaceId).delete();
-      print("📨✅ Space eliminado y usuarios desvinculados");
+      ////print("📨✅ Space eliminado y usuarios desvinculados");
 
       clearData();
       notifyListeners();
       return true;
     } catch (e) {
-      print("💀😍❤️🤑💀 Space Provider ExitSpace $e");
+      ////print("💀😍❤️🤑💀 Space Provider ExitSpace $e");
     }
 
     return false;
@@ -290,7 +288,7 @@ class SpaceProvider extends ChangeNotifier {
       return;
     }
 
-    print("🛰️✅✅ SpaceProvider: Conectando al espacio $spaceId...");
+    ////print("🛰️✅✅ SpaceProvider: Conectando al espacio $spaceId...");
 
     // SUSCRIPCIÓN:
     _spaceSubscription = FirebaseFirestore.instance
@@ -300,10 +298,10 @@ class SpaceProvider extends ChangeNotifier {
         .listen(
           (snapshot) {
             if (snapshot.exists && snapshot.data() != null) {
-              print("✅ Datos del espacio recibidos/actualizados");
+              ////print("✅ Datos del espacio recibidos/actualizados");
               _currentSpace = Space.fromMap(snapshot.data()!);
             } else {
-              print("⚠️ El documento del espacio no existe (¿Fue borrado?)");
+              ////print("⚠️ El documento del espacio no existe (¿Fue borrado?)");
               _currentSpace = null;
               _isSpaceMode =
                   false; // 🔥 Si borran el grupo, volvemos a personal
@@ -311,7 +309,7 @@ class SpaceProvider extends ChangeNotifier {
             notifyListeners();
           },
           onError: (error) {
-            print("🚨 Error escuchando el space: $error");
+            ////print("🚨 Error escuchando el space: $error");
           },
         );
   }
@@ -321,7 +319,7 @@ class SpaceProvider extends ChangeNotifier {
   // RESETEO DE DATOS (Para cerrar sesión o salir del grupo)
   // --------------------------------------------------------
   void clearData() {
-    print("🧹 SpaceProvider: Limpiando espacio local e invitaciones");
+    //print("🧹 SpaceProvider: Limpiando espacio local e invitaciones");
 
     // 1. Cancelar suscripción al grupo
     _spaceSubscription?.cancel();
@@ -351,7 +349,7 @@ enum InvitacionStatus {
 
 extension DateChecks on DateTime {
   bool get sigueVigente {
-    final fechaVencimiento = this.add(const Duration(hours: 24));
+    final fechaVencimiento = add(const Duration(hours: 24));
     return DateTime.now().isBefore(fechaVencimiento);
   }
 }

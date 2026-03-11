@@ -45,14 +45,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   // --- LÓGICA IA CORREGIDA ---
   void _classifyTitle() {
-    print("🤢🤢 empieza ia");
+    //print("🤢🤢 empieza ia");
     // 1. Debounce: Esperamos a que el usuario deje de escribir
     if (debounce?.isActive ?? false) debounce!.cancel();
 
     debounce = Timer(const Duration(milliseconds: 800), () {
       // Verificamos que el widget siga vivo
       if (!mounted) return;
-      print("🤢🤢 provider");
+      //print("🤢🤢 provider");
 
       final aiProvider = Provider.of<AiCategoryProvider>(
         context,
@@ -69,7 +69,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         // Opcional: Solo resetear justo antes de buscar nueva clasificacion
         // para evitar notificar a los listeners en cada tecla pulsada.
         aiProvider.resetCategory();
-        print("🤢🤢 request");
+        //print("🤢🤢 request");
         aiProvider.requestClassification(text);
       }
     });
@@ -133,7 +133,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       categoria: finalCategory,
       isExpense: isExpense,
     );
-    print("🐈‍⬛💀datos de la trasaccion: ${nuevaTransaccion.toMap()}");
+    //print("🐈‍⬛💀datos de la trasaccion: ${nuevaTransaccion.toMap()}");
     // 6. GUARDAR
 
     try {

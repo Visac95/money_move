@@ -216,8 +216,8 @@ Widget _buildTutorialPage(
             Container(
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(
-                  0.2,
+                color: Colors.white.withValues(
+                  alpha: 0.2,
                 ), // Círculo semitransparente
                 shape: BoxShape.circle,
               ),
@@ -248,7 +248,7 @@ Widget _buildTutorialPage(
               subtitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.white.withOpacity(0.9), // Blanco suave
+                color: Colors.white.withValues(alpha:  0.9), // Blanco suave
                 height: 1.5, // Mejor lectura
                 fontSize: 16,
               ),

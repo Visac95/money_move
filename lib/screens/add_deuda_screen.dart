@@ -137,7 +137,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
         return;
       }
     }
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 1");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 1");
 
     if (!mounted) {
       return;
@@ -148,7 +148,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       context,
       listen: false,
     );
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 2");
 
     const uuid = Uuid();
     final nuevaDeuda = Deuda(
@@ -168,7 +168,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       pagada: false,
     );
 
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 3");
 
     if (!mounted) return;
     deudaProvider.addDeuda(
@@ -179,7 +179,7 @@ class _AddDeudaScreenState extends State<AddDeudaScreen> {
       generateAutoTransaction,
     );
 
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
+    //print("😶‍🌫️😶‍🌫️😶‍🌫️ 4");
 
     if (mounted) Navigator.of(context).pop();
     aiProvider.resetCategory();

@@ -85,9 +85,11 @@ Drawer drawerUser(BuildContext context) {
             // 1. Llamamos al servicio para desconectar Google y Firebase
             await AuthService().logout(context);
             if (!context.mounted) return;
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+              (Route<dynamic> route) =>
+                  false, // El 'false' significa: "elimina TODAS las pantallas anteriores"
+            );
           },
         ),
         const SizedBox(height: 20),

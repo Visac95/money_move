@@ -44,7 +44,7 @@ class ModeToggle extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           // Fondo suave translúcido
-          color: activeColor.withOpacity(0.9),
+          color: activeColor.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(color: activeColor, width: 1.5),
         ),
@@ -134,7 +134,7 @@ class ModeToggle extends StatelessWidget {
             color: showText
                 ? (isActive
                       ? activeColor
-                      : colorScheme.surface.withValues(alpha:  0.6))
+                      : colorScheme.surface.withValues(alpha: 0.6))
                 : colorScheme.surface,
             size: showText ? 20 : 15,
           ),
@@ -146,7 +146,7 @@ class ModeToggle extends StatelessWidget {
               style: TextStyle(
                 color: isActive
                     ? activeColor
-                    : colorScheme.surface.withOpacity(0.6),
+                    : colorScheme.surface.withValues(alpha: 0.6),
                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                 fontSize: 13,
               ),

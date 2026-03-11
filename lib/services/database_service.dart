@@ -38,7 +38,7 @@ class DatabaseService {
     try {
       await _userRef.doc(userData.uid).set(userData.toMap());
     } catch (e) {
-      print("💀 Error AddUser: $e");
+      ////print("💀 Error AddUser: $e");
       rethrow;
     }
   }
@@ -55,7 +55,7 @@ class DatabaseService {
       // Usamos .set para asegurar que el ID sea el que generamos en la app
       await ref.doc(t.id).set(t.toMap());
     } catch (e) {
-      print("❌ Error al guardar transacción: $e");
+      ////print("❌ Error al guardar transacción: $e");
       rethrow;
     }
   }
@@ -84,7 +84,7 @@ class DatabaseService {
       final ref = _getCollection(t.userId, space, "transactions");
       await ref.doc(t.id).update(t.toMap());
     } catch (e) {
-      print("❌ Error al actualizar: $e");
+      ////print("❌ Error al actualizar: $e");
       rethrow;
     }
   }
@@ -92,12 +92,12 @@ class DatabaseService {
   // --- BORRAR ---
   Future<void> deleteTransaction(Transaction t, bool space) async {
     try {
-      print("🤐🫤☹️inicio borrado");
+      ////print("🤐🫤☹️inicio borrado");
       final ref = _getCollection(t.userId, space, "transactions");
       await ref.doc(t.id).delete();
-      print("🗑️ Transacción borrada en DB: ${t.id}");
+      ////print("🗑️ Transacción borrada en DB: ${t.id}");
     } catch (e) {
-      print("❌❌❌❌ Error al borrar: $e");
+      ////print("❌❌❌❌ Error al borrar: $e");
     }
   }
 
@@ -106,16 +106,16 @@ class DatabaseService {
   // ==========================================
 
   Future<void> addDeuda(Deuda d, bool space) async {
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
+    ////print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
     try {
       final ref = _getCollection(d.userId, space, "deudas");
       // Usamos .set para asegurar que el ID sea el que generamos en la app
       await ref.doc(d.id).set(d.toMap());
     } catch (e) {
-      print("❌ Error al guardar deuda: $e");
+      ////print("❌ Error al guardar deuda: $e");
       rethrow;
     }
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${d.userId}");
+    ////print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${d.userId}");
   }
 
   Stream<List<Deuda>> getDeudasStream(
@@ -149,16 +149,16 @@ class DatabaseService {
   // ==========================================
 
   Future<void> addAhorro(Ahorro a, bool space) async {
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
+    ////print("😶‍🌫️😶‍🌫️😶‍🌫️ 6");
     try {
       final ref = _getCollection(a.userId, space, "ahorros");
       // Usamos .set para asegurar que el ID sea el que generamos en la app
       await ref.doc(a.id).set(a.toMap());
     } catch (e) {
-      print("❌ Error al guardar ahorro: $e");
+      ////print("❌ Error al guardar ahorro: $e");
       rethrow;
     }
-    print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${a.userId}");
+    ////print("😶‍🌫️😶‍🌫️😶‍🌫️ 8 ID: ${a.userId}");
   }
 
   Stream<List<Ahorro>> getAhorrosStream(
@@ -184,7 +184,7 @@ class DatabaseService {
 
   Future<void> deleteAhorro(Ahorro a, bool space) async {
     final ref = _getCollection(a.userId, space, "ahorros");
-    print("💰💰💰 ${a.id}, $space, ahorros");
+    ////print("💰💰💰 ${a.id}, $space, ahorros");
     await ref.doc(a.id).delete();
   }
 
@@ -195,7 +195,9 @@ class DatabaseService {
   Future<void> addInvitacion(Invitacion i) async {
     try {
       await _invitacionRef.doc(i.codeInvitacion).set(i.toMap());
-    } catch (e) {}
+    } catch (e) {
+      //print("$e error bro")
+    }
   }
 
   Future<Invitacion?> getActiveInvitationFuture() async {
@@ -215,7 +217,9 @@ class DatabaseService {
   Future<void> deleteInvitacion(String id) async {
     try {
       await _invitacionRef.doc(id).delete();
-    } catch (e) {}
+    } catch (e) {
+      //print error bro
+    }
   }
 
   // ✨ HELPER DE MAPEO
